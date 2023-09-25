@@ -114,7 +114,7 @@ More thought for this idea required!
     Context API, is an essential part of this tier. It helps maintain
     the state of the game and user interactions.
 
-## Tier 3 -- Data Access Layer
+### Tier 3 -- Data Access Layer
 
 -   **Data Storage:** If the game saves progress or data locally
     (example -\> HHD or SSD). Optimally it would be stored on the cloud
