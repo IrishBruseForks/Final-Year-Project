@@ -1,6 +1,5 @@
 ---
-subtitle: Ethan Conneely and Ryan Harte
-title: Project Ideas
+Project Group: Ethan Conneely and Ryan Harte
 ---
 
 # Brainstorming Ideas
