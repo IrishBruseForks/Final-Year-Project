@@ -1,4 +1,6 @@
-# Final-Year-Project
+<h1 align="center">
+  Final-Year-Project
+</h1>
 
 <p align="center">
   <a href="https://github.com/IrishBruse">Ethan Conneely (G00393941)</a>  
