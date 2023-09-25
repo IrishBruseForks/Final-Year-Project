@@ -7,5 +7,5 @@
   <br>
   <h3 align="center"><a href="./RUNDOWN.md">Rundown</a> <h3/>
 </p>
-  <h3 align="center"><a href="./Brainstorming.md">Documentation</a> <h3/>
+  <h3 align="center"><a href="./Brainstorming.md">Brainstorming Session</a> <h3/>
 </p>
