@@ -11,6 +11,9 @@ Planning (ERP) report, which is broken down into three tiers, which will
 walk you through the basic design and components to be used in making of
 each project.
 
+![Startup Meeting](./images/1.jpg)
+![Startup Meeting](images/2.jpg)
+
 ## React RPG Game
 
 We discussed making a turn-based RPG game using the React framework.
