@@ -12,7 +12,45 @@ walk you through the basic design and components to be used in making of
 each project.
 
 ![Startup Meeting](./images/1.jpg)
-![Startup Meeting](images/2.jpg)
+![Startup Meeting](./images/2.jpg)
+
+## React instantmessaging inspired by Discord/Whatsapp
+
+We discussed making a chat application based on whatsapp and discord. It would be capable of running commands by some sort of bot.
+This would give it alot more functionality eg gif embedding, weather, news, AI, games and more.
+
+
+### Tier 1 -- Presentation Layer
+
+-   **User Interface (UI):** This includes the React components responsible for rendering the Message bubbles and any embbeded content from external apis.
+
+-   **User Input Handling:** Typeing messages, sending links, uploading images/gifs aswell as running command and showing an autocomplete for all command and any errors the user has.
+
+
+### Tier 2 -- Model/Application Layer
+
+-   **Business Logic:** This encompasses the core functionality of our website, such as handling incoming messages and outgoing ones. Storing messages if the user is offline.
+    handling requests to the apis and consolidating 
+
+-   ****
+
+### Tier 3 -- Data Access Layer
+
+-   **API Integration:** The website will need to communicate with
+    external services or databases for functions like accessing user
+    accounts, fetching the PCPartPicker API, this layer handles these
+    interactions. Email notifications will also be handled here for both
+    classes of users (employees and customers).
+
+-   **Database Interaction:** Website will rely on a database for
+    storing and retrieving data, the code related to database queries
+    and management would belong here. However, React itself doesn\'t
+    directly interact with databases; you\'d typically use a server or
+    backend technology to interact with the database. (Dynamo as
+    mentioned before).
+
+-   **Authentication and Security:** User authentication, authorization,
+    and security features, such as encryption and user access controls.
 
 ## React RPG Game
 
