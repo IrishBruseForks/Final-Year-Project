@@ -7,6 +7,5 @@
   <br>
   <a href="https://github.com/The-Mad-Ryanosaurus">Ryan Harte (G00338424)</a>
   <br>
-</p>
-  <h3 align="center"><a href="./Brainstorming.markdown">Brainstorming Session</a> <h3/>
-</p>
+
+## [Brainstorming Doc](./Brainstorming.md)
