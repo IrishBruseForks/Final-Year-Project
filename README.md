@@ -8,4 +8,5 @@
   <a href="https://github.com/The-Mad-Ryanosaurus">Ryan Harte (G00338424)</a>
   <br>
 
-## [Brainstorming Doc](./Brainstorming.md)
+## [Brainstorming](./Documentation/Brainstorming.md)
+## [Project Proposal](./Documentation/Proposal.md)
