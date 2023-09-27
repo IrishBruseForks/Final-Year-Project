@@ -52,22 +52,19 @@ turn based RPG/D&D game.
 
 - **User Interface (UI):** This includes the React components
 responsible for rendering the game\'s user interface, such as
-characters, inventory, and menu, etc.
-- **Gameplay Components:** This may include React components for
+characters inventory, and menu, etc.
+- **Gameplay Components:** This includes React components for
 rendering the games play area, character sprites, and other in-game
-visuals.
-- **User Input Handling:** Components for handling user input, such as
+visuals (attack sprites and stuff).
+- **User Input Handling:** Components for handling user inputs and user actions, such as
 keyboard and mouse events. Examples -\> Character movement, menu
 selection, and battle commands.
 
 ### Tier 2 -- Model/Application Logic
 
 - **Game Logic:** This includes the core game mechanics, such as
-turn-based combat systems, character stats, inventory management,
-and quest progression. We will create JavaScript classes and
-functions that handle these game rules.
-- **API Integration:** If the game requires interaction with a server
-or external data sources.
+a turn-based combat systems and character action execution, character stats (health etc), inventory management,
+and quest progression. We will create JavaScript classes and functions that handle these game rules.
 - **State Management:** Reacts state management, such as Redux or the
 Context API, is an essential part of this tier. It helps maintain
 the state of the game and user interactions.
@@ -77,7 +74,7 @@ the state of the game and user interactions.
 - **Data Storage:** If the game saves progress or data locally
 (example -\> HHD or SSD). Optimally it would be stored on the cloud
 (AWS or AZURE)
-- **Network Communication:** For online multiplayer games. Making
+- **Network Communication:** For online multiplayer games or accessing the game via browser. Making
 network requests and handling responses. Unsure if game will be
 multiplayer.
 
@@ -102,7 +99,7 @@ More thought for this idea required!
 - **User Interface (UI):** This includes the React components
 responsible for rendering the game\'s user interface, such as
 Pokémon, menu, etc.
-- **Gameplay Components:** This may include React components for
+- **Gameplay Components:** Includes React components for
 rendering the games play area, Pokémon sprites, and other in-game
 visuals such as the Pokedex.
 - **User Input Handling:** Components for handling user input, such as
@@ -118,8 +115,7 @@ rules.
 - **API Integration:** If the game requires interaction with a server
 or external data sources such as getting the Pokémon for the
 Pokedex.
-- **State Management:** Reacts state management, such as Redux or the
-Context API, is an essential part of this tier. It helps maintain
+- **State Management:** Reacts state management, is an essential part of this tier. It helps maintain
 the state of the game and user interactions.
 
 ### Tier 3 -- Data Access Layer
@@ -155,22 +151,19 @@ commences.
 
 - **UI Components:** React components that handle the presentation of
 the website, such as the homepage, service pages, booking forms, and
-other visually oriented elements.
+other visually oriented elements. So many react components to support these visuals.
 - **User Input and Forms:** Components that manage user interactions,
-like forms for submitting repair requests, contact information, or
+like forms for submitting repair requests, contact information, booking requests and
 user reviews.
 - **Navigation:** Navigation components, including menus and links
-that help users navigate the website easily. User friendliness is
+that help users navigate the website easily and seemlessly. User friendliness is
 important.
 
 ### Tier 2 -- Model/Application Layer
 
-- **Business Logic:** This encompasses the core functionality of our
-website, such as handling repair service requests, generating
-quotes, managing user accounts, and any pricing or scheduling
-algorithms.
-- **State Management:** Reacts state management tools, like Redux or
-the Context API, play a crucial role in maintaining the
+- **Business Logic:** *THE CODE* This encompasses the core functionality of our
+website.
+- **State Management:** Reacts state management tools play a crucial role in maintaining the
 application\'s state and handling user interactions.
 - **Data Processing:** Any data processing or transformation required
 for our website\'s functionality. Making sure information
