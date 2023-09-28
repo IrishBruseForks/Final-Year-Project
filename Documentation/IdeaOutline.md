@@ -22,7 +22,8 @@ Below is a Tiered description of the application that will in basic terms walk y
 - **Distributed Bot Management:** Micro service architecture for the bots, each bot would run in it's own container in the cloud.
 - **Database Storage Technologies:**
   - **DynamoDB:** (NoSQL) DynamoDB is being discussed to be used as it is an industry standard and a new technology.
-  - **MySQL:** MySQL is also being discussed to be used as it is also vastly used and recognised in industry. Can also be run locally compared to DynamoDB.
+  - **MySQL:** MySQL is also being discussed to be used as it is also vastly used and recognised in industry.
+  - **MongoDB:** Document based database good choice for large amounts of text based data
 
 
 ### User Interactions and functionality
