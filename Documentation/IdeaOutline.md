@@ -18,9 +18,9 @@ Below is a Tiered description of the application that will in basic terms walk y
 
 ### Tier 3 -- Data Access Layer
 
-- **Database Interaction:** Golang backend server to manage user accounts, store chat history, and handle authentication. 
-- **Distributed Bot Management:** Micro service architecture for the bots, each bot would run in it's own container in the cloud. 
-- **Database Storage Technolgies:**
+- **Database Interaction:** Golang backend server to manage user accounts, store chat history, and handle authentication.
+- **Distributed Bot Management:** Micro service architecture for the bots, each bot would run in it's own container in the cloud.
+- **Database Storage Technologies:**
   - **DynamoDB:** (NoSQL) DynamoDB is being discussed to be used as it is an industry standard and a new technology.
   - **MySQL:** MySQL is also being discussed to be used as it is also vastly used and recognised in industry. Can also be run locally compared to DynamoDB.
 
@@ -30,25 +30,35 @@ Below is a Tiered description of the application that will in basic terms walk y
 Below are descriptions and bulletpoints that we hope an end user will be able to run/execute in the application upon completion/deployment of our project.
 
 - **User Account:**
-  - Create an account
-  - Login/Logout
-  - Customize profile: Username, change password, profile picture
-  - Delete account
+  - Create an account.
+  - Login/Logout.
+  - Customize profile: Username, change password, profile picture.
+  - Delete account.
 
 - **User Interactions:**
-  - Can add and remove friends via username
-  - Can private messages friends or create a group chat
+  - Can add and remove friends via username.
+  - Can send images and gifs.
+  - Read receipts.
+  - Can private messages friends or create a group chat.
+  - Can run commands in group chats.
 
 
 ### Application Framework - Frontend and Backend Design
 
-Below is discussed the Frameworks, external storage devices and API's that will be used in the development of our project. 
+Below is discussed the Frameworks, external storage devices and API's that will be used in the development of our project.
 
 - **Frontend:**
-  - React
-  - MUI
+  - **React:** Used as it is a new framework (compared to having used Ionic in the past) and is used by many companies in industry.
+  - **M.U.I:** (Googles Material UI library and style guide). A cutting-edge library with a sleek and highly professional aesthetic, elevating the application's style without compromising user-friendliness.
 
 - **Backend:**
-  - Database
-  - API
-  - Bots
+  - **DynamoDB Database:** For storing messages and read receipts as well as any link from bots.
+  - **Bots:** Bot are ways of extending the application with extra functionality.
+  - **API:** Bots can have access to external apis such as:
+    -  Weather Api
+    -  News Api
+    -  Memes/Gif Api
+    -  Pokémon Api
+
+
+***Scope and design of project as discussed above may and will most likely change in the design phase as the Scope of the project becomes more apparent***
