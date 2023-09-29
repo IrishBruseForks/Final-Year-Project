@@ -8,10 +8,13 @@ Each student must complete the following form and submit it to their supervisor 
 supervisor has signed-off on the proposal, you must submit the document for consideration using Moodle.
 
 ## 1. Student Name:
+Ethan Conneely
 
 ## 3. Supervisor Name:
+Gemma OCallaghan
 
 ## 4. Project Name:
+To be decided
 
 ## 5. Project Context
 Describe the context of the problem domain here. Explain what you are proposing to do and your rationale for doing it. Explain why the problem domain is of interest.
