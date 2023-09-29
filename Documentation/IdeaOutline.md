@@ -53,7 +53,7 @@ Below is discussed the Frameworks, external storage devices and API's that will 
   - **M.U.I:** (Googles Material UI library and style guide). A cutting-edge library with a sleek and highly professional aesthetic, elevating the application's style without compromising user-friendliness.
 
 - **Backend:**
-  - **DynamoDB Database:** For storing messages and read receipts as well as any link from bots.
+  - **MongoDB Database:** For storing messages and read receipts as well as any links and data from bots.
   - **Bots:** Bot are ways of extending the application with extra functionality.
   - **API:** Bots can have access to external apis such as:
     -  Weather Api
