@@ -22,7 +22,8 @@ Below is a Tiered description of the application that will in basic terms walk y
 - **Distributed Bot Management:** Micro service architecture for the bots, each bot would run in it's own container in the cloud.
 - **Database Storage Technologies:**
   - **DynamoDB:** (NoSQL) DynamoDB is being discussed to be used as it is an industry standard and a new technology.
-  - **MySQL:** MySQL is also being discussed to be used as it is also vastly used and recognised in industry. Can also be run locally compared to DynamoDB.
+  - **MySQL:** MySQL is also being discussed to be used as it is also vastly used and recognised in industry.
+  - **MongoDB:** Document based database good choice for large amounts of text based data
 
 
 ### User Interactions and functionality
@@ -52,7 +53,7 @@ Below is discussed the Frameworks, external storage devices and API's that will 
   - **M.U.I:** (Googles Material UI library and style guide). A cutting-edge library with a sleek and highly professional aesthetic, elevating the application's style without compromising user-friendliness.
 
 - **Backend:**
-  - **DynamoDB Database:** For storing messages and read receipts as well as any link from bots.
+  - **MongoDB Database:** For storing messages and read receipts as well as any links and data from bots.
   - **Bots:** Bot are ways of extending the application with extra functionality.
   - **API:** Bots can have access to external apis such as:
     -  Weather Api
