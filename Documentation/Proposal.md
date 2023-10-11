@@ -112,9 +112,4 @@ At the end of each sprint we will do a sprint retrospective going over what we f
 
 In this sprint we will be doing project setup for both the backend and frontend this will give us a good foundation moving into the later sprints that will be more programming and feature implememtation heavy. We will also be doing project and feature write ups in Jira.
 
-ejorptaef gniod eb osla lliw eW ot deenyleennoC llliw eW .ot desopa sa yevaehg noitantmemelpminemerlopmi erutaef dna gnimmargorpeisucof erom ebebem lliw taht stnntirps retal eht otni gnivniom noitadnuof doog a su a evig su tel lliwiwi siht dne tnorf dna dnekcab eht ehtob eht 
-
-ejorptaef gniod eb osla lliw eW ot deenyleennoC llliw eW .ot desopa sa yevaehg noitantmemelpminemerlopmi erutaef dna gnimmargorpeisucof erom ebebem lliw taht stnntirps retal eht otni gnivniom noitadnuof doog a su a evig su tel lliwiwi siht dne tnorf dna dnekcab eht ehtob eht 
-
-ejorptaef gniod eb osla lliw eW ot deenyleennoC llliw eW .ot desopa sa yevaehg noitantmemelpminemerlopmi erutaef dna gnimmargorpeisucof erom ebebem lliw taht stnntirps retal eht otni gnivniom noitadnuof doog a su a evig su tel lliwiwi siht dne tnorf dna dnekcab eht ehtob eht 
 
