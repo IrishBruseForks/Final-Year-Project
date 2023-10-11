@@ -9,7 +9,6 @@ B.Sc. (Honours) in Software Development Applied Project & Minor Dissertation
 **Project Name:** AI-Integrated Messenger Application - Chatalyst
 
 # Project Context:
-
 Instant communication and the multitude of applications that provide such a service are used by a vast majority of the world's populace each day. Since the invention of the telephone communication has been evolving and with this continuous evolution in technology, users are always seeking the next best ways in which they can communicate instantly with friends and family.
 
 With Artificial Intelligence (AI) becoming more prominent in our lives, there is a rising demand by users to access smarter, more intuitive, and user-friendly communication platforms. The reason for this is users want an application that can aid in automating, assisting and that enhances their interactions through the use of an AI-powered application.
@@ -17,7 +16,6 @@ With Artificial Intelligence (AI) becoming more prominent in our lives, there is
 As this is a group project, we aim to develop an instant messaging application (for both Desktop and Mobile Devices) that will have a strong focus on AI/Bot integration. The application will allow users to create an account, instant message/communicate, as well as send various multimedia files (images, gifs and many more) and interact and make use of the implemented bots and their various functions.
 
 # Project Objectives:
-
 - **Development of a User-Friendly Interface (UI)**
   - **Overview:** Create a UI that is user friendly and aesthetically pleasing.
   - **Components:**
@@ -69,38 +67,41 @@ As this is a group project, we aim to develop an instant messaging application (
     - Email verification on all account setups.
 
 # Technologies/System Architecture
-
 Our AI-integrated messaging application will be developed using the following technologies and system architecture. system architecture:
 
 **Frontend:**
-
-- **React vs Angular:** For frontend development, React has been chosen over Angular as it is a new technology that provides vast flexibility in development with its many libraries and components that are easy for development reusability.
+- **React vs Angular:** For frontend development, React has been chosen over Angular as it is a new technology that provides vast flexibility in development. With its many libraries and components that can be added over angular it means:
+  -  Users will be able to interact with our application more freely. 
+  -  Development will be more flexible and React components offer far more reusability.
+  -  It is an Industry standard for the development of many desktop and mobile applications and is used by Facebook Instagram, WhatsApp, Airbnb, and more. As such it is an incredible framework to work with as it as is sought after industry wide.
   - **React:** 
-  - Promotes a component-based architecture, making it easy to reuse components.
-  -  More libraries, providing flexibility in choosing additional components and development tools.
-  -  Offers React Native for mobile app development 
+    - Promotes a component-based architecture, making it easy to reuse components.
+    -  More libraries, providing flexibility in choosing additional components and development tools.
+    -  Offers React Native for mobile app development.
+    -  Uses JavaScript and HTML syntax. Javascript is used predominantly in frontend development making it an invaluable language to improve knowledge on.
   - **Angular:** 
-  - Also uses a component-based architecture, but with a more structured and hierarchical approach due to its module system.
+    - Also uses a component-based architecture, but with a more structured and hierarchical approach due to its module system.
+    - A comprehensive framework with built-in tools. A lack of libraries and flexibility make it less appealing for our project.
+    - Has Ionic and NativeScript as popular options for mobile development, but the development experience differs to that for web development. 
+    - Uses Typescript which is a strict syntactical superset of JavaScript.
 
-- **MUI (Material-UI):** React components that adhere to Material Design principles, facilitating a consistent and "user friendly" user interface.
+- **MUI (Material-UI):** 
+  - Material-UI (MUI) is a popular React UI framework that implements Google's Material Design. It provides a suite of components that allow for us to develop a consistent, interactive, and responsive user interface that will be appealing and seamless to use.
 
 **Back-End:**
 - **GoLang vs TypeScript:** In industry both languages are very popular for backend servers. The reason we decided to go with GoLang is that it is a language built on concurrency which is very important in a online application that is used by many people you will need to be able to handle hundreds of request in parallel and GoLang facilitates this. Typescript on the other hand is a much more dynamic language and does not have a very good concurrency model as compared to golang  which was built on that idea, for this reason we went with GoLang. The main advantage of using GoLang is that the api types could be shared with both the frontend and backend due to using the same language. There are tools for golang that help facilitate this and we will be using one such thing that generates type safe definitions from the golang structs into interfaces for use when requesting the api from the frontend.
 - **MongoDB vs MySQL:** MonogDB is a database that is best suited for storing documents/json formatted data it is useful for storing big sets of complexly structured data where as MySql is better at storing simpler relational data where the main use case of the data is performing operations and lookups on the data in a performants and secure way.
 
 **AI – Integration**
-
 - The integration of AI capabilities, powered by leading-edge machine learning algorithms, enhances user experience by offering features such as smart replies, news and weather information and others as mentioned above. This combination of technologies ensures our application is scalable, responsive, and user-friendly, catering to the modern needs of messaging platforms and our target user audience.
 
 # Schedule of work:
-
 Our project employs the Agile Methodology 'Scrum'.
 
 We have planned out the work for each sprint we will be undertaking during the project it will be expanded as we work on it and encounter bugs in the application. We will be working in 2 week sprints.
 At the end of each sprint we will do a sprint retrospective going over what we felt went well and what issues we encountered.
 
 **JIRA**
-
 - We have created a JIRA to organise our workload into 'sprints' and have created a Gantt Chart and Kanban board to keep our work organised and we can clearly see when project deadlines and goals are to be met this is just the initial layout of work as the requirements become more clear we will add more tasks to it.
 
 ![](/Documentation/images/jira1.png)
@@ -109,7 +110,6 @@ At the end of each sprint we will do a sprint retrospective going over what we f
 
 
 ## Sprint 1
-
 In this sprint we will be doing project setup for both the backend and frontend this will give us a good foundation moving into the later sprints that will be more programming and feature implememtation heavy. We will also be doing project and feature write ups in Jira.
 
 
