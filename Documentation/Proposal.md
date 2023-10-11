@@ -110,6 +110,14 @@ At the end of each sprint we will do a sprint retrospective going over what we f
 
 
 ## Sprint 1
-In this sprint we will be doing project setup for both the backend and frontend this will give us a good foundation moving into the later sprints that will be more programming and feature implememtation heavy. We will also be doing project and feature write ups in Jira.
 
+In this sprint we will be doing project setup for both the backend and frontend this will give us a good foundation moving into the later sprints that will be more programming and feature implementation heavy. We will also be doing project and feature write ups in Jira.
 
+## Sprint 2
+
+In sprint 2 we will be working on a UI mock-up and the basic authentication with the server for users.
+This sprint will outline what the UI style will be and some very basic skeleton layouts of the website.
+
+## Sprint 3
+
+This sprint is about getting the signup/signin UI design finalized with only tweaks and fixes remaining as well as starting on the message user interface and getting the backend messaging system working.
