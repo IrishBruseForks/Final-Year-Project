@@ -44,7 +44,6 @@ As this is a group project, we aim to develop an instant messaging application (
     - News Bot: A bot that will give news to the user relevant to their location and interests.
     - Weather Bot: A bot that will tell users the weather at their location or a location of their choosing along with other relevant details.
     - Pokémon Bot: A funny Pokémon bot that will give a user relevant information on a Pokémon of their choosing. Will be a Pokédex bot essentially.
-    - NSFW Bot: A bot that will filter an explicit content and make sure all content remains safe and user friendly.
 
 - **Scalable Backend Infrastructure**
   - **Overview:** To build a robust backend using (enter DB here) that can handle the initial users of the application and those that could join in the future.
@@ -76,8 +75,8 @@ Our AI-integrated messaging application will be developed using the following te
 - **MUI (Material-UI):** React components that adhere to Material Design principles, facilitating a consistent and "user friendly" user interface.
 
 **Back-End:**
-
-- **MongoDB** : a NoSQL database, implemented for its flexibility and scalability, especially suited for managing the dynamic structure of messaging data. Used to manage structured user data and application configurations, ensuring data integrity and relationships.
+- **GoLang vs TypeScript:** In industry both languages are very popular for backend servers. The reason we decided to go with GoLang is that it is a langauge built on concurency which is very important in a online application that is used by many people you will need to be able to handle hundreds of request in parallel and GoLang facilitates this. Typescript on the other hand is a much more dynamic language and does not have a very good concurrency model as compared to golang  which was built on that idea, for this reason we went with GoLang. The main advantage of using GoLang is that the api types could be shared with both the frontend and backend due to using the same language. There are tools for golang that help facilitate this and we will be using one such thing that generates type safe definitions from the golang structs into interfaces for use when requestiong the api from the frontend.
+- **MongoDB:** a NoSQL database, implemented for its flexibility and scalability, especially suited for managing the dynamic structure of messaging data. Used to manage structured user data and application configurations, ensuring data integrity and relationships.
 - **MySQL:** implemented for its flexibility and scalability, especially suited for managing the dynamic structure of messaging data. Used to manage structured user data and application configurations, ensuring data integrity and relationships.
 
 **AI – Integration**
