@@ -4,17 +4,22 @@
 
 <h1 style="color: red;">Project Proposal</h1>
 
-<div style="border: 2px solid red; padding: 10px; "> <strong style="color: red;">1. Student Name:</strong> Ethan Conneely (G00393941) and Ryan Harte (G00338424)</div>
+<strong style="color: red;">1. Student Name:</strong>
+<span style="display: inline-block; border: 2px solid red; padding: 10px;">Ethan Conneely (G00393941) and Ryan Harte (G00338424)</span>
+
+
+<strong style="color: red;">2. Project Supervisor:</strong>
+<span style="display: inline-block; border: 2px solid red; padding: 10px;">Gemma O'Callaghan</span>
+
+<strong style="color: red;">3. Project Name:</strong>
+<span style="display: inline-block; border: 2px solid red; padding: 10px;">AI-Integrated Messenger Application - Chatalyst</span>
 
 
 
-<div style="border: 2px solid red; padding: 10px;"> <strong style="color: red;">2. Supervisor Name:</strong> Gemma O'Callaghan</strong></div>
-
-<div style="border: 2px solid red; padding: 10px; margin-bottom: 20px;"> <strong style="color: red;">3. Project Name:</strong>  AI-Integrated Messenger Application - Chatalyst </div>
+<h1 style="color: red;">4. Project Context:</h1>
 
 <div style="border: 2px solid red; padding: 10px; margin-bottom: 20px;">
 
-<h1 style="color: red;">4. Project Context:</h1>
 Instant communication and the multitude of applications that provide such a service are used by a vast majority of the world's populace each day. Since the invention of the telephone communication has been evolving and with this continuous evolution in technology, users are always seeking the next best ways in which they can communicate instantly with friends and family.
 
 With Artificial Intelligence (AI) becoming more prominent in our lives, there is a rising demand by users to access smarter, more intuitive, and user-friendly communication platforms. The reason for this is users want an application that can aid in automating, assisting and that enhances their interactions through the use of an AI-powered applications.
@@ -42,9 +47,10 @@ As mentioned previously we hope to develop and create an AI-Integrated messaging
 - **Data Security:** User trust is the cornerstone of any applications success. The leaking of personal information is the ultimate killer. We're creating data privacy measures, from end-to-end encryption to multifaceted authentication, ensuring user data remains uncompromised.
 </div>
 
+<h1 style="color: red;">5. Project Objectives:</h1>
+
 <div style="border: 2px solid red; padding: 10px; margin-bottom: 20px;">
 
-<h1 style="color: red;">5. Project Objectives:</h1>
 - **Development of a User-Friendly Interface (UI)**
   - **Overview:** Create a UI that is user friendly and aesthetically pleasing.
   - **Components:**
@@ -95,9 +101,10 @@ As mentioned previously we hope to develop and create an AI-Integrated messaging
     - Email verification on all account setups.
 </div>
 
+<h1 style="color: red;">6. Technologies/System Architecture</h1>
+
 <div style="border: 2px solid red; padding: 10px; margin-bottom: 20px;">
 
-<h1 style="color: red;">6. Technologies/System Architecture</h1>
 Our AI-integrated messaging application will be developed using the following technologies and system architecture. system architecture:
 
 **Frontend:**
@@ -127,9 +134,10 @@ Our AI-integrated messaging application will be developed using the following te
 - The integration of AI capabilities, powered by leading-edge machine learning algorithms, enhances user experience by offering features such as smart replies, news and weather information and others as mentioned above. This combination of technologies ensures our application is scalable, responsive, and user-friendly, catering to the modern needs of messaging platforms and our target user audience.
 </div>
 
+<h1 style="color: red;">7. Schedule of Work</h1>
+
 <div style="border: 2px solid red; padding: 10px; margin-bottom: 20px;">
 
-<h1 style="color: red;">7. Schedule of Work</h1>
 Our project employs the Agile Methodology 'Scrum'.
 
 We have planned out the work for each sprint we will be undertaking during the project it will be expanded as we work on it and encounter bugs in the application. We will be working in 2 week sprints.
