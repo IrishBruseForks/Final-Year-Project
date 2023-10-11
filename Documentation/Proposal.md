@@ -10,13 +10,11 @@ B.Sc. (Honours) in Software Development Applied Project & Minor Dissertation
 
 # Project Context:
 
-Instant communication and the multitude of applications that provide such a service are used by a vast majority of the world's populace each day. Since the invention of the telephone communication has been evolving and with this continuous evolution in in technology, users are always seeking the next best ways in which they can communicate instantly.
+Instant communication and the multitude of applications that provide such a service are used by a vast majority of the world's populace each day. Since the invention of the telephone communication has been evolving and with this continuous evolution in technology, users are always seeking the next best ways in which they can communicate instantly with friends and family.
 
-With Artificial Intelligence (AI) becoming more popular, there is a rising demand by users to access smarter, more intuitive, and user-friendly communication platforms. The reason for this is users want an application that can aid in automating, assisting and that enhances their interactions through the use of an AI-powered application.
+With Artificial Intelligence (AI) becoming more prominent in our lives, there is a rising demand by users to access smarter, more intuitive, and user-friendly communication platforms. The reason for this is users want an application that can aid in automating, assisting and that enhances their interactions through the use of an AI-powered application.
 
-## Proposed Solution:
-
-As this is a group project, we aim to develop an instant messaging application (for both Desktop and Mobile Devices) that will have a strong focus on AI/Bot integration. The application will allow users to create an account, instant message/communicate, as well as send various multimedia files (mp3, mp4, gifs and many more) and interact and make use of the implemented bots and their various functions. See project objectives for more information.
+As this is a group project, we aim to develop an instant messaging application (for both Desktop and Mobile Devices) that will have a strong focus on AI/Bot integration. The application will allow users to create an account, instant message/communicate, as well as send various multimedia files (images, gifs and many more) and interact and make use of the implemented bots and their various functions.
 
 # Project Objectives:
 
@@ -28,24 +26,20 @@ As this is a group project, we aim to develop an instant messaging application (
     - Theme customization. Light and Dark mode.
 
 - **User customization capabilities**
-  - **Overview:** Users can create, customise and delete their profiles.
+  - **Overview:** Users can create, customise their profiles.
   - **Components:**
     - Register an account.
     - Login/Logout.
     - Two Factor Authentication.
     - Profile customization, profile pictures etc...
     - Add/Remove Friends
-    - Delete Account
 
 - **Instant Messaging communication**
   - **Overview:** Users can create and send messages to people they are friends with.
   - **Components:**
-    - Send message.
-    - Receive .
-    - Two Factor Authentication.
-    - Profile customization, profile pictures etc...
-    - Add/Remove Friends
-    - Delete Account
+    - Send and receive messages.
+    - Send and receive multimedia.
+    - 
 
 - **Implement AI/Bots**
   - **Overview:** Implementation of AI/Bots to provide various services to users based on their capabilities.
@@ -68,12 +62,11 @@ As this is a group project, we aim to develop an instant messaging application (
     - Feedback Interface: A UI interface for reporting issues/bugs.
 
 - **Data Privacy/Security**
-  - Overview: User details remain private through encryption.
-  - Components:
+  - **Overview:** User details remain private through encryption.
+  - **Components:**
     - End to End Encryption: Ensure user conversations and private details remain encrypted.
-    - Authentication:
-      - Implement 2 factor authentication to keep users' data secure.
-      - Email verification on all account setups.
+    - Implement 2 factor authentication to keep users' data secure.
+    - Email verification on all account setups.
 
 # Technologies/System Architecture
 
@@ -96,15 +89,19 @@ Our AI-integrated messaging application will be developed using the following te
 
 Our project employs the Agile Methodology 'Scrum'.
 
+We have planned out the work for each sprint we will be undertaking during the project it will be expanded as we work on it and encounter bugs in the application. We will be working in 2 week sprints.
+At the end of each sprint we will do a sprint retrospective going over what we felt went well and what issues we encountered.
+
 **JIRA**
 
-- We have created a JIRA to organise our workload into 'sprints' and have created a Gantt Chart and Kanban board to keep our work organised and we can clearly see when project deadlines and goals are to be met/
+- We have created a JIRA to organise our workload into 'sprints' and have created a Gantt Chart and Kanban board to keep our work organised and we can clearly see when project deadlines and goals are to be met this is just the initial layout of work as the requirements become more clear we will add more tasks to it.
 
 ![](/Documentation/images/jira1.png)
-
 '_Jira -_ [https://ethanryanfinalyearproject.atlassian.net/jira/software/projects/KAN/boards/1/timeline?timeline=MONTHS](https://ethanryanfinalyearproject.atlassian.net/jira/software/projects/KAN/boards/1/timeline?timeline=MONTHS)
  _Our work load Gantt Chart from now to December 2023'_
 
-![](/Documentation/images/jira2.png)
 
-'_Each epic in the Gantt Chart contains "stories" that need to be completed for the epic (or tasks) completion.'_
+## Sprint 1
+
+In this sprint we will be doing
+
