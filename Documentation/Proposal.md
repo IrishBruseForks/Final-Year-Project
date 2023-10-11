@@ -108,6 +108,7 @@ At the end of each sprint we will do a sprint retrospective going over what we f
 '_Jira -_ [https://ethanryanfinalyearproject.atlassian.net/jira/software/projects/KAN/boards/1/timeline?timeline=MONTHS](https://ethanryanfinalyearproject.atlassian.net/jira/software/projects/KAN/boards/1/timeline?timeline=MONTHS)
  _Our work load Gantt Chart from now to December 2023'_
 
+![](/Documentation/images/jira3.png)
 
 ## Sprint 1
 
@@ -121,3 +122,16 @@ This sprint will outline what the UI style will be and some very basic skeleton 
 ## Sprint 3
 
 This sprint is about getting the signup/signin UI design finalized with only tweaks and fixes remaining as well as starting on the message user interface and getting the backend messaging system working.
+
+## Sprint 4
+
+Sprint 4 is all about integrating with bots and external facing apis this will allow the messaging app to take advantage of extra information from other sources and can be shared with people in group chats.
+This will require adding UI specific to the api endpoints and bot so we will need to modify the User interface to display the information.
+
+## Sprint 5
+
+The last sprint will be all about implementing a LLM AI (Large Language Model) that will be hosted remotely and be used for intelligent responses to reply to messages for you
+
+## Sprint 6
+
+Fix any outstanding bugs, polish the application functionality and finish the UI making sure everything is consistently styled.
