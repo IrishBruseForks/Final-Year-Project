@@ -1,12 +1,12 @@
 # Project Proposal
 
-B.Sc. (Hons) in Software Development Applied Project & Minor Dissertation
+B.Sc. (Honours) in Software Development Applied Project & Minor Dissertation
 
-**Student Name:** Ethan Conneely (G00393941) andRyan Harte (G00338424)
+**Student Name:** Ethan Conneely (G00393941) and Ryan Harte (G00338424)
 
 **Supervisor Name:** Gemma O'Callaghan
 
-**Project Name:** AI-Integrated Messenger Application - (Ethryl) (Chatalyst) (ChitChat) (ChatCove) (GossipGrotto) (SpeakShack) (BanterBay) (LingoLagoon)
+**Project Name:** AI-Integrated Messenger Application - Chatalyst
 
 # Project Context:
 
@@ -37,6 +37,16 @@ As this is a group project, we aim to develop an instant messaging application (
     - Add/Remove Friends
     - Delete Account
 
+- **Instant Messaging communication**
+  - **Overview:** Users can create and send messages to people they are friends with.
+  - **Components:**
+    - Send message.
+    - Receive .
+    - Two Factor Authentication.
+    - Profile customization, profile pictures etc...
+    - Add/Remove Friends
+    - Delete Account
+
 - **Implement AI/Bots**
   - **Overview:** Implementation of AI/Bots to provide various services to users based on their capabilities.
   - **Components:**
@@ -57,7 +67,7 @@ As this is a group project, we aim to develop an instant messaging application (
     - Ticketing System: An efficient system that tracks and prioritizes issues/bugs based on severity.
     - Feedback Interface: A UI interface for reporting issues/bugs.
 
-- Data Privacy/Security
+- **Data Privacy/Security**
   - Overview: User details remain private through encryption.
   - Components:
     - End to End Encryption: Ensure user conversations and private details remain encrypted.
@@ -75,9 +85,8 @@ Our AI-integrated messaging application will be developed using the following te
 - **MUI (Material-UI):** React components that adhere to Material Design principles, facilitating a consistent and "user friendly" user interface.
 
 **Back-End:**
-- **GoLang vs TypeScript:** In industry both languages are very popular for backend servers. The reason we decided to go with GoLang is that it is a langauge built on concurency which is very important in a online application that is used by many people you will need to be able to handle hundreds of request in parallel and GoLang facilitates this. Typescript on the other hand is a much more dynamic language and does not have a very good concurrency model as compared to golang  which was built on that idea, for this reason we went with GoLang. The main advantage of using GoLang is that the api types could be shared with both the frontend and backend due to using the same language. There are tools for golang that help facilitate this and we will be using one such thing that generates type safe definitions from the golang structs into interfaces for use when requestiong the api from the frontend.
-- **MongoDB:** a NoSQL database, implemented for its flexibility and scalability, especially suited for managing the dynamic structure of messaging data. Used to manage structured user data and application configurations, ensuring data integrity and relationships.
-- **MySQL:** implemented for its flexibility and scalability, especially suited for managing the dynamic structure of messaging data. Used to manage structured user data and application configurations, ensuring data integrity and relationships.
+- **GoLang vs TypeScript:** In industry both languages are very popular for backend servers. The reason we decided to go with GoLang is that it is a language built on concurrency which is very important in a online application that is used by many people you will need to be able to handle hundreds of request in parallel and GoLang facilitates this. Typescript on the other hand is a much more dynamic language and does not have a very good concurrency model as compared to golang  which was built on that idea, for this reason we went with GoLang. The main advantage of using GoLang is that the api types could be shared with both the frontend and backend due to using the same language. There are tools for golang that help facilitate this and we will be using one such thing that generates type safe definitions from the golang structs into interfaces for use when requesting the api from the frontend.
+- **MongoDB vs MySQL:** MonogDB is a database that is best suited for storing documents/json formatted data it is useful for storing big sets of complexly structured data where as MySql is better at storing simpler relational data where the main use case of the data is performing operations and lookups on the data in a performants and secure way.
 
 **AI – Integration**
 
@@ -89,13 +98,13 @@ Our project employs the Agile Methodology 'Scrum'.
 
 **JIRA**
 
-- We have created a JIRA to organise our workload into 'sprints' and have created a Gannt Chart and Kanban board to keep our work organised and we can clearly see when project deadlines and goals are to be met/
+- We have created a JIRA to organise our workload into 'sprints' and have created a Gantt Chart and Kanban board to keep our work organised and we can clearly see when project deadlines and goals are to be met/
 
 ![](/Documentation/images/jira1.png)
 
 '_Jira -_ [https://ethanryanfinalyearproject.atlassian.net/jira/software/projects/KAN/boards/1/timeline?timeline=MONTHS](https://ethanryanfinalyearproject.atlassian.net/jira/software/projects/KAN/boards/1/timeline?timeline=MONTHS)
- _Our work load Gannt Chart from now to December 2023'_
+ _Our work load Gantt Chart from now to December 2023'_
 
 ![](/Documentation/images/jira2.png)
 
-'_Each epic in the Gannt Chart contains "stories" that need to be completed for the epic (or tasks) completion.'_
+'_Each epic in the Gantt Chart contains "stories" that need to be completed for the epic (or tasks) completion.'_
