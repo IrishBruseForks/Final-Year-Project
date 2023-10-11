@@ -11,9 +11,29 @@ B.Sc. (Honours) in Software Development Applied Project & Minor Dissertation
 # Project Context:
 Instant communication and the multitude of applications that provide such a service are used by a vast majority of the world's populace each day. Since the invention of the telephone communication has been evolving and with this continuous evolution in technology, users are always seeking the next best ways in which they can communicate instantly with friends and family.
 
-With Artificial Intelligence (AI) becoming more prominent in our lives, there is a rising demand by users to access smarter, more intuitive, and user-friendly communication platforms. The reason for this is users want an application that can aid in automating, assisting and that enhances their interactions through the use of an AI-powered application.
+With Artificial Intelligence (AI) becoming more prominent in our lives, there is a rising demand by users to access smarter, more intuitive, and user-friendly communication platforms. The reason for this is users want an application that can aid in automating, assisting and that enhances their interactions through the use of an AI-powered applications.
 
 As this is a group project, we aim to develop an instant messaging application (for both Desktop and Mobile Devices) that will have a strong focus on AI/Bot integration. The application will allow users to create an account, instant message/communicate, as well as send various multimedia files (images, gifs and many more) and interact and make use of the implemented bots and their various functions.
+
+## Project Interest
+The development of this project is of interest to us as it combines an array of new technologies and frameworks as you will see below. Developing an application that users will admire, and using these widely recognized and employer-valued technologies, we feel is in our best interest as final year students.
+
+## Project Description
+As mentioned previously we hope to develop and create an AI-Integrated messaging application that focuses on the following:
+
+- **Intuitive User Interface:** Our aim is to fuse aesthetic appeal with functionality. By prioritizing UI/UX design, development of an interface that not only looks great but also feels intuitive is a high priority. With added features like theme customization, user profile customization and more it will give users more control over how the app looks and feels to them.
+
+- **Personalized User Profiles:** We recognize individuality. Our platform empowers users to create their unique digital profile, encompassing everything from profile customization to friend interactions.
+
+- **Instant Communication:** Beyond basic messaging, our platform will facilitate multimedia sharing, ensuring greater communication capabilities for all users.
+
+- **AI-Powered Interactions:** We're elevating user experience by introducing AI-driven bots. Whether it's for quick auto-replies, catching up on the latest news, checking the weather, or even diving into the Pokémon universe. We want users to be able to access a vast array of information that is powered by AI that users can access easily.
+
+- **Robust Backend Framework:** With optimized database operations and scalability in focus, we're ensuring a smooth experience for our users.
+
+- **Responsive Feedback Mechanism:** Acknowledging the evolving nature of technology and accepting that problems arise even after development/deployment, we hope to embed a system for users to report bugs and provide feedback on the application. This ensures a continuous loop of improvement and getting user feedback.
+
+- **Data Security:** User trust is the cornerstone of any applications success. The leaking of personal information is the ultimate killer. We're creating data privacy measures, from end-to-end encryption to multifaceted authentication, ensuring user data remains uncompromised.
 
 # Project Objectives:
 - **Development of a User-Friendly Interface (UI)**
@@ -36,8 +56,7 @@ As this is a group project, we aim to develop an instant messaging application (
   - **Overview:** Users can create and send messages to people they are friends with.
   - **Components:**
     - Send and receive messages.
-    - Send and receive multimedia.
-    - 
+    - Send and receive multimedia in all forms.
 
 - **Implement AI/Bots**
   - **Overview:** Implementation of AI/Bots to provide various services to users based on their capabilities.
