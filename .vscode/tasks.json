@@ -10,6 +10,7 @@
       "runOptions": {
         "runOn": "folderOpen"
       },
+      "options": { "cwd": "./src/Frontend" },
       "problemMatcher": ["$tsc"]
     }
   ]
