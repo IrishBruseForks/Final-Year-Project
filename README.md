@@ -18,14 +18,11 @@
 
 Install node 20 or above
 
-Install the packages
-
-`npm install`
-
 To serve the frontend run:
 
 ```shell
 cd src/Frontend
+npm install
 npm run dev
 ```
 
