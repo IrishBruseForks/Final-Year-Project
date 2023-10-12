@@ -10,6 +10,17 @@
       "runOptions": {
         "runOn": "folderOpen"
       },
+      "dependsOn": "Install Packages",
+      "options": { "cwd": "./src/Frontend" },
+      "problemMatcher": ["$tsc"]
+    },
+    {
+      "label": "Install Packages",
+      "type": "shell",
+      "command": "npm install",
+      "runOptions": {
+        "runOn": "folderOpen"
+      },
       "options": { "cwd": "./src/Frontend" },
       "problemMatcher": ["$tsc"]
     }
