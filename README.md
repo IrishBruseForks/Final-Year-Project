@@ -9,4 +9,31 @@
   <br>
 
 ## [Brainstorming](./Documentation/Brainstorming.md)
+
 ## [Project Proposal](./Documentation/Proposal.md)
+
+# Setup Instructions
+
+## src/Frontend
+
+Install node 20 or above
+
+Install the packages
+
+`npm install`
+
+To serve the frontend run:
+
+```shell
+cd src/Frontend
+npm run dev
+```
+
+## src/Backend
+
+Install go version 1.21 or greater
+
+```shell
+cd src/Backend
+go run .
+```
