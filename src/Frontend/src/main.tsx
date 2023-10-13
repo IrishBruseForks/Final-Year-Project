@@ -9,11 +9,16 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import ServiceDownPage from "./Pages/ServiceDownPage";
 import Constants from "./Utility/Constants";
 import React from "react";
+import HomePage from "./Pages/HomePage";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <LoginPage />,
+  },
+  {
+    path: "/home",
+    element: <HomePage />,
   },
   {
     path: "/serviceDown",
