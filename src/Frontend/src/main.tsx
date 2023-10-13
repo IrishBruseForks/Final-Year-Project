@@ -1,26 +1,19 @@
-import React from "react";
 import ReactDOM from "react-dom/client";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import axios from "axios";
-import Urls from "./Utility/Urls";
-import ServiceDownPage from "./Pages/ServiceDown";
-import { GoogleOAuthProvider } from "@react-oauth/google";
-
 import LoginPage from "./Pages/LoginPage";
-import HomePage from "./Pages/HomePage";
+import axios from "axios";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import ServiceDownPage from "./Pages/ServiceDownPage";
+import Constants from "./Utility/Constants";
+import React from "react";
 
-
-export const router = createBrowserRouter([
+const router = createBrowserRouter([
   {
     path: "/",
     element: <LoginPage />,
-  },
-  {
-    path: "/home",
-    element: <HomePage />,
   },
   {
     path: "/serviceDown",
@@ -45,7 +38,7 @@ const theme = createTheme({
 // Check to see if the backend is running
 // if there is an exception redirect to service down page
 try {
-  await axios.get(Urls.backendUrl + "/status", { timeout: 500 });
+  await axios.get(Constants.BackendUrl + "/status", { timeout: 500 });
 } catch (error: unknown) {
   router.navigate("/serviceDown");
 }

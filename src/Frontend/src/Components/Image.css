@@ -1,0 +1,18 @@
+.image {
+  position: absolute;
+  width: 100%;
+  opacity: 1;
+  transition: opacity 500ms;
+}
+
+.loaded .placeholder {
+  opacity: 0;
+}
+
+.loaded .fullsize {
+  opacity: 1;
+}
+
+.fullsize {
+  opacity: 0;
+}

@@ -11,8 +11,10 @@
         "runOn": "folderOpen"
       },
       "dependsOn": "Install Packages",
-      "options": { "cwd": "./src/Frontend" },
-      "problemMatcher": ["$tsc"]
+      "options": {
+        "cwd": "./src/Frontend"
+      },
+      "problemMatcher": "$tsc"
     },
     {
       "label": "Install Packages",
@@ -21,8 +23,22 @@
       "runOptions": {
         "runOn": "folderOpen"
       },
-      "options": { "cwd": "./src/Frontend" },
-      "problemMatcher": ["$tsc"]
+      "options": {
+        "cwd": "./src/Frontend"
+      },
+      "problemMatcher": "$tsc"
+    },
+    {
+      "label": "Generate Types from Go",
+      "type": "shell",
+      "command": "tygo generate",
+      "runOptions": {
+        "runOn": "folderOpen"
+      },
+      "options": {
+        "cwd": "./src/Backend"
+      },
+      "problemMatcher": "$go"
     }
   ]
 }
