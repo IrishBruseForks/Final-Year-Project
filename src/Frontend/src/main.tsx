@@ -4,16 +4,23 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import LoginPage from "./Pages/LoginPage";
 import axios from "axios";
 import Urls from "./Utility/Urls";
 import ServiceDownPage from "./Pages/ServiceDown";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
-const router = createBrowserRouter([
+import LoginPage from "./Pages/LoginPage";
+import HomePage from "./Pages/HomePage";
+
+
+export const router = createBrowserRouter([
   {
     path: "/",
     element: <LoginPage />,
+  },
+  {
+    path: "/home",
+    element: <HomePage />,
   },
   {
     path: "/serviceDown",
