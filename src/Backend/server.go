@@ -2,6 +2,8 @@ package main
 
 import (
 	"context"
+	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"os"
@@ -45,7 +47,6 @@ func main() {
 	// Routes
 	e.GET("/status", status)
 	e.POST("/oauth2/google", oauthGoogle)
-	e.POST("/oauth2/google/callback", oauthGoogleCallback)
 
 	e.Logger.Fatal(e.Start("localhost:1323"))
 	e.Close()
@@ -68,22 +69,27 @@ func oauthGoogle(c echo.Context) error {
 	tok, err := config.Exchange(context.Background(), u.Code)
 	if err != nil {
 		log.Fatal(err)
+		return c.NoContent(http.StatusInternalServerError)
 	}
 
 	client := config.Client(context.Background(), tok)
 
-	resp, err := client.Get("https://people.googleapis.com/v1/people/me?personFields=names,emailAddresses")
+	resp, err := client.Get("https://people.googleapis.com/v1/people/me?personFields=names.nicknames,photos")
 	if err != nil {
 		log.Fatal(err)
+		return c.NoContent(http.StatusInternalServerError)
+
 	}
 
-	c.Logger().Info(resp.Body)
+	data, err := io.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatal(err)
+		return c.NoContent(http.StatusInternalServerError)
+	}
 
-	return c.JSON(http.StatusOK, resp.Body)
-}
+	respString := string(data)
 
-func oauthGoogleCallback(c echo.Context) error {
-	c.Logger().Info("test")
-	return c.JSON(http.StatusOK, "resp.Body")
+	fmt.Println(respString)
 
+	return c.NoContent(http.StatusOK)
 }

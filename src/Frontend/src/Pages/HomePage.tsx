@@ -4,13 +4,13 @@ import Typography from "@mui/material/Typography";
 
 function MyBoxes() {
   return (
-    <Grid container spacing={-1} style={{ height: "100vh", padding: "15px" }}>
+    <Grid container spacing={3} style={{ height: "100vh", padding: "15px" }}>
       {/* Left Side */}
       <Grid item xs={12} sm={3}>
         <Box
           sx={{
             backgroundColor: "#18191A",
-            height: "20%",
+            height: "30%",
             margin: "10px",
             borderRadius: 2,
             display: "flex",
@@ -25,7 +25,7 @@ function MyBoxes() {
         <Box
           sx={{
             backgroundColor: "#18191A",
-            height: "75%",
+            height: "70%",
             margin: "10px",
             borderRadius: 2,
             display: "flex",
@@ -44,7 +44,7 @@ function MyBoxes() {
         <Box
           sx={{
             backgroundColor: "#18191A",
-            height: "85%",
+            height: "80%",
             margin: "10px",
             borderRadius: 2,
             display: "flex",
@@ -60,7 +60,7 @@ function MyBoxes() {
         <Box
           sx={{
             backgroundColor: "#18191A",
-            height: "10%",
+            height: "20%",
             margin: "10px",
             borderRadius: 2,
             display: "flex",
@@ -79,7 +79,7 @@ function MyBoxes() {
         <Box
           sx={{
             backgroundColor: "#18191A",
-            height: "96%",
+            height: "100%",
             margin: "10px",
             borderRadius: 2,
             display: "flex",
