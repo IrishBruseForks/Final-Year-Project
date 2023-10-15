@@ -1,33 +1,31 @@
 import { Alert, Grid, LinearProgress, Stack } from "@mui/material";
-import axios from "axios";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Constants from "../Utility/Constants";
+import Api from "../Utility/Api";
 
 function ServiceDownPage() {
   const navigate = useNavigate();
 
-  async function checkStatus() {
-    try {
-      await axios.get(Constants.BackendUrl + "/status");
-      navigate("/");
-    } catch (error) {
-      // Catch error
-    }
-  }
-
   useEffect(() => {
+    const checkStatus = async () => {
+      try {
+        await Api.Status();
+        navigate("/");
+      } catch (error) {
+        // Catch Error
+      }
+    };
+
     checkStatus();
 
-    const interval = setInterval(async () => {
+    const interval = setInterval(() => {
       // Check to see if the backend is running
       // if there is an exception redirect to service down page and keep retrying connection
-      await checkStatus();
+      checkStatus();
     }, 3000);
 
     return () => clearInterval(interval);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [navigate]);
 
   return (
     <Stack>

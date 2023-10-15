@@ -1,7 +1,21 @@
-import { Typography } from "@mui/material";
+import { Alert, Grid, Stack } from "@mui/material";
 
 function ErrorPage() {
-  return <Typography variant="h1">Error</Typography>;
+  return (
+    <Stack>
+      <Grid
+        container
+        direction="column"
+        alignItems="center"
+        justifyContent="center"
+        sx={{ minHeight: "99vh" }}
+      >
+        <Alert variant="filled" severity="error">
+          Error 404 - Page not found
+        </Alert>
+      </Grid>
+    </Stack>
+  );
 }
 
 export default ErrorPage;

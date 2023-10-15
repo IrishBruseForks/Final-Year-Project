@@ -5,18 +5,14 @@ import Image from "../Components/Image";
 import Constants from "../Utility/Constants";
 import { useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import Api from "../Utility/Api";
+import { OAuth } from "../Types/ServerTypes";
 
 function LoginPage() {
-  const navigate = useNavigate();
-
   const login = useGoogleLogin({
-    onSuccess: async (tokenResponse) => {
-      console.log(tokenResponse);
-      const resp = await axios.post(Constants.BackendUrl + "/oauth2/google", {
-        code: tokenResponse.code,
-      });
-      console.log(resp.data);
+    onSuccess: async (tokenResponse: OAuth) => {
+      const resp = await Api.AuthGoogle(tokenResponse.code);
+      localStorage.setItem("access-token", resp.token);
     },
     onError: (error) => {
       console.error(error);
@@ -24,9 +20,15 @@ function LoginPage() {
     flow: "auth-code",
   });
 
-  const navigateToHomePage = () => {
-    navigate("/home");
+  const Test = async () => {
+    const t = await axios.get(Constants.BackendUrl + "test", {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("access-token"),
+      },
+    });
+    console.log(t);
   };
+
   useEffect(() => {
     document.title = Constants.AppName("Login");
   }, []);
@@ -37,7 +39,6 @@ function LoginPage() {
       alignItems={"center"}
       sx={{ minHeight: "100vh", pt: 8 }}
     >
-      {" "}
       <Image eager src="./Logo.png" alt="Logo" width="24rem" height="24rem" />
       <Typography variant="h2" align="center" sx={{ mb: 2, mt: 2 }}>
         {Constants.AppName()}
@@ -45,11 +46,11 @@ function LoginPage() {
       <Typography sx={{ mb: 8 }}>
         The catalyst to all your messaging needs
       </Typography>
-      <Button variant="outlined" onClick={navigateToHomePage}>
-        Homepage
-      </Button>
-      <Button variant="contained" onClick={() => login()}>
+      <Button variant="contained" onClick={login}>
         Login With Google <Google sx={{ margin: "0 0 0 0.5rem" }} />
+      </Button>
+      <Button variant="contained" onClick={() => Test()}>
+        Test
       </Button>
     </Stack>
   );
