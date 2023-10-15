@@ -1,4 +1,4 @@
-![](/Documentation/images/atu1.jpg)
+![](./images/atu1.jpg)
 
 # B.Sc. (Honours) in Software Development Applied Project & Minor Dissertation
 
@@ -9,7 +9,6 @@
 <span > <strong style="color: red;">2. Supervisor Name:</strong><span style="border: 1px solid red; padding: 5px; margin-left:10px;">Gemma O'Callaghan</span></span>
 
 <span > <strong style="color: red;">3. Project Name:</strong><span style="border: 1px solid red; padding: 5px; margin-left:10px;">AI-Integrated Messenger Application - Chatalyst</span></span>
-
 
 <h1 style="color: red;">4. Project Context:</h1>
 <div style="border: 1px solid red; padding: 10px; margin-bottom: 20px;">
@@ -45,8 +44,8 @@ As mentioned previously we hope to develop and create an AI-Integrated messaging
 
 <div style="border: 1px solid red; padding: 10px; margin-bottom: 20px;">
 
-
 - **Development of a User-Friendly Interface (UI)**
+
   - **Overview:** Create a UI that is user friendly and aesthetically pleasing.
   - **Components:**
     - UI/UX to design the interface before implementation.
@@ -102,7 +101,6 @@ As mentioned previously we hope to develop and create an AI-Integrated messaging
 
 <div style="border: 1px solid red; padding: 10px; margin-bottom: 20px;">
 
-
 Our AI-integrated messaging application will be developed using the following technologies and system architecture. system architecture:
 
 **Frontend:**
@@ -134,13 +132,11 @@ Our AI-integrated messaging application will be developed using the following te
 **AI – Integration**
 
 - The integration of AI capabilities, powered by leading-edge machine learning algorithms, enhances user experience by offering features such as smart replies, news and weather information and others as mentioned above. This combination of technologies ensures our application is scalable, responsive, and user-friendly, catering to the modern needs of messaging platforms and our target user audience.
-- 
-</div>
+- </div>
 
 <h1 style="color: red;">7. Schedule of Work</h1>
 
 <div style="border: 1px solid red; padding: 10px; margin-bottom: 20px;">
-
 
 Our project employs the Agile Methodology 'Scrum'.
 
@@ -151,11 +147,11 @@ At the end of each sprint we will do a sprint retrospective going over what we f
 
 - We have created a JIRA to organise our workload into 'sprints' and have created a Gantt Chart and Kanban board to keep our work organised and we can clearly see when project deadlines and goals are to be met this is just the initial layout of work as the requirements become more clear we will add more tasks to it.
 
-![](/Documentation/images/jira1.png)
+![](./images/jira1.png)
 '_Jira -_ [https://ethanryanfinalyearproject.atlassian.net/jira/software/projects/KAN/boards/1/timeline?timeline=MONTHS](https://ethanryanfinalyearproject.atlassian.net/jira/software/projects/KAN/boards/1/timeline?timeline=MONTHS)
 _Our work load Gantt Chart from now to December 2023'_
 
-![](/Documentation/images/jira3.png)
+![](./images/jira3.png)
 
 ## Sprint 1
 
@@ -185,4 +181,4 @@ Fix any outstanding bugs, polish the application functionality and finish the UI
 
 </div>
 
-![](/Documentation/images/atu2.png)
+![](./images/atu2.png)
