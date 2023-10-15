@@ -5,7 +5,7 @@ packages:
 
     # Where this output should be written to.
     # If you specify a folder it will be written to a file `index.ts` within that folder. By default it is written into the Golang package folder.
-    output_path: "../Frontend/src/Utility/apiTypes.ts"
+    output_path: "../Frontend/src/Types/ServerTypes.ts"
 
     # Customize the indentation (use \t if you want tabs)
     indent: "  "
@@ -13,13 +13,13 @@ packages:
     # Specify your own custom type translations, useful for custom types, `time.Time` and `null.String`.
     # Be default unrecognized types will be `any`.
     type_mappings:
-      time.Time: "string"
-      my.Type: "SomeType"
 
     # This content will be put at the top of the output Typescript file, useful for importing custom types.
     frontmatter: |
 
     # Filenames of Go source files that should not be included
     # in the output.
-    exclude_files:
-      - ""
+    include_files:
+      - "apiTypes.go"
+
+    PreserveComments: "types"
