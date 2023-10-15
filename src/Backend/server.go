@@ -149,8 +149,6 @@ func oauthGoogle(c echo.Context) error {
 	}
 	defer statement.Close()
 
-	log.Println("test")
-
 	statement.Exec(idTokenResp.Subject, idTokenResp.Name, idTokenResp.Picture)
 
 	claims := &AuthJwt{
@@ -169,8 +167,6 @@ func oauthGoogle(c echo.Context) error {
 		log.Fatal(err)
 		return echo.ErrInternalServerError
 	}
-
-	db.Close()
 
 	return c.JSON(http.StatusOK, OAuthResponse{
 		Token: tokenString,

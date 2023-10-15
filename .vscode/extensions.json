@@ -1,3 +1,8 @@
 {
-  "recommendations": ["esbenp.prettier-vscode", "golang.go"]
+  "recommendations": [
+    "esbenp.prettier-vscode",
+    "golang.go",
+    "qwtel.sqlite-viewer",
+    "dbaeumer.vscode-eslint"
+  ]
 }

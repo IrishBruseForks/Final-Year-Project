@@ -1,33 +1,27 @@
-import { Button, Stack, Typography } from "@mui/material";
 import Google from "@mui/icons-material/Google";
+import { Button, Stack, Typography } from "@mui/material";
 import { useGoogleLogin } from "@react-oauth/google";
-import Image from "../Components/Image";
-import Constants from "../Utility/Constants";
 import { useEffect } from "react";
-import axios from "axios";
-import Api from "../Utility/Api";
+import { useNavigate } from "react-router-dom";
+import Image from "../Components/Image";
 import { OAuth } from "../Types/ServerTypes";
+import Api from "../Utility/Api";
+import Constants from "../Utility/Constants";
 
 function LoginPage() {
+  const navigate = useNavigate();
+
   const login = useGoogleLogin({
     onSuccess: async (tokenResponse: OAuth) => {
       const resp = await Api.AuthGoogle(tokenResponse.code);
-      localStorage.setItem("access-token", resp.token);
+      localStorage.setItem(Constants.AccessTokenKey, resp.token);
+      navigate("/");
     },
     onError: (error) => {
       console.error(error);
     },
     flow: "auth-code",
   });
-
-  const Test = async () => {
-    const t = await axios.get(Constants.BackendUrl + "test", {
-      headers: {
-        Authorization: "Bearer " + localStorage.getItem("access-token"),
-      },
-    });
-    console.log(t);
-  };
 
   useEffect(() => {
     document.title = Constants.AppName("Login");
@@ -48,9 +42,6 @@ function LoginPage() {
       </Typography>
       <Button variant="contained" onClick={login}>
         Login With Google <Google sx={{ margin: "0 0 0 0.5rem" }} />
-      </Button>
-      <Button variant="contained" onClick={() => Test()}>
-        Test
       </Button>
     </Stack>
   );

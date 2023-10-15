@@ -10,13 +10,23 @@ import Api from "./Utility/Api";
 import Constants from "./Utility/Constants";
 
 function App() {
-  // Check to see if the backend is running
-  // if there is an exception redirect to service down page and keep retrying connection
-
   useEffect(() => {
+    // Check to see if the backend is running
+    // if there is an exception redirect to service down page and keep retrying connection
     Api.Status().catch(() => {
       router.navigate("/serviceDown");
     });
+
+    // Check if we need to login again because we are either
+    // missing the access token
+    const token = localStorage.getItem(Constants.AccessTokenKey);
+
+    if (token === null) {
+      router.navigate("/login");
+    } else {
+      // We have a token
+      // TODO: check if the token is expired and refresh it or login
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -26,7 +36,7 @@ function App() {
       element: <LoginPage />,
     },
     {
-      path: "/home",
+      path: "/",
       element: <HomePage />,
     },
     {
@@ -39,18 +49,43 @@ function App() {
     },
   ]);
 
+  // For debugging the theme to disable set to null
+  const themeOverride = null;
+
+  const darkThemeMq = window.matchMedia("(prefers-color-scheme: dark)");
+  const [mode, setMode] = React.useState<"light" | "dark">(
+    themeOverride !== null
+      ? themeOverride
+      : darkThemeMq.matches
+      ? "dark"
+      : "light"
+  );
   const theme = createTheme({
     palette: {
-      mode: "dark",
+      mode: mode,
     },
     typography: {
       fontFamily: ["Poppins", '"Helvetica Neue"', "Arial", "sans-serif"].join(
         ","
       ),
     },
-    shape: {
-      borderRadius: 50,
+    components: {
+      MuiButton: {
+        styleOverrides: {
+          root: {
+            borderRadius: 28,
+          },
+        },
+      },
     },
+  });
+
+  darkThemeMq.addEventListener("change", (e) => {
+    if (e.matches) {
+      setMode("dark");
+    } else {
+      setMode("light");
+    }
   });
 
   return (
