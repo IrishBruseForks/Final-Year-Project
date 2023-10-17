@@ -36,6 +36,7 @@ func main() {
 	runEchoServer()
 }
 
+
 func runEchoServer() {
 	e := echo.New()
 

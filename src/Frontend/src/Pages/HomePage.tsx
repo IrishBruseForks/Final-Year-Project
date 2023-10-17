@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { useState } from "react";
+import FriendsPanel from "../Components/FriendsPanel";
 
 function HomePage() {
   const [opened, setOpened] = useState(false);
@@ -86,20 +87,10 @@ function HomePage() {
             onOpen={() => setOpened(true)}
             onClose={() => setOpened(false)}
           >
-            <Grid item xs={12} md={3}>
-              <Stack spacing={2} sx={{ height: "100%", pb: { xs: 2, md: 0 } }}>
-                <Paper sx={{ height: "100%" }}>1</Paper>
-                <Paper sx={{ height: "100%" }}>2</Paper>
-              </Stack>
-            </Grid>
+            <FriendsPanel></FriendsPanel>
           </SwipeableDrawer>
         ) : (
-          <Grid item xs={12} md={3}>
-            <Stack spacing={2} sx={{ height: "100%", pb: { xs: 2, md: 0 } }}>
-              <Paper sx={{ height: "100%" }}>1</Paper>
-              <Paper sx={{ height: "100%" }}>2</Paper>
-            </Stack>
-          </Grid>
+          <FriendsPanel></FriendsPanel>
         )}
         <Grid item xs={12} md={9}>
           <Stack spacing={2} sx={{ height: "100%" }}>

@@ -1,0 +1,33 @@
+.LSideBarHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background-color: #1e2124;
+  color: white; /* color of text */
+  border-bottom: 3px solid black;
+}
+
+.LSideBarFriends {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background-color: #1e2124;
+  color: white; /* color of text */
+  border-bottom: 3px solid black;
+}
+
+.LSideBarChats {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background-color: #1e2124;
+  color: white; /* color of text */
+  border-bottom: 3px solid black;
+}
+
+.boldText {
+  font-weight: bold;
+}
