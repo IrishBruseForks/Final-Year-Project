@@ -32,7 +32,7 @@ function FriendsPanel() {
     },
   ];
   return (
-    <Grid item xs={12} md={3} sx={{ width: { xs: "75vw" } }}>
+    <Box>
       <Box
         sx={{
           p: 1,
@@ -61,7 +61,7 @@ function FriendsPanel() {
           </>
         ))}
       </Stack>
-    </Grid>
+    </Box>
   );
 }
 
