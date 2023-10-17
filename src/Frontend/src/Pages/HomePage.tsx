@@ -93,8 +93,8 @@ function HomePage() {
             </Grid>
           </SwipeableDrawer>
         ) : (
-          <Grid item md={3}>
-            <Paper sx={{ width: "100%" }}>
+          <Grid item md={3} sx={{ width: "100%" }}>
+            <Paper sx={{ height: "100%" }}>
               <FriendsPanel></FriendsPanel>
             </Paper>
           </Grid>
