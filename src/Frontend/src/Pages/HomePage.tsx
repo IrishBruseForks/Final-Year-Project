@@ -82,16 +82,24 @@ function HomePage() {
       </AppBar>
       <Grid container columnSpacing={2} sx={{ height: "100%" }}>
         {isMobile ? (
+          // Mobile
           <SwipeableDrawer
             open={opened}
             onOpen={() => setOpened(true)}
             onClose={() => setOpened(false)}
           >
-            <FriendsPanel></FriendsPanel>
+            <Grid item sx={{ width: { xs: "75vw" } }}>
+              <FriendsPanel></FriendsPanel>
+            </Grid>
           </SwipeableDrawer>
         ) : (
-          <FriendsPanel></FriendsPanel>
+          <Grid item md={3}>
+            <Paper sx={{ width: "100%" }}>
+              <FriendsPanel></FriendsPanel>
+            </Paper>
+          </Grid>
         )}
+        {/* Desktop */}
         <Grid item xs={12} md={9}>
           <Stack spacing={2} sx={{ height: "100%" }}>
             <Paper sx={{ height: "100%" }}>3</Paper>
