@@ -2,9 +2,11 @@ import { Avatar, Box, Grid, Stack, Typography } from "@mui/material";
 
 type Props = {
   username: string;
+  lastMessage: string;
+  profilePic: string;
 };
 
-function ChatItem({ username }: Props) {
+function ChatItem({ username, lastMessage, profilePic }: Props) {
   return (
     <Box
       sx={{
@@ -16,15 +18,15 @@ function ChatItem({ username }: Props) {
     >
       {/* Profile picture (Avatar component can be used here) */}
       <Avatar
-        src=""
+        src={profilePic}
         alt="Profile Picture"
         sx={{ width: 60, height: 60, marginRight: 2 }}
       />
 
       {/* Name and other text stacked vertically */}
       <Stack direction="column" spacing={1}>
-        <Typography variant="h6">{username}</Typography>
-        <Typography variant="body2">Other Text Here</Typography>
+        <Typography variant="h5">{username}</Typography>
+        <Typography>{lastMessage}</Typography>
       </Stack>
     </Box>
   );
