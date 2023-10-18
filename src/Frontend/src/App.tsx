@@ -69,6 +69,11 @@ function App() {
           },
         },
       },
+      MuiDrawer: {
+        styleOverrides: {
+          paper: { backgroundColor: "#272727", backgroundImage: "linear-gradient(rgba(255, 255, 255, 0.01), rgba(255, 255, 255, 0.0))" },
+        },
+      },
     },
   });
 

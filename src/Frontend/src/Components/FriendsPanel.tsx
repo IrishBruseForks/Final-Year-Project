@@ -1,8 +1,6 @@
 import AddIcon from "@mui/icons-material/Add";
 import { Box, Divider, IconButton, Stack, Typography } from "@mui/material";
 import ChatItem from "./ChatItem";
-import Api from "../Utility/Api";
-import { useEffect } from "react";
 
 function FriendsPanel() {
   // Replacing this with API later
