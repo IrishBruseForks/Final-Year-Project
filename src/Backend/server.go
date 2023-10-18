@@ -7,8 +7,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"log"
 	"os"
+	"time"
 
 	_ "github.com/go-sql-driver/mysql"
 
@@ -35,7 +35,11 @@ func main() {
 }
 
 func runEchoServer() {
+	// Clear console output for debugging
+	fmt.Print("\033[H\033[2J")
+
 	e := echo.New()
+	e.HideBanner = true
 
 	addMiddleware(e)
 	addRoutes(e)
@@ -50,7 +54,7 @@ func addRoutes(e *echo.Echo) {
 
 	// Message Apis
 	e.GET("/channels", getChannels)
-
+	e.POST("/channels", postChannels)
 }
 
 func addMiddleware(e *echo.Echo) {
@@ -67,7 +71,6 @@ func addMiddleware(e *echo.Echo) {
 	e.Logger.SetLevel(0)
 
 	secret := getJwtSecretBytes()
-	log.Println(len(secret))
 
 	e.Use(echojwt.WithConfig(echojwt.Config{
 		SigningKey: secret,
@@ -76,9 +79,6 @@ func addMiddleware(e *echo.Echo) {
 				return true
 			}
 			return false
-		},
-		NewClaimsFunc: func(c echo.Context) jwt.Claims {
-			return new(AuthJwt)
 		},
 	}))
 }
@@ -122,17 +122,12 @@ func initDatabase() {
 
 	_, err = db.Exec(`INSERT INTO Users (userId,username,picture) VALUES (?,?,?)`, 12, "Test Account", "https://picsum.photos/200")
 	if err != nil {
-		log.Println(err)
+		fmt.Println(err)
 	}
 }
 
-type AuthJwt struct {
-	Name                 string `json:"name"`
-	Picture              string `json:"picture"`
-	jwt.RegisteredClaims `tstype:",extends"`
-}
-
 type GoogleJwt struct {
+	Subject              string `json:"sub"`
 	Name                 string `json:"name"`
 	Picture              string `json:"picture"`
 	jwt.RegisteredClaims `tstype:",extends"`
@@ -141,18 +136,18 @@ type GoogleJwt struct {
 func getJwtSecretBytes() []byte {
 	jwtSecret, found := os.LookupEnv("JwtSecret")
 	if !found {
-		log.Fatal(".env missing JwtSecret")
+		panic(".env missing JwtSecret")
 	}
 
 	secretBytes, err := base64.StdEncoding.DecodeString(jwtSecret)
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
 
 	return secretBytes
 }
 
-func exchangeTokenWithGoogle(u *OAuth, c echo.Context) (*GoogleJwt, error) {
+func exchangeTokenWithGoogle(u *OAuth) (*GoogleJwt, error) {
 	tok, err := config.Exchange(context.Background(), u.Code)
 	if err != nil {
 		return nil, err
@@ -175,4 +170,8 @@ func exchangeTokenWithGoogle(u *OAuth, c echo.Context) (*GoogleJwt, error) {
 	json.Unmarshal(bytes, idTokenResp)
 
 	return idTokenResp, nil
+}
+
+func log(value any) {
+	fmt.Println(time.Now(), value)
 }

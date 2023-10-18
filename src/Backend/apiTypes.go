@@ -5,7 +5,9 @@ type OAuth struct {
 }
 
 type OAuthResponse struct {
-	Token string `json:"token"`
+	Token          string `json:"token"`
+	Sub            string `json:"sub"`
+	ProfilePicture string `json:"profilePicture"`
 }
 
 type ChannelResponse struct {

@@ -1,4 +1,4 @@
-module myapp
+module chatalyst
 
 go 1.21.1
 

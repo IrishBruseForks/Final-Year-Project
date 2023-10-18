@@ -1,31 +1,34 @@
 import { AccountCircle, Menu as MenuIcon } from "@mui/icons-material";
-import {
-  AppBar,
-  Box,
-  IconButton,
-  Menu,
-  MenuItem,
-  Paper,
-  Stack,
-  SwipeableDrawer,
-  Toolbar,
-  Typography,
-  useMediaQuery,
-} from "@mui/material";
+import { AppBar, Box, IconButton, Menu, MenuItem, Paper, Stack, SwipeableDrawer, Toolbar, Typography, useMediaQuery } from "@mui/material";
 import Grid from "@mui/material/Grid";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FriendsPanel from "../Components/FriendsPanel";
+import Constants from "../Utility/Constants";
+import Image from "../Components/Image";
 
 function HomePage() {
   const [opened, setOpened] = useState(false);
+  const [profilePicture, setProfilePicture] = useState<string>("");
   const isMobile = useMediaQuery("(max-width:900px)");
+
+  useEffect(() => {
+    document.title = Constants.AppName("Home");
+    setProfilePicture(localStorage.getItem(Constants.ProfilePictureKey)!);
+  }, []);
+
+  const toggleDrawer = (state: boolean) => {
+    setOpened(state);
+  };
 
   return (
     <Box sx={{ height: "100vh" }}>
-      <AppBar position="static">
+      <AppBar position="sticky">
         <Toolbar>
           {isMobile && (
             <IconButton
+              onClick={() => {
+                toggleDrawer(true);
+              }}
               size="large"
               edge="start"
               color="inherit"
@@ -40,15 +43,8 @@ function HomePage() {
           </Typography>
           {true && (
             <div>
-              <IconButton
-                size="large"
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                // onClick={}
-                color="inherit"
-              >
-                <AccountCircle />
+              <IconButton size="large" aria-label="account of current user" aria-controls="menu-appbar" aria-haspopup="true" color="inherit">
+                <Image src={profilePicture} alt="Profile Picture" sx={{ height: "2rem" }} />
               </IconButton>
               <Menu
                 id="menu-appbar"
@@ -84,9 +80,16 @@ function HomePage() {
         {isMobile ? (
           // Mobile
           <SwipeableDrawer
+            anchor="left"
             open={opened}
-            onOpen={() => setOpened(true)}
-            onClose={() => setOpened(false)}
+            onOpen={() => {
+              console.log("open");
+              toggleDrawer(true);
+            }}
+            onClose={() => {
+              console.log("close");
+              toggleDrawer(false);
+            }}
           >
             <Grid item sx={{ width: { xs: "75vw" } }}>
               <FriendsPanel></FriendsPanel>

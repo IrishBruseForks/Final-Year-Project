@@ -1,4 +1,5 @@
 {
+  "cSpell.language": "en-GB",
   "cSpell.words": [
     "Chatalyst",
     "Conneely",
@@ -12,22 +13,36 @@
     "signup",
     "structs"
   ],
-  "cSpell.language": "en-GB",
+  "emeraldwalk.runonsave": {
+    "autoClearConsole": false,
+    "commands": [
+      {
+        "cmd": "dbml2sql ${workspaceRoot}/src/Backend/sql/database.dbml --mysql -o ${workspaceRoot}/src/Backend/sql/database.sql",
+        "isAsync": true,
+        "match": "database\\.dbml"
+      }
+    ]
+  },
+  "files.exclude": {
+    "**/.DS_Store": true,
+    "**/.git": true,
+    "**/.hg": true,
+    "**/.svn": true,
+    "**/CVS": true,
+    "**/Thumbs.db": true,
+    "**/tmp": true
+  },
   "go.inlayHints.assignVariableTypes": true,
   "go.inlayHints.compositeLiteralFields": true,
   "go.inlayHints.compositeLiteralTypes": true,
   "go.inlayHints.parameterNames": true,
   "typescript.implementationsCodeLens.enabled": true,
+  "typescript.inlayHints.functionLikeReturnTypes.enabled": true,
+  "typescript.inlayHints.parameterNames.enabled": "all",
+  "typescript.inlayHints.parameterTypes.enabled": true,
+  "typescript.inlayHints.propertyDeclarationTypes.enabled": true,
+  "typescript.inlayHints.variableTypes.enabled": true,
   "typescript.referencesCodeLens.enabled": true,
   "typescript.referencesCodeLens.showOnAllFunctions": true,
-  "emeraldwalk.runonsave": {
-    "autoClearConsole": false,
-    "commands": [
-      {
-        "match": "*.dbml",
-        "isAsync": true,
-        "cmd": "echo 'I run for all files.'"
-      }
-    ]
-  }
+  "typescript.tsserver.experimental.enableProjectDiagnostics": true
 }

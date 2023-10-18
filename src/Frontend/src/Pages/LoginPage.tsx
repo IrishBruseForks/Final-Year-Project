@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { OAuth } from "../Types/ServerTypes";
 import Api from "../Utility/Api";
 import Constants from "../Utility/Constants";
+import Image from "../Components/Image";
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -13,7 +14,11 @@ function LoginPage() {
   const login = useGoogleLogin({
     onSuccess: async (tokenResponse: OAuth) => {
       const resp = await Api.AuthGoogle(tokenResponse.code);
+
       localStorage.setItem(Constants.AccessTokenKey, resp.token);
+      localStorage.setItem(Constants.UserIdKey, resp.sub);
+      localStorage.setItem(Constants.ProfilePictureKey, resp.profilePicture);
+
       navigate("/");
     },
     onError: (error) => {
@@ -28,7 +33,7 @@ function LoginPage() {
 
   return (
     <Stack direction={"column"} alignItems={"center"} sx={{ minHeight: "100vh", pt: 8 }}>
-      <img src="./Logo.png" alt="Logo" title="Logo" width="24rem" height="24rem" />
+      <Image src="./Logo.png" alt="Logo" sx={{ width: "24rem", height: "24rem" }} />
 
       <Typography variant="h2" align="center" sx={{ mb: 2, mt: 2 }}>
         {Constants.AppName()}

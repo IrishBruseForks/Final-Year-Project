@@ -41,10 +41,7 @@ function FriendsPanel() {
       <Divider></Divider>
       <Stack direction={"column"} spacing={1}>
         {userArray.map((user) => (
-          <>
-            <ChatItem username={user.username} lastMessage={user.lastMessage} profilePic={user.profilePic} key={user.username}></ChatItem>
-            <Divider />
-          </>
+          <ChatItem username={user.username} lastMessage={user.lastMessage} profilePic={user.profilePic} key={user.username}></ChatItem>
         ))}
       </Stack>
     </Box>

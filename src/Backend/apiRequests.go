@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-	"log"
 	"net/http"
 	"time"
 
@@ -14,32 +12,38 @@ func getStatus(c echo.Context) error {
 	return c.String(http.StatusOK, "Alive")
 }
 
+type AuthJwt struct {
+	Name                 string `json:"name"`
+	Picture              string `json:"picture"`
+	jwt.RegisteredClaims `tstype:",extends"`
+}
+
 func postAuthGoogle(c echo.Context) error {
 	u := new(OAuth)
 	if err := c.Bind(u); err != nil {
-		log.Fatal(err)
-		return err
+		log(err)
+		return echo.ErrInternalServerError
 	}
 
-	idTokenResp, err := exchangeTokenWithGoogle(u, c)
+	idTokenResp, err := exchangeTokenWithGoogle(u)
 	if err != nil {
-		fmt.Println(err)
+		log(err)
 		return echo.ErrInternalServerError
 	}
 
 	statement, err := db.Prepare(`INSERT INTO Users (userId,username,picture) VALUES (?,?,?)`)
 	if err != nil {
-		fmt.Println(err)
+		log(err)
 		return echo.ErrInternalServerError
 	}
 	defer statement.Close()
 
-	fmt.Println(idTokenResp.Subject)
+	log(idTokenResp.Subject)
 
+	// TODO check if value is in db already
 	_, err = statement.Exec(idTokenResp.Subject, idTokenResp.Name, idTokenResp.Picture)
 	if err != nil {
-		fmt.Println(err)
-		return echo.ErrInternalServerError
+		log(err)
 	}
 
 	claims := &AuthJwt{
@@ -55,43 +59,13 @@ func postAuthGoogle(c echo.Context) error {
 
 	tokenString, err := jsonToken.SignedString(getJwtSecretBytes())
 	if err != nil {
-		log.Fatal(err)
+		log(err)
 		return echo.ErrInternalServerError
 	}
 
 	return c.JSON(http.StatusOK, OAuthResponse{
-		Token: tokenString,
+		Token:          tokenString,
+		Sub:            idTokenResp.Subject,
+		ProfilePicture: idTokenResp.Picture,
 	})
-}
-
-func getChannels(c echo.Context) error {
-	// TODO return only chats the user is in
-	rows, err := db.Query("SELECT username, picture from Users;")
-	if err != nil {
-		fmt.Println(err)
-		return echo.ErrInternalServerError
-	}
-
-	var channels []ChannelResponse
-
-	for rows.Next() {
-		var channel ChannelResponse
-
-		channel.LastMessage = "TODO add get latest message"
-
-		err := rows.Scan(&channel.Username, &channel.ProfilePic)
-		if err != nil {
-			fmt.Println(err)
-			return echo.ErrInternalServerError
-		}
-
-		channels = append(channels, channel)
-	}
-
-	if err = rows.Err(); err != nil {
-		fmt.Println(err)
-		return echo.ErrInternalServerError
-	}
-
-	return c.JSON(http.StatusOK, channels)
 }

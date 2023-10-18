@@ -1,4 +1,4 @@
-import { Avatar, Box, Stack, Typography } from "@mui/material";
+import { Avatar, Box, Divider, Stack, Typography } from "@mui/material";
 
 type Props = {
   username: string;
@@ -24,6 +24,7 @@ function ChatItem({ username, lastMessage, profilePic }: Props) {
         <Typography variant="h5">{username}</Typography>
         <Typography>{lastMessage}</Typography>
       </Stack>
+      <Divider />
     </Box>
   );
 }

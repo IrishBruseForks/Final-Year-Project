@@ -1,6 +1,6 @@
-import axios, { AxiosResponse } from "axios";
-import Constants from "./Constants";
+import axios from "axios";
 import { ChannelResponse, OAuthResponse } from "../Types/ServerTypes";
+import Constants from "./Constants";
 
 /**
  * POST /auth/google
@@ -24,7 +24,15 @@ function Status(): Promise<any> {
 /**
  * GET /channels
  */
-function Channels(): Promise<ChannelResponse[]> {
+function GetChannels(): Promise<ChannelResponse[]> {
+  const url = Constants.BackendUrl + "channels";
+  return AuthGet<ChannelResponse[]>(url);
+}
+
+/**
+ * POST /channels
+ */
+function PostChannels() {
   const url = Constants.BackendUrl + "channels";
   return AuthGet<ChannelResponse[]>(url);
 }
@@ -39,8 +47,19 @@ async function AuthGet<Res>(url: string): Promise<Res> {
   return resp.data;
 }
 
+async function AuthPost<Res, Data>(url: string, data: Data): Promise<Res> {
+  const resp = await axios.post<Res>(Constants.BackendUrl + url, data, {
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem(Constants.AccessTokenKey),
+    },
+  });
+
+  return resp.data;
+}
+
 export default {
   AuthGoogle,
   Status,
-  Channels,
+  GetChannels,
+  PostChannels,
 };

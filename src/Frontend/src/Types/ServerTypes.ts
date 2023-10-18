@@ -8,6 +8,8 @@ export interface OAuth {
 }
 export interface OAuthResponse {
   token: string;
+  sub: string;
+  profilePicture: string;
 }
 export interface ChannelResponse {
   username: string;
