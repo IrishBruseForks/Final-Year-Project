@@ -6,15 +6,19 @@ Table Users {
 
 Table Channels {
     chanId bigint [pk]
-    lastMessage bigint [ref: - Messages.msgId]
+    lastMessage bigint
 }
 
 Table Messages {
     msgId bigint [pk]
-    chanId bigint [ref: > Channels.chanId]
-    sentBy char(32) [ref: > Users.userId]
+    chanId bigint
+    sentBy char(32)
     sentOn timestamp
 }
 
 // Relations
 Ref Users_Channels: Channels.chanId <> Users.userId
+
+Ref: Channels.lastMessage - Messages.msgId
+Ref: Messages.chanId > Channels.chanId
+Ref: Messages.sentBy > Users.userId

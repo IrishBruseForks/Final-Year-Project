@@ -1,6 +1,6 @@
 -- SQL dump generated using DBML (dbml-lang.org)
 -- Database: MySQL
--- Generated at: 2023-10-17T22:31:41.274Z
+-- Generated at: 2023-10-18T20:53:23.933Z
 
 CREATE TABLE `Users` (
   `userId` char(32) PRIMARY KEY,
@@ -20,12 +20,6 @@ CREATE TABLE `Messages` (
   `sentOn` timestamp
 );
 
-ALTER TABLE `Channels` ADD FOREIGN KEY (`lastMessage`) REFERENCES `Messages` (`msgId`);
-
-ALTER TABLE `Messages` ADD FOREIGN KEY (`chanId`) REFERENCES `Channels` (`chanId`);
-
-ALTER TABLE `Messages` ADD FOREIGN KEY (`sentBy`) REFERENCES `Users` (`userId`);
-
 CREATE TABLE `Channels_Users` (
   `Channels_chanId` bigint,
   `Users_userId` char(32),
@@ -36,3 +30,9 @@ ALTER TABLE `Channels_Users` ADD FOREIGN KEY (`Channels_chanId`) REFERENCES `Cha
 
 ALTER TABLE `Channels_Users` ADD FOREIGN KEY (`Users_userId`) REFERENCES `Users` (`userId`);
 
+
+ALTER TABLE `Messages` ADD FOREIGN KEY (`msgId`) REFERENCES `Channels` (`lastMessage`);
+
+ALTER TABLE `Messages` ADD FOREIGN KEY (`chanId`) REFERENCES `Channels` (`chanId`);
+
+ALTER TABLE `Messages` ADD FOREIGN KEY (`sentBy`) REFERENCES `Users` (`userId`);
