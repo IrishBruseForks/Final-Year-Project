@@ -9,3 +9,8 @@ export interface OAuth {
 export interface OAuthResponse {
   token: string;
 }
+export interface ChannelResponse {
+  username: string;
+  lastMessage: string;
+  profilePic: string;
+}

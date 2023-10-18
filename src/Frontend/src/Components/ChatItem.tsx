@@ -1,4 +1,4 @@
-import { Avatar, Box, Grid, Stack, Typography } from "@mui/material";
+import { Avatar, Box, Stack, Typography } from "@mui/material";
 
 type Props = {
   username: string;
@@ -17,11 +17,7 @@ function ChatItem({ username, lastMessage, profilePic }: Props) {
       }}
     >
       {/* Profile picture (Avatar component can be used here) */}
-      <Avatar
-        src={profilePic}
-        alt="Profile Picture"
-        sx={{ width: 60, height: 60, marginRight: 2 }}
-      />
+      <Avatar src={profilePic} alt="Profile Picture" sx={{ width: 60, height: 60, marginRight: 2 }} />
 
       {/* Name and other text stacked vertically */}
       <Stack direction="column" spacing={1}>

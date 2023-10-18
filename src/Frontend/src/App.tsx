@@ -6,8 +6,8 @@ import ErrorPage from "./Pages/ErrorPage";
 import HomePage from "./Pages/HomePage";
 import LoginPage from "./Pages/LoginPage";
 import ServiceDownPage from "./Pages/ServiceDownPage";
-import Api from "./Utility/Api";
 import Constants from "./Utility/Constants";
+import Api from "./Utility/Api";
 
 function App() {
   useEffect(() => {
@@ -53,21 +53,13 @@ function App() {
   const themeOverride = null;
 
   const darkThemeMq = window.matchMedia("(prefers-color-scheme: dark)");
-  const [mode, setMode] = React.useState<"light" | "dark">(
-    themeOverride !== null
-      ? themeOverride
-      : darkThemeMq.matches
-      ? "dark"
-      : "light"
-  );
+  const [mode, setMode] = React.useState<"light" | "dark">(themeOverride !== null ? themeOverride : darkThemeMq.matches ? "dark" : "light");
   const theme = createTheme({
     palette: {
       mode: mode,
     },
     typography: {
-      fontFamily: ["Poppins", '"Helvetica Neue"', "Arial", "sans-serif"].join(
-        ","
-      ),
+      fontFamily: ["Poppins", '"Helvetica Neue"', "Arial", "sans-serif"].join(","),
     },
     components: {
       MuiButton: {

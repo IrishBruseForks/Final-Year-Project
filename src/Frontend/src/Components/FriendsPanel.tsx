@@ -1,15 +1,8 @@
-import {
-  Avatar,
-  Box,
-  Divider,
-  Grid,
-  IconButton,
-  Stack,
-  Typography,
-} from "@mui/material";
-import ChatItem from "./ChatItem";
-import { Message } from "@mui/icons-material";
 import AddIcon from "@mui/icons-material/Add";
+import { Box, Divider, IconButton, Stack, Typography } from "@mui/material";
+import ChatItem from "./ChatItem";
+import Api from "../Utility/Api";
+import { useEffect } from "react";
 
 function FriendsPanel() {
   // Replacing this with API later
@@ -27,12 +20,12 @@ function FriendsPanel() {
     {
       username: "Ash",
       lastMessage: "Gotta Catch 'Em All!",
-      profilePic:
-        "https://upload.wikimedia.org/wikipedia/commons/5/53/Pok%C3%A9_Ball_icon.svg",
+      profilePic: "https://upload.wikimedia.org/wikipedia/commons/5/53/Pok%C3%A9_Ball_icon.svg",
     },
   ];
+
   return (
-    <Grid item xs={12} md={3} sx={{ width: { xs: "75vw" } }}>
+    <Box>
       <Box
         sx={{
           p: 1,
@@ -51,17 +44,12 @@ function FriendsPanel() {
       <Stack direction={"column"} spacing={1}>
         {userArray.map((user) => (
           <>
-            <ChatItem
-              username={user.username}
-              lastMessage={user.lastMessage}
-              profilePic={user.profilePic}
-              key={user.username}
-            ></ChatItem>
+            <ChatItem username={user.username} lastMessage={user.lastMessage} profilePic={user.profilePic} key={user.username}></ChatItem>
             <Divider />
           </>
         ))}
       </Stack>
-    </Grid>
+    </Box>
   );
 }
 

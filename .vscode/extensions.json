@@ -3,6 +3,7 @@
     "esbenp.prettier-vscode",
     "golang.go",
     "qwtel.sqlite-viewer",
-    "dbaeumer.vscode-eslint"
+    "dbaeumer.vscode-eslint",
+    "matt-meyers.vscode-dbml"
   ]
 }

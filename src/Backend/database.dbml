@@ -1,0 +1,20 @@
+Table Users {
+    userId char(32) [pk]
+    username text
+    picture text
+}
+
+Table Channels {
+    chanId bigint [pk]
+    lastMessage bigint [ref: - Messages.msgId]
+}
+
+Table Messages {
+    msgId bigint [pk]
+    chanId bigint [ref: > Channels.chanId]
+    sentBy char(32) [ref: > Users.userId]
+    sentOn timestamp
+}
+
+// Relations
+Ref Users_Channels: Channels.chanId <> Users.userId

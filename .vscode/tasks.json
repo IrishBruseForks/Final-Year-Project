@@ -39,6 +39,15 @@
         "cwd": "./src/Backend"
       },
       "problemMatcher": "$go"
+    },
+    {
+      "label": "Generate SQL schema from dbml",
+      "type": "shell",
+      "command": "dbml2sql database.dbml --mysql -o database.sql",
+      "options": {
+        "cwd": "./src/Backend"
+      },
+      "problemMatcher": "$go"
     }
   ]
 }

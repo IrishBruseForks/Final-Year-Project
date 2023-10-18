@@ -8,19 +8,17 @@ import (
 	"fmt"
 	"io"
 	"log"
-	"net/http"
 	"os"
-	"time"
 
-	_ "github.com/glebarez/go-sqlite"
+	_ "github.com/go-sql-driver/mysql"
+
 	jwt "github.com/golang-jwt/jwt/v5"
 	godotenv "github.com/joho/godotenv"
+	echojwt "github.com/labstack/echo-jwt/v4"
 	echo "github.com/labstack/echo/v4"
 	middleware "github.com/labstack/echo/v4/middleware"
 	oauth2 "golang.org/x/oauth2"
 	googleOauth "golang.org/x/oauth2/google"
-
-	echojwt "github.com/labstack/echo-jwt/v4"
 )
 
 var config *oauth2.Config
@@ -36,7 +34,6 @@ func main() {
 	runEchoServer()
 }
 
-
 func runEchoServer() {
 	e := echo.New()
 
@@ -47,11 +44,13 @@ func runEchoServer() {
 }
 
 func addRoutes(e *echo.Echo) {
-	e.GET("/status", status)
-	e.POST("/auth/google", oauthGoogle)
-	e.GET("/test", func(c echo.Context) error {
-		return c.String(http.StatusOK, "Test")
-	})
+	// Utility
+	e.GET("/status", getStatus)
+	e.POST("/auth/google", postAuthGoogle)
+
+	// Message Apis
+	e.GET("/channels", getChannels)
+
 }
 
 func addMiddleware(e *echo.Echo) {
@@ -85,9 +84,19 @@ func addMiddleware(e *echo.Echo) {
 }
 
 func initOauth() {
+	clientID, found := os.LookupEnv("ClientID")
+	if !found {
+		panic("ClientID missing in .env")
+	}
+
+	clientSecret, found := os.LookupEnv("ClientSecret")
+	if !found {
+		panic("ClientSecret missing in .env")
+	}
+
 	config = &oauth2.Config{
-		ClientID:     os.Getenv("ClientID"),
-		ClientSecret: os.Getenv("ClientSecret"),
+		ClientID:     clientID,
+		ClientSecret: clientSecret,
 		Scopes: []string{
 			"https://www.googleapis.com/auth/userinfo.email",
 			"https://www.googleapis.com/auth/userinfo.profile",
@@ -100,22 +109,21 @@ func initOauth() {
 func loadEnv() {
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
 }
 
 func initDatabase() {
 	var err error
-	db, err = sql.Open("sqlite", "./database.db")
+	db, err = sql.Open("mysql", os.Getenv("SqlUrl"))
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
 
-	db.Exec(`CREATE TABLE IF NOT EXISTS Users(id int primary key, name text, picture text)`)
-}
-
-func status(c echo.Context) error {
-	return c.String(http.StatusOK, "Alive")
+	_, err = db.Exec(`INSERT INTO Users (userId,username,picture) VALUES (?,?,?)`, 12, "Test Account", "https://picsum.photos/200")
+	if err != nil {
+		log.Println(err)
+	}
 }
 
 type AuthJwt struct {
@@ -130,56 +138,11 @@ type GoogleJwt struct {
 	jwt.RegisteredClaims `tstype:",extends"`
 }
 
-func oauthGoogle(c echo.Context) error {
-	u := new(OAuth)
-	if err := c.Bind(u); err != nil {
-		log.Fatal(err)
-		return err
-	}
-
-	idTokenResp, err := exchangeTokenWithGoogle(u, c)
-	if err != nil {
-		log.Fatal(err)
-		return echo.ErrInternalServerError
-	}
-
-	statement, err := db.Prepare(`INSERT INTO Users (id,name,picture) VALUES (?,?,?)`)
-	if err != nil {
-		log.Fatal(err)
-		return echo.ErrInternalServerError
-	}
-	defer statement.Close()
-
-	statement.Exec(idTokenResp.Subject, idTokenResp.Name, idTokenResp.Picture)
-
-	claims := &AuthJwt{
-		idTokenResp.Name,
-		idTokenResp.Picture,
-		jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 24 * 7)), // implement logout on frontend
-			IssuedAt:  jwt.NewNumericDate(time.Now()),
-		},
-	}
-
-	jsonToken := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-
-	tokenString, err := jsonToken.SignedString(getJwtSecretBytes())
-	if err != nil {
-		log.Fatal(err)
-		return echo.ErrInternalServerError
-	}
-
-	return c.JSON(http.StatusOK, OAuthResponse{
-		Token: tokenString,
-	})
-}
-
 func getJwtSecretBytes() []byte {
 	jwtSecret, found := os.LookupEnv("JwtSecret")
 	if !found {
 		log.Fatal(".env missing JwtSecret")
 	}
-	log.Println(jwtSecret)
 
 	secretBytes, err := base64.StdEncoding.DecodeString(jwtSecret)
 	if err != nil {
