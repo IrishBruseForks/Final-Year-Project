@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
 import AddIcon from "@mui/icons-material/Add";
-import { Box, Divider, IconButton, Stack, Typography } from "@mui/material";
-import ChatItem from "./ChatItem";
+import { Box, Divider, IconButton, List, Stack, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
 import { ChannelResponse } from "../Types/ServerTypes";
 import API from "../Utility/Api";
+import ChatItem from "./ChatItem";
 
 // FriendsPanel component
 // API/Database caller
@@ -53,11 +53,11 @@ function FriendsPanel() {
             </IconButton>
           </Box>
           <Divider />
-          <Stack direction={"column"} spacing={1}>
+          <List>
             {channels.map((channel) => (
-              <ChatItem username={channel.username} lastMessage={channel.lastMessage} profilePic={channel.profilePic} key={channel.username} />
+              <ChatItem username={channel.name} lastMessage={"" + channel.lastMessage} profilePic={channel.picture} key={channel.id} />
             ))}
-          </Stack>
+          </List>
         </>
       )}
     </Box>
