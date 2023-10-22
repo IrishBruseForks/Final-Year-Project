@@ -16,7 +16,6 @@ function LoginPage() {
       const resp = await Api.AuthGoogle(tokenResponse.code);
 
       localStorage.setItem(Constants.AccessTokenKey, resp.token);
-      localStorage.setItem(Constants.UserIdKey, resp.sub);
       localStorage.setItem(Constants.ProfilePictureKey, resp.profilePicture);
 
       navigate("/");

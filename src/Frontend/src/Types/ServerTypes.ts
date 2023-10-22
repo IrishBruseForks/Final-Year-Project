@@ -16,3 +16,6 @@ export interface ChannelResponse {
   picture: string;
   lastMessage?: number /* int64 */;
 }
+export interface NewChannelRequest {
+  users: string[];
+}

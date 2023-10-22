@@ -1,6 +1,7 @@
 import axios from "axios";
-import { ChannelResponse, OAuthResponse } from "../Types/ServerTypes";
+import { ChannelResponse, NewChannelRequest, OAuthResponse } from "../Types/ServerTypes";
 import Constants from "./Constants";
+import { enqueueSnackbar } from "notistack";
 
 /**
  * POST /auth/google
@@ -32,29 +33,35 @@ function GetChannels(): Promise<ChannelResponse[]> {
 /**
  * POST /channels
  */
-function PostChannels() {
+function PostChannels(data: NewChannelRequest) {
   const url = Constants.BackendUrl + "channels";
-  return AuthGet<ChannelResponse[]>(url);
+  return AuthPost<NewChannelRequest, number>(url, data);
 }
 
-async function AuthGet<Res>(url: string): Promise<Res> {
-  const resp = await axios.get<Res>(Constants.BackendUrl + url, {
-    headers: {
-      Authorization: "Bearer " + localStorage.getItem(Constants.AccessTokenKey),
-    },
-  });
+const config = {
+  headers: {
+    Authorization: "Bearer " + localStorage.getItem(Constants.AccessTokenKey),
+  },
+};
 
-  return resp.data;
+async function AuthGet<Result>(url: string): Promise<Result> {
+  try {
+    const resp = await axios.get<Result>(url, config);
+    return resp.data;
+  } catch (error) {
+    enqueueSnackbar("Error: " + error, { variant: "error" });
+    return Promise.reject("Error");
+  }
 }
 
-async function AuthPost<Res, Data>(url: string, data: Data): Promise<Res> {
-  const resp = await axios.post<Res>(Constants.BackendUrl + url, data, {
-    headers: {
-      Authorization: "Bearer " + localStorage.getItem(Constants.AccessTokenKey),
-    },
-  });
-
-  return resp.data;
+async function AuthPost<Data, Result>(url: string, data: Data): Promise<Result> {
+  try {
+    const resp = await axios.post<Result>(url, data, config);
+    return resp.data;
+  } catch (error) {
+    enqueueSnackbar("Error: " + error, { variant: "error" });
+    return Promise.reject("Error");
+  }
 }
 
 export default {

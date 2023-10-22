@@ -41,39 +41,37 @@ function HomePage() {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             Photos
           </Typography>
-          {true && (
-            <div>
-              <IconButton size="large" aria-label="account of current user" aria-controls="menu-appbar" aria-haspopup="true" color="inherit">
-                <Image src={profilePicture} title="Profile Picture" sx={{ height: "2rem", width: "2rem" }} />
-              </IconButton>
-              <Menu
-                id="menu-appbar"
-                // anchorEl={anchorEl}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                open={Boolean(false)}
-                // onClose={handleClose}
+          <div>
+            <IconButton size="large" aria-label="account of current user" aria-controls="menu-appbar" aria-haspopup="true" color="inherit">
+              <Image src={profilePicture} title="Profile Picture" sx={{ height: 32, width: 32 }} />
+            </IconButton>
+            <Menu
+              id="menu-appbar"
+              // anchorEl={anchorEl}
+              anchorOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+              open={Boolean(false)}
+              // onClose={handleClose}
+            >
+              <MenuItem
+              // onClick={handleClose}
               >
-                <MenuItem
-                // onClick={handleClose}
-                >
-                  Profile
-                </MenuItem>
-                <MenuItem
-                // onClick={handleClose}
-                >
-                  My account
-                </MenuItem>
-              </Menu>
-            </div>
-          )}
+                Profile
+              </MenuItem>
+              <MenuItem
+              // onClick={handleClose}
+              >
+                My account
+              </MenuItem>
+            </Menu>
+          </div>
         </Toolbar>
       </AppBar>
       <Grid container columnSpacing={2} sx={{ height: "100%" }}>

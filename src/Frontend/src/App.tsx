@@ -1,13 +1,16 @@
 import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import { GoogleOAuthProvider } from "@react-oauth/google";
-import React, { useEffect } from "react";
+import { SnackbarProvider } from "notistack";
+import React, { createContext, useEffect } from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import ErrorPage from "./Pages/ErrorPage";
 import HomePage from "./Pages/HomePage";
 import LoginPage from "./Pages/LoginPage";
 import ServiceDownPage from "./Pages/ServiceDownPage";
-import Constants from "./Utility/Constants";
 import Api from "./Utility/Api";
+import Constants from "./Utility/Constants";
+
+export const ErrorContext = createContext<Error | null>(null);
 
 function App() {
   useEffect(() => {
@@ -54,6 +57,8 @@ function App() {
 
   const darkThemeMq = window.matchMedia("(prefers-color-scheme: dark)");
   const [mode, setMode] = React.useState<"light" | "dark">(themeOverride !== null ? themeOverride : darkThemeMq.matches ? "dark" : "light");
+
+  // https://mui.com/material-ui/customization/default-theme/
   const theme = createTheme({
     palette: {
       mode: mode,
@@ -88,10 +93,12 @@ function App() {
   return (
     <GoogleOAuthProvider clientId={Constants.GoogleAppID}>
       <React.StrictMode>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <RouterProvider router={router} />
-        </ThemeProvider>
+        <SnackbarProvider maxSnack={3}>
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <RouterProvider router={router} />
+          </ThemeProvider>
+        </SnackbarProvider>
       </React.StrictMode>
     </GoogleOAuthProvider>
   );
