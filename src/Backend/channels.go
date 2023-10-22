@@ -41,10 +41,6 @@ func getChannels(c echo.Context) error {
 	return c.JSON(http.StatusOK, channels)
 }
 
-type NewChannelRequest struct {
-	Users []string `json:"users"`
-}
-
 func postChannels(c echo.Context) error {
 	jwt := getJwt(c)
 
@@ -87,6 +83,12 @@ func postChannels(c echo.Context) error {
 	}
 
 	return c.String(http.StatusOK, strconv.FormatInt(channelId, 10))
+}
+
+func putChannels(c echo.Context) error {
+	// jwt := getJwt(c)
+
+	return c.String(http.StatusOK, "putChannels")
 }
 
 func getJwt(c echo.Context) *AuthJwt {

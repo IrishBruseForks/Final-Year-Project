@@ -45,22 +45,33 @@ func runEchoServer() {
 }
 
 func addRoutes(e *echo.Echo) {
-	// Utility
+	// Non-Auth Apis
 	e.GET("/status", getStatus)
 	e.POST("/auth/google", postAuthGoogle)
 
+	// Auth Apis
 	secret := getJwtSecretBytes()
 
-	g := e.Group("messages", echojwt.WithConfig(echojwt.Config{
+	jwtMiddleware := echojwt.WithConfig(echojwt.Config{
 		SigningKey: secret,
 		NewClaimsFunc: func(c echo.Context) jwt.Claims {
 			return new(AuthJwt)
 		},
-	}))
+		Skipper: func(c echo.Context) bool {
+			return c.Path() == "/status" || c.Path() == "/auth/google"
+		},
+	})
 
-	// Message Apis
-	g.GET("/channels", getChannels)
-	g.POST("/channels", postChannels)
+	e.Use(jwtMiddleware)
+
+	// Channel Apis
+	e.GET("/channels", getChannels)
+	e.POST("/channels", postChannels)
+	e.PUT("/channels", putChannels)
+
+	// Messages Apis
+	e.GET("/messages", getChannels)
+	e.POST("/messages", postChannels)
 }
 
 func addMiddleware(e *echo.Echo) {

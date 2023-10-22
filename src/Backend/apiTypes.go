@@ -15,3 +15,7 @@ type ChannelResponse struct {
 	Picture     string `json:"picture"`
 	LastMessage *int64 `json:"lastMessage"`
 }
+
+type NewChannelRequest struct {
+	Users []string `json:"users"`
+}
