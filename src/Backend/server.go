@@ -1,12 +1,9 @@
 package main
 
 import (
-	"context"
 	"database/sql"
 	"encoding/base64"
-	"encoding/json"
 	"fmt"
-	"io"
 	"os"
 	"time"
 
@@ -52,9 +49,18 @@ func addRoutes(e *echo.Echo) {
 	e.GET("/status", getStatus)
 	e.POST("/auth/google", postAuthGoogle)
 
+	secret := getJwtSecretBytes()
+
+	g := e.Group("messages", echojwt.WithConfig(echojwt.Config{
+		SigningKey: secret,
+		NewClaimsFunc: func(c echo.Context) jwt.Claims {
+			return new(AuthJwt)
+		},
+	}))
+
 	// Message Apis
-	e.GET("/channels", getChannels)
-	e.POST("/channels", postChannels)
+	g.GET("/channels", getChannels)
+	g.POST("/channels", postChannels)
 }
 
 func addMiddleware(e *echo.Echo) {
@@ -70,17 +76,6 @@ func addMiddleware(e *echo.Echo) {
 	e.Use(middleware.CORS())
 	e.Logger.SetLevel(0)
 
-	secret := getJwtSecretBytes()
-
-	e.Use(echojwt.WithConfig(echojwt.Config{
-		SigningKey: secret,
-		Skipper: func(c echo.Context) bool {
-			if c.Path() == "/status" || c.Path() == "/auth/google" {
-				return true
-			}
-			return false
-		},
-	}))
 }
 
 func initOauth() {
@@ -119,11 +114,6 @@ func initDatabase() {
 	if err != nil {
 		panic(err)
 	}
-
-	_, err = db.Exec(`INSERT INTO Users (userId,username,picture) VALUES (?,?,?)`, 12, "Test Account", "https://picsum.photos/200")
-	if err != nil {
-		fmt.Println(err)
-	}
 }
 
 type GoogleJwt struct {
@@ -147,31 +137,11 @@ func getJwtSecretBytes() []byte {
 	return secretBytes
 }
 
-func exchangeTokenWithGoogle(u *OAuth) (*GoogleJwt, error) {
-	tok, err := config.Exchange(context.Background(), u.Code)
-	if err != nil {
-		return nil, err
-	}
-
-	client := config.Client(context.Background(), tok)
-	idToken := tok.Extra("id_token").(string)
-
-	resp, err := client.Get("https://oauth2.googleapis.com/tokeninfo?id_token=" + idToken)
-	if err != nil {
-		return nil, err
-	}
-
-	bytes, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	idTokenResp := new(GoogleJwt)
-	json.Unmarshal(bytes, idTokenResp)
-
-	return idTokenResp, nil
+func log(value error) {
+	fmt.Println(time.Now(), value.Error())
 }
 
-func log(value any) {
-	fmt.Println(time.Now(), value)
+func apiError(prefix string, value error, httpError error) error {
+	fmt.Println("Error("+prefix+"):", value.Error())
+	return httpError
 }

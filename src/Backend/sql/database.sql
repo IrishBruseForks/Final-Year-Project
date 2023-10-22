@@ -1,38 +1,35 @@
 -- SQL dump generated using DBML (dbml-lang.org)
 -- Database: MySQL
--- Generated at: 2023-10-18T20:53:23.933Z
+-- Generated at: 2023-10-22T02:48:15.464Z
 
 CREATE TABLE `Users` (
-  `userId` char(32) PRIMARY KEY,
+  `id` char(32) PRIMARY KEY,
   `username` text,
-  `picture` text
+  `picture` text,
+  `isBot` boolean
 );
 
 CREATE TABLE `Channels` (
-  `chanId` bigint PRIMARY KEY,
+  `id` bigint PRIMARY KEY AUTO_INCREMENT,
+  `name` text,
+  `picture` text,
   `lastMessage` bigint
 );
 
 CREATE TABLE `Messages` (
-  `msgId` bigint PRIMARY KEY,
-  `chanId` bigint,
+  `id` bigint PRIMARY KEY AUTO_INCREMENT,
+  `userId` bigint,
   `sentBy` char(32),
   `sentOn` timestamp
 );
 
-CREATE TABLE `Channels_Users` (
-  `Channels_chanId` bigint,
-  `Users_userId` char(32),
-  PRIMARY KEY (`Channels_chanId`, `Users_userId`)
+CREATE TABLE `Users_Channels` (
+  `Users_id` char(32),
+  `Channels_id` bigint,
+  PRIMARY KEY (`Users_id`, `Channels_id`)
 );
 
-ALTER TABLE `Channels_Users` ADD FOREIGN KEY (`Channels_chanId`) REFERENCES `Channels` (`chanId`);
+ALTER TABLE `Users_Channels` ADD FOREIGN KEY (`Users_id`) REFERENCES `Users` (`id`);
 
-ALTER TABLE `Channels_Users` ADD FOREIGN KEY (`Users_userId`) REFERENCES `Users` (`userId`);
+ALTER TABLE `Users_Channels` ADD FOREIGN KEY (`Channels_id`) REFERENCES `Channels` (`id`);
 
-
-ALTER TABLE `Messages` ADD FOREIGN KEY (`msgId`) REFERENCES `Channels` (`lastMessage`);
-
-ALTER TABLE `Messages` ADD FOREIGN KEY (`chanId`) REFERENCES `Channels` (`chanId`);
-
-ALTER TABLE `Messages` ADD FOREIGN KEY (`sentBy`) REFERENCES `Users` (`userId`);

@@ -44,5 +44,23 @@
   "typescript.inlayHints.variableTypes.enabled": true,
   "typescript.referencesCodeLens.enabled": true,
   "typescript.referencesCodeLens.showOnAllFunctions": true,
-  "typescript.tsserver.experimental.enableProjectDiagnostics": true
+  "typescript.tsserver.experimental.enableProjectDiagnostics": true,
+  "scm.alwaysShowRepositories": true,
+  "sqltools.connections": [
+    {
+      "mysqlOptions": {
+        "authProtocol": "default",
+        "enableSsl": "Disabled",
+        "ssl": {}
+      },
+      "previewLimit": 50,
+      "server": "containers-us-west-135.railway.app",
+      "driver": "MySQL",
+      "name": "railway",
+      "database": "railway",
+      "username": "root",
+      "password": "H44cT5d1fgAvP71DqEE9",
+      "connectString": "mysql://root:H44cT5d1fgAvP71DqEE9@containers-us-west-135.railway.app:7449/railway"
+    }
+  ]
 }

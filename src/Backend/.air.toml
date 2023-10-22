@@ -13,9 +13,9 @@ bin = "tmp/main.exe"
 # Customize binary.
 full_bin = "./tmp/main.exe"
 # Watch these filename extensions.
-include_ext = ["go", "tpl", "tmpl", "html"]
+include_ext = ["go", "tpl", "tmpl", "html", "sql"]
 # Ignore these filename extensions or directories.
-exclude_dir = ["assets", "tmp", "vendor", "testdata"]
+exclude_dir = ["assets", "tmp", "vendor", "testdata","sql"]
 # Watch these directories if you specified.
 include_dir = []
 # Exclude files.

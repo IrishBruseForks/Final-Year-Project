@@ -1,24 +1,28 @@
+Project chatalyst {
+  database_type: 'MySQL'
+  Note: 'Collage final year project where we are making a chat application with bots.'
+}
+
 Table Users {
-    userId char(32) [pk]
+    id char(32) [pk]
     username text
     picture text
+    isBot boolean
 }
 
 Table Channels {
-    chanId bigint [pk]
+    id bigint [pk,increment]
+    name text
+    picture text
     lastMessage bigint
 }
 
 Table Messages {
-    msgId bigint [pk]
-    chanId bigint
+    id bigint [pk,increment]
+    userId bigint
     sentBy char(32)
     sentOn timestamp
 }
 
 // Relations
-Ref Users_Channels: Channels.chanId <> Users.userId
-
-Ref: Channels.lastMessage - Messages.msgId
-Ref: Messages.chanId > Channels.chanId
-Ref: Messages.sentBy > Users.userId
+Ref Users_Channels: Users.id <> Channels.id

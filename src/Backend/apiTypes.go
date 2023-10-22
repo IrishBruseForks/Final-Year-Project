@@ -6,12 +6,12 @@ type OAuth struct {
 
 type OAuthResponse struct {
 	Token          string `json:"token"`
-	Sub            string `json:"sub"`
 	ProfilePicture string `json:"profilePicture"`
 }
 
 type ChannelResponse struct {
-	Username    string `json:"username"`
-	LastMessage string `json:"lastMessage"`
-	ProfilePic  string `json:"profilePic"`
+	Id          string `json:"id"`
+	Name        string `json:"name"`
+	Picture     string `json:"picture"`
+	LastMessage *int64 `json:"lastMessage"`
 }
