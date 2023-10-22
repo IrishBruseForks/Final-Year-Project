@@ -1,4 +1,4 @@
-import { AccountCircle, Menu as MenuIcon } from "@mui/icons-material";
+import { Menu as MenuIcon } from "@mui/icons-material";
 import { AppBar, Box, IconButton, Menu, MenuItem, Paper, Stack, SwipeableDrawer, Toolbar, Typography, useMediaQuery } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { useEffect, useState } from "react";
@@ -44,7 +44,7 @@ function HomePage() {
           {true && (
             <div>
               <IconButton size="large" aria-label="account of current user" aria-controls="menu-appbar" aria-haspopup="true" color="inherit">
-                <Image src={profilePicture} alt="Profile Picture" sx={{ height: "2rem" }} />
+                <Image src={profilePicture} title="Profile Picture" sx={{ height: "2rem", width: "2rem" }} />
               </IconButton>
               <Menu
                 id="menu-appbar"

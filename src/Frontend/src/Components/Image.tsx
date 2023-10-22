@@ -1,15 +1,15 @@
 import { Box, SxProps, Theme } from "@mui/material";
 
 interface ImageProps {
-  alt: string;
+  title: string;
   src: string;
   sx?: SxProps<Theme>;
 }
 
-function Image({ alt, src, sx }: ImageProps) {
+function Image({ title, src, sx }: ImageProps) {
   return (
     <Box sx={sx}>
-      <img src={src} alt={alt} title={alt} style={{ width: "100%", height: "100%" }} />
+      <img src={src} title={title} style={{ width: "100%", height: "100%" }} loading="lazy" />
     </Box>
   );
 }
