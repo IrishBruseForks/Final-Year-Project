@@ -18,7 +18,9 @@ function LoginPage() {
       localStorage.setItem(Constants.AccessTokenKey, resp.token);
       localStorage.setItem(Constants.ProfilePictureKey, resp.profilePicture);
 
-      navigate("/");
+      setTimeout(() => {
+        navigate("/");
+      }, 250);
     },
     onError: (error) => {
       console.error(error);

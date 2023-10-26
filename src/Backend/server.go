@@ -64,6 +64,9 @@ func addRoutes(e *echo.Echo) {
 
 	e.Use(jwtMiddleware)
 
+	// Validate login
+	e.GET("/login", getLogin)
+
 	// Channel Apis
 	e.GET("/channels", getChannels)
 	e.POST("/channels", postChannels)

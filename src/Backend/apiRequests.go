@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 	"time"
@@ -13,6 +14,19 @@ import (
 
 func getStatus(c echo.Context) error {
 	return c.String(http.StatusOK, "Alive")
+}
+
+func getLogin(c echo.Context) error {
+	user, ok := c.Get("user").(*jwt.Token)
+
+	if !ok {
+		return c.NoContent(http.StatusUnauthorized)
+	}
+
+	jwt := user.Claims.(*AuthJwt)
+	fmt.Println(jwt)
+
+	return c.NoContent(http.StatusOK)
 }
 
 type AuthJwt struct {

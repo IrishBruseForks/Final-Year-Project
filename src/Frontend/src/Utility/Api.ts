@@ -4,6 +4,14 @@ import Constants from "./Constants";
 import { enqueueSnackbar } from "notistack";
 
 /**
+ * GET /status
+ */
+function Status(): Promise<any> {
+  const url = Constants.BackendUrl + "status";
+  return AuthGet(url);
+}
+
+/**
  * POST /auth/google
  * @param code The code recieved from googles oauth2 code-flow
  */
@@ -15,19 +23,21 @@ async function AuthGoogle(code: string): Promise<OAuthResponse> {
 }
 
 /**
- * GET /status
+ * GET /login
  */
-function Status(): Promise<any> {
-  const url = Constants.BackendUrl + "status";
-  return axios.get(url);
+async function GetLogin(): Promise<ChannelResponse[]> {
+  const url = Constants.BackendUrl + "channels";
+  const resp = await axios.get<ChannelResponse[]>(url, config);
+  return resp.data;
 }
 
 /**
  * GET /channels
  */
-function GetChannels(): Promise<ChannelResponse[]> {
+async function GetChannels(): Promise<ChannelResponse[]> {
   const url = Constants.BackendUrl + "channels";
-  return AuthGet<ChannelResponse[]>(url);
+  const resp = await axios.get<ChannelResponse[]>(url, config);
+  return resp.data;
 }
 
 /**
@@ -65,8 +75,9 @@ async function AuthPost<Data, Result>(url: string, data: Data): Promise<Result> 
 }
 
 export default {
-  AuthGoogle,
   Status,
+  AuthGoogle,
+  GetLogin,
   GetChannels,
   PostChannels,
 };

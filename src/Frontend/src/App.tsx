@@ -20,6 +20,13 @@ function App() {
       router.navigate("/serviceDown");
     });
 
+    // Check if the user is authorised every time they reload the page
+    Api.GetLogin().catch(() => {
+      localStorage.removeItem(Constants.AccessTokenKey);
+      localStorage.removeItem(Constants.ProfilePictureKey);
+      router.navigate("/login");
+    });
+
     // Check if we need to login again because we are either
     // missing the access token
     const token = localStorage.getItem(Constants.AccessTokenKey);

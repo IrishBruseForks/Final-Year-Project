@@ -1,5 +1,5 @@
 import AddIcon from "@mui/icons-material/Add";
-import { Box, Divider, IconButton, List, Stack, Typography } from "@mui/material";
+import { Box, Divider, IconButton, List, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { ChannelResponse } from "../Types/ServerTypes";
 import API from "../Utility/Api";
@@ -54,9 +54,10 @@ function FriendsPanel() {
           </Box>
           <Divider />
           <List>
-            {channels.map((channel) => (
-              <ChatItem username={channel.name} lastMessage={"" + channel.lastMessage} profilePic={channel.picture} key={channel.id} />
-            ))}
+            {channels &&
+              channels.map((channel) => (
+                <ChatItem username={channel.name} lastMessage={"" + channel.lastMessage} profilePic={channel.picture} key={channel.id} />
+              ))}
           </List>
         </>
       )}
