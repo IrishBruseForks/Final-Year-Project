@@ -79,7 +79,7 @@ func addRoutes(e *echo.Echo) {
 
 func addMiddleware(e *echo.Echo) {
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
-		Format: "${method} ${status} ${uri} ${error}\n",
+		Format: "\n\n${method} ${status} ${uri} ${error}\n",
 	}))
 
 	e.Use(middleware.BodyDump(func(c echo.Context, reqBody, resBody []byte) {
@@ -123,8 +123,13 @@ func loadEnv() {
 }
 
 func initDatabase() {
+	sqlUrl, found := os.LookupEnv("SqlUrl")
+	if !found {
+		panic("SqlUrl missing in .env")
+	}
+
 	var err error
-	db, err = sql.Open("mysql", os.Getenv("SqlUrl"))
+	db, err = sql.Open("mysql", sqlUrl)
 	if err != nil {
 		panic(err)
 	}

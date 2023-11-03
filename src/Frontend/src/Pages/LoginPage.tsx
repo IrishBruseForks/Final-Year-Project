@@ -7,6 +7,7 @@ import { OAuth } from "../Types/ServerTypes";
 import Api from "../Utility/Api";
 import Constants from "../Utility/Constants";
 import Image from "../Components/Image";
+import { enqueueSnackbar } from "notistack";
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -18,12 +19,10 @@ function LoginPage() {
       localStorage.setItem(Constants.AccessTokenKey, resp.token);
       localStorage.setItem(Constants.ProfilePictureKey, resp.profilePicture);
 
-      setTimeout(() => {
-        navigate("/");
-      }, 250);
+      navigate("/");
     },
     onError: (error) => {
-      console.error(error);
+      enqueueSnackbar("Error: " + error, { variant: "error" });
     },
     flow: "auth-code",
   });

@@ -8,8 +8,8 @@ import (
 	"net/http"
 	"time"
 
-	jwt "github.com/golang-jwt/jwt/v5"
-	echo "github.com/labstack/echo/v4"
+	"github.com/golang-jwt/jwt/v5"
+	"github.com/labstack/echo/v4"
 )
 
 func getStatus(c echo.Context) error {

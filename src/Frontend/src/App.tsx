@@ -12,20 +12,33 @@ import Constants from "./Utility/Constants";
 
 export const ErrorContext = createContext<Error | null>(null);
 
+const router = createBrowserRouter([
+  {
+    path: "/login",
+    element: <LoginPage />,
+  },
+  {
+    path: "/",
+    element: <HomePage />,
+  },
+  {
+    path: "/serviceDown",
+    element: <ServiceDownPage />,
+  },
+  {
+    path: "*",
+    element: <ErrorPage />,
+  },
+]);
+
 function App() {
   useEffect(() => {
     // Check to see if the backend is running
     // if there is an exception redirect to service down page and keep retrying connection
-    Api.Status().catch(() => {
-      router.navigate("/serviceDown");
-    });
-
-    // Check if the user is authorised every time they reload the page
-    Api.GetLogin().catch(() => {
-      localStorage.removeItem(Constants.AccessTokenKey);
-      localStorage.removeItem(Constants.ProfilePictureKey);
-      router.navigate("/login");
-    });
+    CheckServiceStatus();
+    setTimeout(() => {
+      CheckServiceStatus();
+    }, 5000);
 
     // Check if we need to login again because we are either
     // missing the access token
@@ -34,30 +47,21 @@ function App() {
     if (token === null) {
       router.navigate("/login");
     } else {
-      // We have a token
-      // TODO: check if the token is expired and refresh it or login
+      // Check if the user is authorised every time they reload the page
+      Api.GetLogin().catch(() => {
+        localStorage.removeItem(Constants.AccessTokenKey);
+        localStorage.removeItem(Constants.ProfilePictureKey);
+        router.navigate("/login");
+      });
+    }
+
+    function CheckServiceStatus() {
+      Api.Status().catch(() => {
+        router.navigate("/serviceDown");
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const router = createBrowserRouter([
-    {
-      path: "/login",
-      element: <LoginPage />,
-    },
-    {
-      path: "/",
-      element: <HomePage />,
-    },
-    {
-      path: "/serviceDown",
-      element: <ServiceDownPage />,
-    },
-    {
-      path: "*",
-      element: <ErrorPage />,
-    },
-  ]);
 
   // For debugging the theme to disable set to null
   const themeOverride = null;

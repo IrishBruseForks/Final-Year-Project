@@ -8,7 +8,11 @@ import { enqueueSnackbar } from "notistack";
  */
 function Status(): Promise<any> {
   const url = Constants.BackendUrl + "status";
-  return AuthGet(url);
+  try {
+    return axios.get(url, getConfig());
+  } catch (error) {
+    return Promise.reject("Error");
+  }
 }
 
 /**
@@ -27,7 +31,7 @@ async function AuthGoogle(code: string): Promise<OAuthResponse> {
  */
 async function GetLogin(): Promise<ChannelResponse[]> {
   const url = Constants.BackendUrl + "channels";
-  const resp = await axios.get<ChannelResponse[]>(url, config);
+  const resp = await axios.get<ChannelResponse[]>(url, getConfig());
   return resp.data;
 }
 
@@ -36,8 +40,7 @@ async function GetLogin(): Promise<ChannelResponse[]> {
  */
 async function GetChannels(): Promise<ChannelResponse[]> {
   const url = Constants.BackendUrl + "channels";
-  const resp = await axios.get<ChannelResponse[]>(url, config);
-  return resp.data;
+  return AuthGet<ChannelResponse[]>(url);
 }
 
 /**
@@ -48,15 +51,9 @@ function PostChannels(data: NewChannelRequest) {
   return AuthPost<NewChannelRequest, number>(url, data);
 }
 
-const config = {
-  headers: {
-    Authorization: "Bearer " + localStorage.getItem(Constants.AccessTokenKey),
-  },
-};
-
 async function AuthGet<Result>(url: string): Promise<Result> {
   try {
-    const resp = await axios.get<Result>(url, config);
+    const resp = await axios.get<Result>(url, getConfig());
     return resp.data;
   } catch (error) {
     enqueueSnackbar("Error: " + error, { variant: "error" });
@@ -66,12 +63,20 @@ async function AuthGet<Result>(url: string): Promise<Result> {
 
 async function AuthPost<Data, Result>(url: string, data: Data): Promise<Result> {
   try {
-    const resp = await axios.post<Result>(url, data, config);
+    const resp = await axios.post<Result>(url, data, getConfig());
     return resp.data;
   } catch (error) {
     enqueueSnackbar("Error: " + error, { variant: "error" });
     return Promise.reject("Error");
   }
+}
+
+function getConfig() {
+  return {
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem(Constants.AccessTokenKey),
+    },
+  };
 }
 
 export default {

@@ -29,6 +29,18 @@
       "problemMatcher": "$tsc"
     },
     {
+      "label": "Watch go backend",
+      "type": "shell",
+      "command": "air",
+      "runOptions": {
+        "runOn": "folderOpen"
+      },
+      "options": {
+        "cwd": "./src/Backend"
+      },
+      "problemMatcher": "$tsc"
+    },
+    {
       "label": "Generate Types from Go",
       "type": "shell",
       "command": "tygo generate",
