@@ -1,6 +1,6 @@
 -- Insert test users
-insert into Users (id, username, picture)
-values (
+INSERT INTO Users (id, username, picture)
+VALUES (
         "101915797943822058743",
         "Ethan Conneely (IrishBruse)",
         "https://lh3.googleusercontent.com/a/ACg8ocLIyC5EsYQxWNhiKBmQp_fkSebzHP65JDd6Q17FFyMxK0Y=s96-c"
@@ -13,10 +13,21 @@ values (
     (
         "1",
         "Test Account 1",
-        "https://picsum.photos/200"
+        "https://picsum.photos/id/10/200"
     ),
     (
         "2",
         "Test Account 2",
-        "https://picsum.photos/200"
+        "https://picsum.photos/id/20/200"
     );
+-- Insert test channels
+INSERT INTO Channels (name, picture, lastMessage)
+VALUES (
+        "Test Channel",
+        "https://picsum.photos/id/100/200",
+        1
+    );
+-- Insert test messages
+INSERT INTO Users_Channels (Users_id, Channels_id)
+VALUES ("101915797943822058743", LAST_INSERT_ID()),
+    ("108148078418375467933", LAST_INSERT_ID());

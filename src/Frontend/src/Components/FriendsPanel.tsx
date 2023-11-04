@@ -5,7 +5,7 @@ import { ChannelResponse } from "../Types/ServerTypes";
 import API from "../Utility/Api";
 import ChatItem from "./ChatItem";
 
-// FriendsPanel component
+// FriendsPanel componentz
 // API/Database caller
 function FriendsPanel() {
   // State for channels and its setter
@@ -14,21 +14,24 @@ function FriendsPanel() {
   // State for loading status and its setter
   const [loading, setLoading] = useState(true);
 
+  // Async function to fetch channels
+  async function fetchChannels() {
+    try {
+      const response = await API.GetChannels();
+      setChannels(response); // Update channels state
+      setLoading(false); // Set loading to false
+    } catch (error) {
+      setLoading(false); // Set loading to false on error
+    }
+  }
+
   // Hook that runs once component mounts
   useEffect(() => {
-    // Async function to fetch channels
-    async function fetchChannels() {
-      try {
-        const response = await API.GetChannels();
-        setChannels(response); // Update channels state
-        setLoading(false); // Set loading to false
-      } catch (error) {
-        console.error("Error fetching channels:", error);
-        setLoading(false); // Set loading to false on error
-      }
-    }
+    const timeout = setInterval(() => {
+      fetchChannels(); // Invoke the fetch function
+    }, 5000);
 
-    fetchChannels(); // Invoke the fetch function
+    return () => clearTimeout(timeout);
   }, []);
 
   return (
@@ -45,6 +48,7 @@ function FriendsPanel() {
               justifyContent: "space-between",
               alignItems: "center",
               backgroundColor: "transparent",
+              maxHeight: "100%",
             }}
           >
             <Typography variant="h6">Chats</Typography>
@@ -53,7 +57,7 @@ function FriendsPanel() {
             </IconButton>
           </Box>
           <Divider />
-          <List>
+          <List sx={{ maxHeight: "100%" }}>
             {channels &&
               channels.map((channel) => (
                 <ChatItem username={channel.name} lastMessage={"" + channel.lastMessage} profilePic={channel.picture} key={channel.id} />

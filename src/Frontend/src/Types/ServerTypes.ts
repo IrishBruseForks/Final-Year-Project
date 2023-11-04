@@ -6,6 +6,9 @@
 export interface OAuth {
   code: string;
 }
+export interface GetChannelBody {
+  users: string[];
+}
 export interface OAuthResponse {
   token: string;
   profilePicture: string;
@@ -16,6 +19,16 @@ export interface ChannelResponse {
   picture: string;
   lastMessage?: number /* int64 */;
 }
-export interface NewChannelRequest {
-  users: string[];
+export interface GetMessageBody {
+  channelId: number /* int64 */;
+}
+export interface PostMessageBody {
+  channelId: number /* int64 */;
+  content: string;
+}
+export interface PostMessageResponse {
+  channelId: string;
+  sentBy: string;
+  sentOn: string;
+  content: string;
 }

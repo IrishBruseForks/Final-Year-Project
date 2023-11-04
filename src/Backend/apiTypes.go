@@ -1,7 +1,11 @@
 package main
 
 type OAuth struct {
-	Code string `json:"code"`
+	Code string `json:"code" validate:"required"`
+}
+
+type GetChannelBody struct {
+	Users []string `json:"users" validate:"required"`
 }
 
 type OAuthResponse struct {
@@ -16,6 +20,18 @@ type ChannelResponse struct {
 	LastMessage *int64 `json:"lastMessage"`
 }
 
-type NewChannelRequest struct {
-	Users []string `json:"users"`
+type GetMessageBody struct {
+	ChannelId int64 `json:"channelId" validate:"required"`
+}
+
+type PostMessageBody struct {
+	ChannelId int64  `json:"channelId" validate:"required"`
+	Content   string `json:"content"`
+}
+
+type PostMessageResponse struct {
+	ChannelId string `json:"channelId"`
+	SentBy    string `json:"sentBy"`
+	SentOn    string `json:"sentOn"`
+	Content   string `json:"content"`
 }

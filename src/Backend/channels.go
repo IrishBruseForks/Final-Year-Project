@@ -5,7 +5,7 @@ import (
 	"strconv"
 
 	"github.com/golang-jwt/jwt/v5"
-	echo "github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4"
 )
 
 func getChannels(c echo.Context) error {
@@ -17,6 +17,7 @@ func getChannels(c echo.Context) error {
 		JOIN Users_Channels uc ON c.id = uc.Channels_id
 	WHERE uc.Users_id = ?;
 	`, jwt.Subject)
+
 	if err != nil {
 		return apiError("Query", err, echo.ErrInternalServerError)
 	}
@@ -43,11 +44,15 @@ func getChannels(c echo.Context) error {
 
 func postChannels(c echo.Context) error {
 	jwt := getJwt(c)
+	var err error
 
-	newChannelRequest := new(NewChannelRequest)
-	err := c.Bind(&newChannelRequest)
-	if err != nil {
+	newChannelRequest := new(GetChannelBody)
+	if err = c.Bind(&newChannelRequest); err != nil {
 		return apiError("Bind", err, echo.ErrInternalServerError)
+	}
+
+	if err = c.Validate(newChannelRequest); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
 
 	// Add the user who created the group to the group

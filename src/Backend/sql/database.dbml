@@ -19,10 +19,12 @@ Table Channels {
 
 Table Messages {
     id bigint [pk,increment]
-    userId bigint
+    channelId bigint
     sentBy char(32)
     sentOn timestamp
+    content text
 }
 
 // Relations
 Ref Users_Channels: Users.id <> Channels.id
+Ref: Messages.channelId > Channels.id

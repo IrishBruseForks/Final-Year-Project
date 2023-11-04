@@ -9,6 +9,8 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 
+	"github.com/go-playground/validator"
+
 	jwt "github.com/golang-jwt/jwt/v5"
 	godotenv "github.com/joho/godotenv"
 	echojwt "github.com/labstack/echo-jwt/v4"
@@ -44,6 +46,18 @@ func runEchoServer() {
 	e.Close()
 }
 
+type CustomValidator struct {
+	validator *validator.Validate
+}
+
+func (cv *CustomValidator) Validate(i interface{}) error {
+	if err := cv.validator.Struct(i); err != nil {
+		// Optionally, you could return the error to give each route more control over the status code
+		return err
+	}
+	return nil
+}
+
 func addRoutes(e *echo.Echo) {
 	// Non-Auth Apis
 	e.GET("/status", getStatus)
@@ -62,6 +76,8 @@ func addRoutes(e *echo.Echo) {
 		},
 	})
 
+	e.Validator = &CustomValidator{validator: validator.New()}
+
 	e.Use(jwtMiddleware)
 
 	// Validate login
@@ -73,8 +89,8 @@ func addRoutes(e *echo.Echo) {
 	e.PUT("/channels", putChannels)
 
 	// Messages Apis
-	e.GET("/messages", getChannels)
-	e.POST("/messages", postChannels)
+	e.GET("/messages", getMessages)
+	e.POST("/messages", postMessages)
 }
 
 func addMiddleware(e *echo.Echo) {

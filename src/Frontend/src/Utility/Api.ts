@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ChannelResponse, NewChannelRequest, OAuthResponse } from "../Types/ServerTypes";
+import { ChannelResponse, GetChannelBody, GetMessageBody, OAuthResponse } from "../Types/ServerTypes";
 import Constants from "./Constants";
 import { enqueueSnackbar } from "notistack";
 
@@ -46,9 +46,25 @@ async function GetChannels(): Promise<ChannelResponse[]> {
 /**
  * POST /channels
  */
-function PostChannels(data: NewChannelRequest) {
+function PostChannels(data: GetChannelBody) {
   const url = Constants.BackendUrl + "channels";
-  return AuthPost<NewChannelRequest, number>(url, data);
+  return AuthPost<GetChannelBody, number>(url, data);
+}
+
+/**
+ * GET /message
+ */
+function GetMessage() {
+  const url = Constants.BackendUrl + "messages";
+  return AuthGet<GetMessageBody>(url);
+}
+
+/**
+ * POST /message
+ */
+function PostMessage(data: GetMessageBody) {
+  const url = Constants.BackendUrl + "messages";
+  return AuthPost<GetMessageBody, number>(url, data);
 }
 
 async function AuthGet<Result>(url: string): Promise<Result> {
@@ -66,7 +82,7 @@ async function AuthPost<Data, Result>(url: string, data: Data): Promise<Result> 
     const resp = await axios.post<Result>(url, data, getConfig());
     return resp.data;
   } catch (error) {
-    enqueueSnackbar("Error: " + error, { variant: "error" });
+    enqueueSnackbar("Api " + error, { variant: "error" });
     return Promise.reject("Error");
   }
 }
@@ -85,4 +101,6 @@ export default {
   GetLogin,
   GetChannels,
   PostChannels,
+  GetMessage,
+  PostMessage,
 };

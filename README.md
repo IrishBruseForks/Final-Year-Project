@@ -14,6 +14,14 @@
 
 # Setup Instructions
 
+Open project in vscode tasks will run automatically that will setup everything.
+
+You will need node for it to `npm i`
+
+and you will need air which will hot reload the backend server for development
+
+or manual way
+
 ## src/Frontend
 
 Install node 20 or above
