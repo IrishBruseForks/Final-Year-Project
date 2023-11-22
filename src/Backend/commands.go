@@ -7,13 +7,13 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func getChannels(c echo.Context) error {
+func getCommands(c echo.Context) error {
 	jwt := getJwt(c)
 
 	// TODO return only chats the user is in
 	rows, err := db.Query(`
-	Select c.* FROM Channels c
-		JOIN Users_Channels uc ON c.id = uc.Channels_id
+	Select c.* FROM Commands c
+		JOIN Users_Commands uc ON c.id = uc.Commands_id
 	WHERE uc.Users_id = ?;
 	`, jwt.Subject)
 
@@ -21,7 +21,7 @@ func getChannels(c echo.Context) error {
 		return apiError("Query", err, echo.ErrInternalServerError)
 	}
 
-	var channels []ChannelResponse
+	var Commands []ChannelResponse
 
 	for rows.Next() {
 		var channel ChannelResponse
@@ -31,17 +31,17 @@ func getChannels(c echo.Context) error {
 			return apiError("Scan", err, echo.ErrInternalServerError)
 		}
 
-		channels = append(channels, channel)
+		Commands = append(Commands, channel)
 	}
 
 	if err = rows.Err(); err != nil {
 		return apiError("rows", err, echo.ErrInternalServerError)
 	}
 
-	return c.JSON(http.StatusOK, channels)
+	return c.JSON(http.StatusOK, Commands)
 }
 
-func postChannels(c echo.Context) error {
+func postCommands(c echo.Context) error {
 	jwt := getJwt(c)
 	var err error
 
@@ -59,7 +59,7 @@ func postChannels(c echo.Context) error {
 
 	createChannelQuery := `
 	INSERT INTO
-		Channels (name,picture,lastMessage)
+		Commands (name,picture,lastMessage)
 	VALUES
 		(?,?,?);
 	`
@@ -72,7 +72,7 @@ func postChannels(c echo.Context) error {
 
 	addUserToChannelQuery := `
 	INSERT INTO
-		Users_Channels (Users_id, Channels_id)
+		Users_Commands (Users_id, Commands_id)
 	VALUES
 		(?,?);
 	`
@@ -81,7 +81,7 @@ func postChannels(c echo.Context) error {
 		_, err = db.Exec(addUserToChannelQuery, user, channelId)
 
 		if err != nil {
-			return apiError("userChannels", err, echo.ErrInternalServerError)
+			return apiError("userCommands", err, echo.ErrInternalServerError)
 		}
 
 	}
@@ -89,8 +89,8 @@ func postChannels(c echo.Context) error {
 	return c.String(http.StatusOK, strconv.FormatInt(channelId, 10))
 }
 
-func putChannels(c echo.Context) error {
+func putCommands(c echo.Context) error {
 	// jwt := getJwt(c)
 
-	return c.String(http.StatusOK, "putChannels")
+	return c.String(http.StatusOK, "putCommands")
 }

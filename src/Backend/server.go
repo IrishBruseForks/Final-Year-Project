@@ -83,14 +83,18 @@ func addRoutes(e *echo.Echo) {
 	// Validate login
 	e.GET("/login", getLogin)
 
-	// Channel Apis
+	// Channel Endpoints
 	e.GET("/channels", getChannels)
 	e.POST("/channels", postChannels)
 	e.PUT("/channels", putChannels)
 
-	// Messages Apis
+	// Messages Endpoints
 	e.GET("/messages", getMessages)
 	e.POST("/messages", postMessages)
+
+	// Messages Apis
+	e.GET("/commands", getCommands)
+	e.POST("/commands", postCommands)
 }
 
 func addMiddleware(e *echo.Echo) {
@@ -179,4 +183,9 @@ func log(value error) {
 func apiError(prefix string, value error, httpError error) error {
 	fmt.Println("Error("+prefix+"):", value.Error())
 	return httpError
+}
+
+func getJwt(c echo.Context) *AuthJwt {
+	user := c.Get("user").(*jwt.Token)
+	return user.Claims.(*AuthJwt)
 }
