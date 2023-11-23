@@ -2,6 +2,7 @@ import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { SnackbarProvider } from "notistack";
 import React, { createContext, useEffect } from "react";
+import { QueryClient, QueryClientProvider } from "react-query";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import ErrorPage from "./Pages/ErrorPage";
 import HomePage from "./Pages/HomePage";
@@ -101,15 +102,19 @@ function App() {
     }
   });
 
+  const queryClient = new QueryClient({});
+
   return (
     <GoogleOAuthProvider clientId={Constants.GoogleAppID}>
       <React.StrictMode>
-        <SnackbarProvider maxSnack={3}>
-          <ThemeProvider theme={theme}>
-            <CssBaseline />
-            <RouterProvider router={router} />
-          </ThemeProvider>
-        </SnackbarProvider>
+        <QueryClientProvider client={queryClient}>
+          <SnackbarProvider maxSnack={3}>
+            <ThemeProvider theme={theme}>
+              <CssBaseline />
+              <RouterProvider router={router} />
+            </ThemeProvider>
+          </SnackbarProvider>
+        </QueryClientProvider>
       </React.StrictMode>
     </GoogleOAuthProvider>
   );

@@ -1,43 +1,31 @@
 import AddIcon from "@mui/icons-material/Add";
 import { Box, Divider, IconButton, List, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
-import { ChannelResponse } from "../Types/ServerTypes";
+import { useEffect } from "react";
+import { useQuery, useQueryClient } from "react-query";
 import API from "../Utility/Api";
 import ChatItem from "./ChatItem";
 
 // FriendsPanel componentz
 // API/Database caller
 function FriendsPanel() {
-  // State for channels and its setter
-  const [channels, setChannels] = useState<ChannelResponse[]>([]);
+  const queryClient = useQueryClient();
 
-  // State for loading status and its setter
-  const [loading, setLoading] = useState(true);
-
-  // Async function to fetch channels
-  async function fetchChannels() {
-    try {
-      const response = await API.GetChannels();
-      setChannels(response); // Update channels state
-      setLoading(false); // Set loading to false
-    } catch (error) {
-      setLoading(false); // Set loading to false on error
-    }
-  }
+  const { data, isLoading } = useQuery("getChannels", API.GetChannels);
 
   // Hook that runs once component mounts
   useEffect(() => {
     const timeout = setInterval(() => {
-      fetchChannels(); // Invoke the fetch function
+      queryClient.invalidateQueries("getChannels"); // Invoke the fetch function
     }, 5000);
 
     return () => clearTimeout(timeout);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <Box>
       {/* Conditional rendering - if loading, show the loading text */}
-      {loading ? (
+      {isLoading ? (
         <Typography>Loading...</Typography>
       ) : (
         <>
@@ -58,10 +46,9 @@ function FriendsPanel() {
           </Box>
           <Divider />
           <List sx={{ maxHeight: "100%" }}>
-            {channels &&
-              channels.map((channel) => (
-                <ChatItem username={channel.name} lastMessage={"" + channel.lastMessage} profilePic={channel.picture} key={channel.id} />
-              ))}
+            {data?.map((channel) => (
+              <ChatItem username={channel.name} lastMessage={"" + channel.lastMessage} profilePic={channel.picture} key={channel.id} />
+            ))}
           </List>
         </>
       )}

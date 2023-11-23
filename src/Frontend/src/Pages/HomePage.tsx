@@ -3,8 +3,8 @@ import { AppBar, Box, IconButton, Menu, MenuItem, Paper, Stack, SwipeableDrawer,
 import Grid from "@mui/material/Grid";
 import { useEffect, useState } from "react";
 import FriendsPanel from "../Components/FriendsPanel";
-import Constants from "../Utility/Constants";
 import Image from "../Components/Image";
+import Constants from "../Utility/Constants";
 
 function HomePage() {
   const [opened, setOpened] = useState(false);
