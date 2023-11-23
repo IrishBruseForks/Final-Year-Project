@@ -1,9 +1,13 @@
+import * as React from "react";
 import AddIcon from "@mui/icons-material/Add";
 import { Box, Divider, IconButton, List, Typography } from "@mui/material";
 import { useEffect } from "react";
 import { useQuery, useQueryClient } from "react-query";
 import API from "../Utility/Api";
 import ChatItem from "./ChatItem";
+import Modal from "@mui/material/Modal";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import NewChatModal from "./NewChatModal";
 
 // FriendsPanel componentz
 // API/Database caller
@@ -11,6 +15,13 @@ function FriendsPanel() {
   const queryClient = useQueryClient();
 
   const { data, isLoading } = useQuery("getChannels", API.GetChannels);
+
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+ 
+
 
   // Hook that runs once component mounts
   useEffect(() => {
@@ -41,9 +52,13 @@ function FriendsPanel() {
           >
             <Typography variant="h6">Chats</Typography>
             <IconButton>
+              <PersonAddIcon />
+            </IconButton>
+            <IconButton onClick={handleOpen}>
               <AddIcon />
             </IconButton>
           </Box>
+          <NewChatModal open={open} handleClose={handleClose} />
           <Divider />
           <List sx={{ maxHeight: "100%" }}>
             {data?.map((channel) => (
