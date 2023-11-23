@@ -16,6 +16,11 @@ VALUES (
         "https://picsum.photos/id/10/200"
     ),
     (
+        "103599007347698685839",
+        "Ryan Harte",
+        "https://lh3.googleusercontent.com/a/ACg8ocLiEexQGgJZmVm0juXAdU0sa59ZF2HbA345tsA5bkmn=s96-c"
+    ),
+    (
         "2",
         "Test Account 2",
         "https://picsum.photos/id/20/200"
@@ -30,4 +35,4 @@ VALUES (
 -- Insert test messages
 INSERT INTO Users_Channels (Users_id, Channels_id)
 VALUES ("101915797943822058743", LAST_INSERT_ID()),
-    ("108148078418375467933", LAST_INSERT_ID());
+    ("103599007347698685839", LAST_INSERT_ID());
