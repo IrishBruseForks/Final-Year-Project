@@ -1,11 +1,10 @@
 import AddIcon from "@mui/icons-material/Add";
-import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import { Box, Divider, IconButton, List, Typography } from "@mui/material";
 import * as React from "react";
 import { useEffect } from "react";
 import { useQuery, useQueryClient } from "react-query";
 import API from "../Utility/Api";
-import ChatItem from "./ChatItem";
+import ChannelItem from "./ChannelItem";
 import NewChatModal from "./NewChatModal";
 
 // FriendsPanel componentz
@@ -55,7 +54,7 @@ function FriendsPanel() {
           <Divider />
           <List sx={{ maxHeight: "100%" }}>
             {data?.map((channel) => (
-              <ChatItem username={channel.name} lastMessage={"" + channel.lastMessage} profilePic={channel.picture} key={channel.id} />
+              <ChannelItem username={channel.name} lastMessage={"" + channel.lastMessage} profilePic={channel.picture} key={channel.id} />
             ))}
           </List>
         </>

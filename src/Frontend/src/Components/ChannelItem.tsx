@@ -6,7 +6,7 @@ type Props = {
   profilePic: string;
 };
 
-function ChatItem({ username, lastMessage, profilePic }: Props) {
+function ChannelItem({ username, lastMessage, profilePic }: Props) {
   return (
     <>
       <ListItemButton>
@@ -30,4 +30,4 @@ function ChatItem({ username, lastMessage, profilePic }: Props) {
   );
 }
 
-export default ChatItem;
+export default ChannelItem;
