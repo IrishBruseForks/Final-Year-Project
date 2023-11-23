@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import { useQuery, useQueryClient } from "react-query";
 import API from "../Utility/Api";
 import ChatItem from "./ChatItem";
-import NewChatModal from "./NewChatModal.1";
+import NewChatModal from "./NewChatModal";
 
 // FriendsPanel componentz
 // API/Database caller
