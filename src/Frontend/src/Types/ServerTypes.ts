@@ -24,8 +24,8 @@ export interface GetMessageBody {
 }
 export interface Friend {
   id: string;
-  username: number /* int64 */;
-  picture: number /* int64 */;
+  username: string;
+  picture: string;
 }
 export interface PostMessageBody {
   channelId: number /* int64 */;
