@@ -1,6 +1,6 @@
-import { Paper, Stack, useMediaQuery } from "@mui/material";
+import { Paper, Stack, SwipeableDrawer, useMediaQuery } from "@mui/material";
 import Grid from "@mui/material/Grid";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import FriendsPanel from "../Components/FriendsPanel";
 import MessageHeader from "../Components/MessageArea/MessageHeader";
 import MessageView from "../Components/MessageArea/MessageView";
@@ -9,23 +9,45 @@ import Constants from "../Utility/Constants";
 function HomePage() {
   const isMobile = useMediaQuery("(max-width:900px)");
 
+  const [opened, setOpened] = useState(false);
+
+  const toggleDrawer = (state: boolean) => {
+    setOpened(state);
+  };
   useEffect(() => {
     document.title = Constants.AppName("Home");
   }, []);
 
   return (
     <Stack sx={{ height: "100vh" }}>
-      <MessageHeader />
-
-      {!isMobile && (
-        <Grid item md={3} sx={{ width: "100%" }}>
-          <Paper sx={{ height: "100%" }}>
-            <FriendsPanel></FriendsPanel>
-          </Paper>
-        </Grid>
-      )}
+      <MessageHeader toggleDrawer={toggleDrawer} />
 
       <Grid container columnSpacing={2} flexGrow={1}>
+        {isMobile ? (
+          <SwipeableDrawer
+            anchor="left"
+            open={opened}
+            onOpen={() => {
+              console.log("open");
+              toggleDrawer(true);
+            }}
+            onClose={() => {
+              console.log("close");
+              toggleDrawer(false);
+            }}
+          >
+            <Grid item sx={{ width: { xs: "75vw" } }}>
+              <FriendsPanel></FriendsPanel>
+            </Grid>
+          </SwipeableDrawer>
+        ) : (
+          <Grid item md={3} sx={{ width: "100%" }}>
+            <Paper sx={{ height: "100%" }}>
+              <FriendsPanel></FriendsPanel>
+            </Paper>
+          </Grid>
+        )}
+
         <MessageView />
       </Grid>
     </Stack>

@@ -1,20 +1,13 @@
 import { Menu as MenuIcon } from "@mui/icons-material";
-import { AppBar, Grid, IconButton, Menu, MenuItem, SwipeableDrawer, Toolbar, Typography, useMediaQuery } from "@mui/material";
+import { AppBar, IconButton, Menu, MenuItem, Toolbar, Typography, useMediaQuery } from "@mui/material";
 
 import { useEffect, useState } from "react";
 import Constants from "../../Utility/Constants";
-import FriendsPanel from "../FriendsPanel";
 import Image from "../Image";
 
-function MessageHeader() {
+function MessageHeader({ toggleDrawer }: { toggleDrawer: (open: boolean) => void }) {
   const isMobile = useMediaQuery("(max-width:900px)");
   const [profilePicture, setProfilePicture] = useState<string>("");
-  const [opened, setOpened] = useState(false);
-
-  const toggleDrawer = (state: boolean) => {
-    setOpened(state);
-  };
-
   useEffect(() => {
     setProfilePicture(localStorage.getItem(Constants.ProfilePictureKey)!);
   }, []);
@@ -73,25 +66,6 @@ function MessageHeader() {
           </div>
         </Toolbar>
       </AppBar>
-
-      {isMobile && (
-        <SwipeableDrawer
-          anchor="left"
-          open={opened}
-          onOpen={() => {
-            console.log("open");
-            toggleDrawer(true);
-          }}
-          onClose={() => {
-            console.log("close");
-            toggleDrawer(false);
-          }}
-        >
-          <Grid item sx={{ width: { xs: "75vw" } }}>
-            <FriendsPanel></FriendsPanel>
-          </Grid>
-        </SwipeableDrawer>
-      )}
     </>
   );
 }
