@@ -100,12 +100,22 @@ func addRoutes(e *echo.Echo) {
 func addMiddleware(e *echo.Echo) {
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
 		Format: "\n\n${method} ${status} ${uri} ${error}\n",
+		Skipper: func(c echo.Context) bool {
+			return c.Path() == "/channels" && c.Request().Method == "GET"
+		},
 	}))
 
-	e.Use(middleware.BodyDump(func(c echo.Context, reqBody, resBody []byte) {
-		fmt.Println("Request: ", string(reqBody))
-		fmt.Println("Response:", string(resBody))
-	}))
+	e.Use(middleware.BodyDumpWithConfig(
+		middleware.BodyDumpConfig{
+			Handler: func(c echo.Context, reqBody []byte, resBody []byte) {
+				fmt.Println("Request: ", string(reqBody))
+				fmt.Print("Response:", string(resBody))
+			},
+			Skipper: func(c echo.Context) bool {
+				return c.Path() == "/channels" && c.Request().Method == "GET"
+			},
+		},
+	))
 
 	e.Use(middleware.CORS())
 	e.Logger.SetLevel(0)
