@@ -1,7 +1,7 @@
 import axios from "axios";
+import { enqueueSnackbar } from "notistack";
 import { ChannelResponse, GetChannelBody, GetMessageBody, OAuthResponse } from "../Types/ServerTypes";
 import Constants from "./Constants";
-import { enqueueSnackbar } from "notistack";
 
 /**
  * GET /status

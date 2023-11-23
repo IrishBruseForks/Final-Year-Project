@@ -37,7 +37,7 @@ function App() {
     // Check to see if the backend is running
     // if there is an exception redirect to service down page and keep retrying connection
     CheckServiceStatus();
-    setTimeout(() => {
+    setInterval(() => {
       CheckServiceStatus();
     }, 5000);
 

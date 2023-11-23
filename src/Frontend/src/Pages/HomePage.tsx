@@ -1,5 +1,5 @@
 import { Menu as MenuIcon } from "@mui/icons-material";
-import { AppBar, Box, IconButton, Menu, MenuItem, Paper, Stack, SwipeableDrawer, Toolbar, Typography, useMediaQuery } from "@mui/material";
+import { AppBar, IconButton, Menu, MenuItem, Paper, Stack, SwipeableDrawer, Toolbar, Typography, useMediaQuery } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { useEffect, useState } from "react";
 import FriendsPanel from "../Components/FriendsPanel";
@@ -21,8 +21,8 @@ function HomePage() {
   };
 
   return (
-    <Box sx={{ height: "100vh" }}>
-      <AppBar position="sticky">
+    <Stack sx={{ height: "100vh" }}>
+      <AppBar position="relative">
         <Toolbar>
           {isMobile && (
             <IconButton
@@ -74,7 +74,7 @@ function HomePage() {
           </div>
         </Toolbar>
       </AppBar>
-      <Grid container columnSpacing={2} sx={{ height: "100%" }}>
+      <Grid container columnSpacing={2} flexGrow={1}>
         {isMobile ? (
           // Mobile
           <SwipeableDrawer
@@ -108,7 +108,7 @@ function HomePage() {
           </Stack>
         </Grid>
       </Grid>
-    </Box>
+    </Stack>
   );
 }
 
