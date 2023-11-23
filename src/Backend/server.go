@@ -101,7 +101,7 @@ func addMiddleware(e *echo.Echo) {
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
 		Format: "\n\n${method} ${status} ${uri} ${error}\n",
 		Skipper: func(c echo.Context) bool {
-			return c.Path() == "/channels" && c.Request().Method == "GET"
+			return (c.Path() == "/channels" || c.Path() == "/status") && (c.Request().Method == "GET" || c.Request().Method == "OPTIONS")
 		},
 	}))
 
@@ -112,7 +112,7 @@ func addMiddleware(e *echo.Echo) {
 				fmt.Print("Response:", string(resBody))
 			},
 			Skipper: func(c echo.Context) bool {
-				return c.Path() == "/channels" && c.Request().Method == "GET"
+				return (c.Path() == "/channels" || c.Path() == "/status") && (c.Request().Method == "GET" || c.Request().Method == "OPTIONS")
 			},
 		},
 	))
