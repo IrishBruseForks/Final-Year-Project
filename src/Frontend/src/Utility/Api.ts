@@ -72,7 +72,7 @@ function PostMessage(data: GetMessageBody) {
  */
 function GetFriends() {
   const url = Constants.BackendUrl + "friends";
-  return AuthGet<Friend>(url);
+  return AuthGet<Friend[]>(url);
 }
 
 async function AuthGet<Result>(url: string): Promise<Result> {
