@@ -9,7 +9,7 @@ import Constants from "../Utility/Constants";
 export function HomePage() {
   const [opened, setOpened] = useState(false);
   const [profilePicture, setProfilePicture] = useState<string>("");
-  const isMobile = useMediaQuery("(max-width:900px)");
+  const isMobile = useMediaQuery("(max-width:899px)");
 
   useEffect(() => {
     document.title = Constants.AppName("Home");

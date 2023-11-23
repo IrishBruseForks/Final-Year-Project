@@ -9,7 +9,7 @@ type Props = {
 function ChannelItem({ username, lastMessage, profilePic }: Props) {
   return (
     <>
-      <ListItemButton onClick={open}>
+      <ListItemButton>
         <Box display={"grid"} alignItems={"center"} gridTemplateColumns={"1fr auto"}>
           {/* Profile picture (Avatar component can be used here) */}
           <Box gridRow={"span 2"}>

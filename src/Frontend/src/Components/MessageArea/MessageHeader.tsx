@@ -6,7 +6,7 @@ import Constants from "../../Utility/Constants";
 import Image from "../Image";
 
 function MessageHeader({ toggleDrawer }: { toggleDrawer: (open: boolean) => void }) {
-  const isMobile = useMediaQuery("(max-width:900px)");
+  const isMobile = useMediaQuery("(max-width:899px)");
   const [profilePicture, setProfilePicture] = useState<string>("");
   useEffect(() => {
     setProfilePicture(localStorage.getItem(Constants.ProfilePictureKey)!);

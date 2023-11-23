@@ -5,7 +5,7 @@ import React, { createContext, useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import ErrorPage from "./Pages/ErrorPage";
-import HomePage from "./Pages/HomePage.1";
+import HomePage from "./Pages/HomePage";
 import LoginPage from "./Pages/LoginPage";
 import ServiceDownPage from "./Pages/ServiceDownPage";
 import Api from "./Utility/Api";

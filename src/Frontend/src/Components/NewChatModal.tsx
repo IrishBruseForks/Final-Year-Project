@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import { Autocomplete, Box, Button, Modal, Stack, TextField, Typography } from "@mui/material";
+import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
-import { Box, Modal, TextField, Typography, MenuItem, Autocomplete, Button, Stack } from "@mui/material";
 import API from "../Utility/Api";
 
 interface NewChatModalProps {

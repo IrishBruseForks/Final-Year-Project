@@ -7,7 +7,7 @@ import MessageView from "../Components/MessageArea/MessageView";
 import Constants from "../Utility/Constants";
 
 function HomePage() {
-  const isMobile = useMediaQuery("(max-width:900px)");
+  const isMobile = useMediaQuery("(max-width:899px)");
 
   const [opened, setOpened] = useState(false);
 
@@ -22,26 +22,28 @@ function HomePage() {
     <Stack sx={{ height: "100vh" }}>
       <MessageHeader toggleDrawer={toggleDrawer} />
 
+      {isMobile && (
+        <SwipeableDrawer
+          anchor="left"
+          open={opened}
+          onOpen={() => {
+            console.log("open");
+            toggleDrawer(true);
+          }}
+          onClose={() => {
+            console.log("close");
+            toggleDrawer(false);
+          }}
+        >
+          <Grid item sx={{ width: { xs: "75vw" } }}>
+            <FriendsPanel></FriendsPanel>
+          </Grid>
+        </SwipeableDrawer>
+      )}
+
       <Grid container columnSpacing={2} flexGrow={1}>
-        {isMobile ? (
-          <SwipeableDrawer
-            anchor="left"
-            open={opened}
-            onOpen={() => {
-              console.log("open");
-              toggleDrawer(true);
-            }}
-            onClose={() => {
-              console.log("close");
-              toggleDrawer(false);
-            }}
-          >
-            <Grid item sx={{ width: { xs: "75vw" } }}>
-              <FriendsPanel></FriendsPanel>
-            </Grid>
-          </SwipeableDrawer>
-        ) : (
-          <Grid item md={3} sx={{ width: "100%" }}>
+        {!isMobile && (
+          <Grid item md={3} flexGrow={1}>
             <Paper sx={{ height: "100%" }}>
               <FriendsPanel></FriendsPanel>
             </Paper>
