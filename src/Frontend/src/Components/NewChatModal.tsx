@@ -1,108 +1,88 @@
-import { Box, Button, List, ListItem, Modal, TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
+import { useQuery } from "react-query";
+import { Box, Button, Modal, TextField, Typography, MenuItem } from "@mui/material";
+import API from "../Utility/Api";
 
 interface NewChatModalProps {
   open: boolean;
   handleClose: () => void;
 }
 
+interface User {
+  id: string;
+  username: string;
+  picture: string;
+}
+
 function NewChatModal({ open, handleClose }: NewChatModalProps) {
-  const [selectedContacts, setSelectedContacts] = useState<string[]>([]);
+  const [selectedContacts, setSelectedContacts] = useState<User[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [message, setMessage] = useState("");
-  const [searchResults, setSearchResults] = useState<string[]>([]); // Mocked search results
+
+  // Fetch search results using react-query
+  const { data: searchResults, isFetching } = useQuery(
+    ['getFriends', searchTerm],
+    () => API.GetFriends(searchTerm),
+    {
+      enabled: searchTerm.length > 0, // Only run the query if the search term is not empty
+      keepPreviousData: true, // Optional: Keep previous data while new data is being fetched
+    }
+  );
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-    setSearchTerm(value);
+    setSearchTerm(event.target.value);
+  };
 
-    // Implement the actual search logic for contacts here - API Call
-    // Demonstration below for searching users - will be deleted eventually
-    if (value) {
-      setSearchResults(["Mario", "Luigi", "Ash"].filter((user) => user.toLowerCase().includes(value.toLowerCase())));
-    } else {
-      setSearchResults([]);
+  const handleAddContact = (user: User) => {
+    if (!selectedContacts.some((contact) => contact.id === user.id)) {
+      setSelectedContacts([...selectedContacts, user]);
     }
   };
 
-  const handleAddContact = (contact: string) => {
-    if (!selectedContacts.includes(contact)) {
-      setSelectedContacts([...selectedContacts, contact]);
-    }
-  };
-
-  const handleRemoveContact = (contact: string) => {
-    setSelectedContacts(selectedContacts.filter((c) => c !== contact));
+  const handleRemoveContact = (userId: string) => {
+    setSelectedContacts(selectedContacts.filter((contact) => contact.id !== userId));
   };
 
   return (
     <Modal open={open} onClose={handleClose} aria-labelledby="new-chat-modal-title" sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
       <Box
+        component="form"
         sx={{
-          p: 1, // Padding
-          display: "flex", // Use flexbox
-          flexDirection: "column", // Stack children vertically
-          justifyContent: "center", // Center content vertically in the box
-          alignItems: "center", // Center content horizontally
-          backgroundColor: "background.paper", // Background color
-          borderRadius: 2, // Border radius
-          boxShadow: 24, // Box shadow
-          maxWidth: 400, // Maximum width
-          width: "100%", // Full width
-          margin: "auto", // Auto margins for centering
+          p: 1,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "background.paper",
+          borderRadius: 2,
+          boxShadow: 24,
+          maxWidth: 400,
+          width: "100%",
+          margin: "auto",
         }}
       >
         <Typography id="new-chat-modal-title" variant="h6" component="h2">
-          Start New Chat
+          Create New Chat
         </Typography>
 
-        {/* Search Bar for Contacts */}
-        <TextField label="Search Contacts" fullWidth margin="normal" value={searchTerm} onChange={handleSearchChange} />
-
-        {/* Search Results - will display the contacts that have been selected */}
-        <List>
-          {searchResults.map((contact, index) => (
-            <ListItem key={index} button onClick={() => handleAddContact(contact)}>
-              {contact}
-            </ListItem>
-          ))}
-        </List>
-
-        {/* Display Selected Contacts */}
-        <Typography variant="body2" sx={{ mt: 2 }}>
-          Selected Contacts:
-        </Typography>
-        <Box sx={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: 1, mt: 1 }}>
-          {selectedContacts.map((contact, index) => (
-            <Box
-              key={index}
-              sx={{
-                p: 1,
-                border: "1px solid",
-                borderRadius: "4px",
-                cursor: "pointer", // Style for cursor. Done manually as it is automatically done for other components
-              }}
-              onClick={() => handleRemoveContact(contact)}
-            >
-              {contact}
-            </Box>
-          ))}
-        </Box>
-        {/* Message Input */}
-        <TextField label="Message" fullWidth margin="normal" multiline rows={4} value={message} onChange={(e) => setMessage(e.target.value)} />
-
-        {/* Send Button */}
-        <Button
-          variant="contained"
-          color="primary"
+        <TextField
+          label="Search Contacts"
           fullWidth
-          onClick={() => {
-            /* send message logic will go here*/
-          }}
-          disabled={selectedContacts.length === 0} // Enables send button only if a contact has been selected
+          margin="normal"
+          value={searchTerm}
+          onChange={handleSearchChange}
+          select
+          autoComplete="off"
+          disabled={isFetching}
         >
-          Send
-        </Button>
+          {searchResults?.map((user) => (
+            <MenuItem key={user.id} value={user.username} onClick={() => handleAddContact(user)}>
+              {user.username}
+            </MenuItem>
+          ))}
+        </TextField>
+
+        {/* ... Additional components like the list of selected contacts, message field, etc. */}
+        {/* ... */}
       </Box>
     </Modal>
   );

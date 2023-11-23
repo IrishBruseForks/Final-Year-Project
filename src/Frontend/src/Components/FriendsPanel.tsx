@@ -47,9 +47,6 @@ function FriendsPanel() {
             }}
           >
             <Typography variant="h6">Chats</Typography>
-            <IconButton>
-              <PersonAddIcon />
-            </IconButton>
             <IconButton onClick={handleOpen}>
               <AddIcon />
             </IconButton>
