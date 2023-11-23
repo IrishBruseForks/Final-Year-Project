@@ -7,6 +7,8 @@ import (
 )
 
 func getFriends(c echo.Context) error {
+	jwt := getJwt(c)
+
 	rows, err := db.Query(`
 	Select id,username,picture FROM Users;
 	`)
@@ -25,7 +27,9 @@ func getFriends(c echo.Context) error {
 			return apiError("Scan", err, echo.ErrInternalServerError)
 		}
 
-		Friends = append(Friends, channel)
+		if channel.Id != jwt.Subject {
+			Friends = append(Friends, channel)
+		}
 	}
 
 	if err = rows.Err(); err != nil {
