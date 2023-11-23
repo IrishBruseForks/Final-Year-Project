@@ -22,6 +22,11 @@ export interface ChannelResponse {
 export interface GetMessageBody {
   channelId: number /* int64 */;
 }
+export interface Friend {
+  id: string;
+  username: number /* int64 */;
+  picture: number /* int64 */;
+}
 export interface PostMessageBody {
   channelId: number /* int64 */;
   content: string;

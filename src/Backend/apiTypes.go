@@ -24,6 +24,12 @@ type GetMessageBody struct {
 	ChannelId int64 `json:"channelId" validate:"required"`
 }
 
+type Friend struct {
+	Id       string `json:"id" validate:"required"`
+	Username string `json:"username" validate:"required"`
+	Picture  string `json:"picture" validate:"required"`
+}
+
 type PostMessageBody struct {
 	ChannelId int64  `json:"channelId" validate:"required"`
 	Content   string `json:"content"`

@@ -92,9 +92,12 @@ func addRoutes(e *echo.Echo) {
 	e.GET("/messages", getMessages)
 	e.POST("/messages", postMessages)
 
-	// Messages Apis
+	// Messages Endpoints
 	e.GET("/commands", getCommands)
 	e.POST("/commands", postCommands)
+
+	// Friends Endpoints
+	e.GET("/friends", getFriends)
 }
 
 func addMiddleware(e *echo.Echo) {

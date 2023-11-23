@@ -1,6 +1,6 @@
 import axios from "axios";
 import { enqueueSnackbar } from "notistack";
-import { ChannelResponse, GetChannelBody, GetMessageBody, OAuthResponse } from "../Types/ServerTypes";
+import { ChannelResponse, Friend, GetChannelBody, GetMessageBody, OAuthResponse } from "../Types/ServerTypes";
 import Constants from "./Constants";
 
 /**
@@ -65,6 +65,14 @@ function GetMessage() {
 function PostMessage(data: GetMessageBody) {
   const url = Constants.BackendUrl + "messages";
   return AuthPost<GetMessageBody, number>(url, data);
+}
+
+/**
+ * GET /message
+ */
+function GetFriends() {
+  const url = Constants.BackendUrl + "friends";
+  return AuthGet<Friend>(url);
 }
 
 async function AuthGet<Result>(url: string): Promise<Result> {

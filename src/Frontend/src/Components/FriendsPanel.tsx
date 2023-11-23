@@ -1,13 +1,12 @@
-import * as React from "react";
 import AddIcon from "@mui/icons-material/Add";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import { Box, Divider, IconButton, List, Typography } from "@mui/material";
+import * as React from "react";
 import { useEffect } from "react";
 import { useQuery, useQueryClient } from "react-query";
 import API from "../Utility/Api";
 import ChatItem from "./ChatItem";
-import Modal from "@mui/material/Modal";
-import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import NewChatModal from "./NewChatModal";
+import NewChatModal from "./NewChatModal.1";
 
 // FriendsPanel componentz
 // API/Database caller
@@ -19,9 +18,6 @@ function FriendsPanel() {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-
- 
-
 
   // Hook that runs once component mounts
   useEffect(() => {
