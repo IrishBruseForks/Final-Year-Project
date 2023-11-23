@@ -111,4 +111,5 @@ export default {
   PostChannels,
   GetMessage,
   PostMessage,
+  GetFriends,
 };
