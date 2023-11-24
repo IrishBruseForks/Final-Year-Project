@@ -1,36 +1,33 @@
-import AddIcon from "@mui/icons-material/Add";
+import React, { useState, useEffect } from "react";
 import { Box, Divider, IconButton, List, Typography } from "@mui/material";
-import * as React from "react";
-import { useEffect } from "react";
+import AddIcon from "@mui/icons-material/Add";
 import { useQuery, useQueryClient } from "react-query";
 import API from "../Utility/Api";
 import ChannelItem from "./ChannelItem";
-import NewChatModal from "./NewChatModal";
+import { CreateChannelModal } from "./CreateChannelModal"; // Import the modal component
 
-// FriendsPanel componentz
-// API/Database caller
 function FriendsPanel() {
   const queryClient = useQueryClient();
-
   const { data, isLoading } = useQuery("getChannels", API.GetChannels);
+  const [open, setOpen] = useState(false);
 
-  const [open, setOpen] = React.useState(false);
+  // Assuming you have a method to get the current user's name
+  // This is a placeholder, replace it with the actual logic
+  const currentUserName = "Ryan Harte"; // Replace with dynamic user's name retrieval
+
+  useEffect(() => {
+    // This interval will refetch channels every 5 seconds
+    const interval = setInterval(() => {
+      queryClient.invalidateQueries("getChannels");
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [queryClient]);
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  // Hook that runs once component mounts
-  useEffect(() => {
-    const timeout = setInterval(() => {
-      queryClient.invalidateQueries("getChannels"); // Invoke the fetch function
-    }, 5000);
-
-    return () => clearTimeout(timeout);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   return (
     <Box>
-      {/* Conditional rendering - if loading, show the loading text */}
       {isLoading ? (
         <Typography>Loading...</Typography>
       ) : (
@@ -50,15 +47,19 @@ function FriendsPanel() {
               <AddIcon />
             </IconButton>
           </Box>
-          <NewChatModal open={open} handleClose={handleClose} />
           <Divider />
-          <List sx={{ maxHeight: "100%" }}>
+          <List sx={{ maxHeight: "100%", overflow: "auto" }}>
             {data?.map((channel) => (
               <ChannelItem username={channel.name} lastMessage={"" + channel.lastMessage} profilePic={channel.picture} key={channel.id} />
             ))}
           </List>
         </>
       )}
+      <CreateChannelModal
+        open={open}
+        handleClose={handleClose}
+        defaultChannelName={currentUserName} 
+      />
     </Box>
   );
 }
