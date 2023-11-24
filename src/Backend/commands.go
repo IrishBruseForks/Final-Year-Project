@@ -45,7 +45,7 @@ func postCommands(c echo.Context) error {
 	jwt := getJwt(c)
 	var err error
 
-	newChannelRequest := new(GetChannelBody)
+	newChannelRequest := new(PostChannelBody)
 	if err = c.Bind(&newChannelRequest); err != nil {
 		return apiError("Bind", err, echo.ErrInternalServerError)
 	}

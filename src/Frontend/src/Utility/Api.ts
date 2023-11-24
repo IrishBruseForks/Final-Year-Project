@@ -1,6 +1,6 @@
 import axios from "axios";
 import { enqueueSnackbar } from "notistack";
-import { ChannelResponse, Friend, GetChannelBody, GetMessageBody, OAuthResponse } from "../Types/ServerTypes";
+import { ChannelResponse, Friend, GetMessageBody, OAuthResponse, PostChannelBody } from "../Types/ServerTypes";
 import Constants from "./Constants";
 
 /**
@@ -46,9 +46,9 @@ async function GetChannels(): Promise<ChannelResponse[]> {
 /**
  * POST /channels
  */
-function PostChannels(data: GetChannelBody) {
+function PostChannels(data: PostChannelBody) {
   const url = Constants.BackendUrl + "channels";
-  return AuthPost<GetChannelBody, number>(url, data);
+  return AuthPost<PostChannelBody, number>(url, data);
 }
 
 /**

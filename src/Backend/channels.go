@@ -45,7 +45,7 @@ func postChannels(c echo.Context) error {
 	jwt := getJwt(c)
 	var err error
 
-	newChannelRequest := new(GetChannelBody)
+	newChannelRequest := new(PostChannelBody)
 	if err = c.Bind(&newChannelRequest); err != nil {
 		return apiError("Bind", err, echo.ErrInternalServerError)
 	}
@@ -63,7 +63,7 @@ func postChannels(c echo.Context) error {
 	VALUES
 		(?,?,?);
 	`
-	res, err := db.Exec(createChannelQuery, jwt.Name, jwt.Picture, 0)
+	res, err := db.Exec(createChannelQuery, newChannelRequest.Name, newChannelRequest.Picture, 0) // TODO implement last channel message
 	if err != nil {
 		return apiError("createChannelQuery", err, echo.ErrInternalServerError)
 	}

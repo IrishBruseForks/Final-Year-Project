@@ -4,8 +4,10 @@ type OAuth struct {
 	Code string `json:"code" validate:"required"`
 }
 
-type GetChannelBody struct {
-	Users []string `json:"users" validate:"required"`
+type PostChannelBody struct {
+	Name    string   `json:"name" validate:"required"`
+	Picture string   `json:"picture" validate:"required"`
+	Users   []string `json:"users" validate:"required"`
 }
 
 type OAuthResponse struct {

@@ -6,7 +6,9 @@
 export interface OAuth {
   code: string;
 }
-export interface GetChannelBody {
+export interface PostChannelBody {
+  name: string;
+  picture: string;
   users: string[];
 }
 export interface OAuthResponse {
