@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { Box, Divider, IconButton, List, Typography } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
+import { Box, Divider, IconButton, List, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "react-query";
 import API from "../Utility/Api";
 import ChannelItem from "./ChannelItem";
@@ -10,10 +10,6 @@ function FriendsPanel() {
   const queryClient = useQueryClient();
   const { data, isLoading } = useQuery("getChannels", API.GetChannels);
   const [open, setOpen] = useState(false);
-
-  // Assuming you have a method to get the current user's name
-  // This is a placeholder, replace it with the actual logic
-  const currentUserName = "Ryan Harte"; // Replace with dynamic user's name retrieval
 
   useEffect(() => {
     // This interval will refetch channels every 5 seconds
@@ -55,11 +51,7 @@ function FriendsPanel() {
           </List>
         </>
       )}
-      <CreateChannelModal
-        open={open}
-        handleClose={handleClose}
-        defaultChannelName={currentUserName} 
-      />
+      <CreateChannelModal open={open} handleClose={handleClose} />
     </Box>
   );
 }

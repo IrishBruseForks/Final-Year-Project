@@ -7,7 +7,9 @@ import Image from "../Image";
 
 function MessageHeader({ toggleDrawer }: { toggleDrawer: (open: boolean) => void }) {
   const isMobile = useMediaQuery("(max-width:899px)");
+  const [opened, setOpened] = useState<boolean>(false);
   const [profilePicture, setProfilePicture] = useState<string>("");
+
   useEffect(() => {
     setProfilePicture(localStorage.getItem(Constants.ProfilePictureKey)!);
   }, []);
@@ -33,37 +35,44 @@ function MessageHeader({ toggleDrawer }: { toggleDrawer: (open: boolean) => void
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             Chatalyst
           </Typography>
-          <div>
-            <IconButton size="large" aria-label="account of current user" aria-controls="menu-appbar" aria-haspopup="true" color="inherit">
-              <Image src={profilePicture} title="Profile Picture" sx={{ height: 32, width: 32 }} />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              // anchorEl={anchorEl}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
+          <IconButton
+            onClick={() => setOpened(true)}
+            size="large"
+            aria-label="account of current user"
+            aria-controls="menu-appbar"
+            aria-haspopup="true"
+            color="inherit"
+          >
+            <Image src={profilePicture} title="Profile Picture" sx={{ height: 32, width: 32 }} />
+          </IconButton>
+          <Menu
+            id="menu-appbar"
+            anchorEl={null}
+            anchorOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+            open={opened}
+            onClose={() => {
+              setOpened(false);
+            }}
+          >
+            <MenuItem>Profile</MenuItem>
+            <MenuItem
+              onClick={() => {
+                localStorage.removeItem(Constants.AccessTokenKey);
+                localStorage.removeItem(Constants.ProfilePictureKey);
+                window.location.reload();
               }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(false)}
-              // onClose={handleClose}
             >
-              <MenuItem
-              // onClick={handleClose}
-              >
-                Profile
-              </MenuItem>
-              <MenuItem
-              // onClick={handleClose}
-              >
-                My account
-              </MenuItem>
-            </Menu>
-          </div>
+              Logout
+            </MenuItem>
+          </Menu>
         </Toolbar>
       </AppBar>
     </>

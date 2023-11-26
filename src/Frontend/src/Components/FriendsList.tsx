@@ -57,7 +57,7 @@ export function HomePage() {
                 vertical: "top",
                 horizontal: "right",
               }}
-              open={Boolean(false)}
+              open={opened}
             >
               <MenuItem>Profile</MenuItem>
               <MenuItem>My account</MenuItem>

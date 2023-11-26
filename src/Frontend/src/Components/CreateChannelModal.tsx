@@ -1,23 +1,23 @@
-import React, { useState, useEffect } from "react";
 import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
   Button,
-  TextField,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
   Checkbox,
-  OutlinedInput,
-  ListItemText,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  FormControl,
   FormHelperText,
+  InputLabel,
+  ListItemText,
+  MenuItem,
+  OutlinedInput,
+  Select,
+  TextField,
 } from "@mui/material";
-import API from "../Utility/Api";
+import React, { useEffect, useState } from "react";
 import { useQueryClient } from "react-query";
-import { PostChannelBody, Friend } from "../Types/ServerTypes";
+import { Friend, PostChannelBody } from "../Types/ServerTypes";
+import API from "../Utility/Api";
 import Constants from "../Utility/Constants";
 
 // Constants for styling the Select component
@@ -36,11 +36,10 @@ const MenuProps = {
 type CreateChannelModalProps = {
   open: boolean;
   handleClose: () => void;
-  defaultChannelName: string;
 };
 
 // Create the CreateChannelModal component
-export const CreateChannelModal: React.FC<CreateChannelModalProps> = ({ open, handleClose, defaultChannelName }) => {
+export const CreateChannelModal: React.FC<CreateChannelModalProps> = ({ open, handleClose }) => {
   // State variables to manage form input and errors
   const [channelName, setChannelName] = useState<string>("");
   const [channelPicture, setChannelPicture] = useState<string>("");
@@ -80,9 +79,6 @@ export const CreateChannelModal: React.FC<CreateChannelModalProps> = ({ open, ha
       setSelectError(true); // Set error if no users are selected
       return; // Do not proceed with channel creation
     }
-
-    // Map the selected usernames to user IDs
-    const selectedUserIds = selectedUserID.map((username) => users.find((user) => user.username === username)?.id);
 
     // Filter out any potential undefined values and join the usernames
     const finalChannelName = channelName.trim() || selectedUserID.join(", ");
