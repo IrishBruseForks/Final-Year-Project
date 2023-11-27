@@ -1,6 +1,7 @@
 import { Paper, Stack, SwipeableDrawer, useMediaQuery } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import FriendsPanel from "../Components/FriendsPanel";
 import MessageHeader from "../Components/MessageArea/MessageHeader";
 import MessageView from "../Components/MessageArea/MessageView";
@@ -10,6 +11,10 @@ function HomePage() {
   const isMobile = useMediaQuery("(max-width:899px)");
 
   const [opened, setOpened] = useState(false);
+
+  const { username } = useParams<{ username: string }>();
+
+  console.log(username);
 
   const toggleDrawer = (state: boolean) => {
     setOpened(state);
@@ -49,7 +54,6 @@ function HomePage() {
             </Paper>
           </Grid>
         )}
-
         <MessageView />
       </Grid>
     </Stack>

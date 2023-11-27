@@ -17,18 +17,28 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <LoginPage />,
+    errorElement: <ErrorPage />,
   },
   {
     path: "/",
     element: <HomePage />,
+    errorElement: <ErrorPage />,
+    children: [
+      {
+        path: "/:uuid",
+        element: <HomePage />,
+      },
+    ],
   },
   {
     path: "/serviceDown",
     element: <ServiceDownPage />,
+    errorElement: <ErrorPage />,
   },
   {
     path: "*",
     element: <ErrorPage />,
+    errorElement: <ErrorPage />,
   },
 ]);
 
