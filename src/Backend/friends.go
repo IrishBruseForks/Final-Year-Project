@@ -9,12 +9,10 @@ import (
 func getFriends(c echo.Context) error {
 	jwt := getJwt(c)
 
-	rows, err := db.Query(`
-	Select id,username,picture FROM Users;
-	`)
+	rows, err := db.Query("Select id,username,picture FROM Users;")
 
 	if err != nil {
-		return apiError("Query", err, echo.ErrInternalServerError)
+		return apiError("Query", echo.ErrInternalServerError, err)
 	}
 
 	var Friends []Friend
@@ -24,7 +22,7 @@ func getFriends(c echo.Context) error {
 		err := rows.Scan(&channel.Id, &channel.Username, &channel.Picture)
 
 		if err != nil {
-			return apiError("Scan", err, echo.ErrInternalServerError)
+			return apiError("Scan", echo.ErrInternalServerError, err)
 		}
 
 		if channel.Id != jwt.Subject {
@@ -33,7 +31,7 @@ func getFriends(c echo.Context) error {
 	}
 
 	if err = rows.Err(); err != nil {
-		return apiError("rows", err, echo.ErrInternalServerError)
+		return apiError("rows", echo.ErrInternalServerError, err)
 	}
 
 	return c.JSON(http.StatusOK, Friends)

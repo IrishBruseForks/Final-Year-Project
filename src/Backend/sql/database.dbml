@@ -11,15 +11,15 @@ Table Users {
 }
 
 Table Channels {
-    id bigint [pk,increment]
+    id varchar(36) [pk]
     name text
     picture text
-    lastMessage bigint
+    lastMessage varchar(36)
 }
 
 Table Messages {
-    id bigint [pk,increment]
-    channelId bigint
+    id varchar(36) [pk]
+    channelId varchar(36)
     sentBy char(32)
     sentOn timestamp
     content text

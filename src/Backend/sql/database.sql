@@ -1,6 +1,6 @@
 -- SQL dump generated using DBML (dbml-lang.org)
 -- Database: MySQL
--- Generated at: 2023-11-03T02:40:59.471Z
+-- Generated at: 2023-11-27T00:53:47.799Z
 
 CREATE TABLE `Users` (
   `id` char(32) PRIMARY KEY,
@@ -10,15 +10,15 @@ CREATE TABLE `Users` (
 );
 
 CREATE TABLE `Channels` (
-  `id` bigint PRIMARY KEY AUTO_INCREMENT,
+  `id` varchar(36) PRIMARY KEY,
   `name` text,
   `picture` text,
-  `lastMessage` bigint
+  `lastMessage` varchar(36)
 );
 
 CREATE TABLE `Messages` (
-  `id` bigint PRIMARY KEY AUTO_INCREMENT,
-  `channelId` bigint,
+  `id` varchar(36) PRIMARY KEY,
+  `channelId` varchar(36),
   `sentBy` char(32),
   `sentOn` timestamp,
   `content` text
@@ -26,7 +26,7 @@ CREATE TABLE `Messages` (
 
 CREATE TABLE `Users_Channels` (
   `Users_id` char(32),
-  `Channels_id` bigint,
+  `Channels_id` varchar(36),
   PRIMARY KEY (`Users_id`, `Channels_id`)
 );
 

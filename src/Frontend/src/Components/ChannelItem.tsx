@@ -1,15 +1,22 @@
 import { Avatar, Box, Divider, ListItemButton, Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 type Props = {
+  id: string;
   username: string;
   lastMessage: string;
   profilePic: string;
 };
 
-function ChannelItem({ username, lastMessage, profilePic }: Props) {
+function ChannelItem({ id, username, lastMessage, profilePic }: Props) {
+  const navigate = useNavigate();
   return (
     <>
-      <ListItemButton>
+      <ListItemButton
+        onClick={() => {
+          navigate("/" + id);
+        }}
+      >
         <Box display={"grid"} alignItems={"center"} gridTemplateColumns={"1fr auto"}>
           {/* Profile picture (Avatar component can be used here) */}
           <Box gridRow={"span 2"}>

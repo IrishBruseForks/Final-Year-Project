@@ -7,13 +7,10 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-// source A:\Final-Year-Project\src\Backend\sql\reset.sql
-
 func getMessages(c echo.Context) error {
 	var message GetMessageBody
-
 	if err := c.Bind(&message); err != nil {
-		return apiError("bind", err, echo.ErrInternalServerError)
+		return apiError("bind", echo.ErrInternalServerError, err)
 	}
 
 	if err := c.Validate(message); err != nil {
@@ -31,7 +28,7 @@ func getMessages(c echo.Context) error {
 
 	rows, err := db.Query(query, message.ChannelId)
 	if err != nil {
-		return apiError("getMessagesQuery", err, echo.ErrInternalServerError)
+		return apiError("getMessagesQuery", echo.ErrInternalServerError, err)
 	}
 
 	messages := make([]PostMessageResponse, 0)
@@ -40,7 +37,7 @@ func getMessages(c echo.Context) error {
 		var msg PostMessageResponse
 		err := rows.Scan(&msg.ChannelId, &msg.SentBy, &msg.SentOn, &msg.Content)
 		if err != nil {
-			return apiError("rows.Scan", err, echo.ErrInternalServerError)
+			return apiError("rows.Scan", echo.ErrInternalServerError, err)
 		}
 		messages = append(messages, msg)
 	}
@@ -53,12 +50,11 @@ func postMessages(c echo.Context) error {
 
 	msgRequest := new(PostMessageBody)
 
-	err := c.Bind(&msgRequest)
-	if err != nil {
-		return apiError("Bind", err, echo.ErrInternalServerError)
+	if err := c.Bind(&msgRequest); err != nil {
+		return apiError("Bind", echo.ErrInternalServerError, err)
 	}
 
-	if err = c.Validate(msgRequest); err != nil {
+	if err := c.Validate(msgRequest); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
 
@@ -68,14 +64,15 @@ func postMessages(c echo.Context) error {
 	VALUES
 		(?,?,NOW(),?);
 	`
+
 	res, err := db.Exec(query, msgRequest.ChannelId, jwt.Subject, msgRequest.Content)
 	if err != nil {
-		return apiError("createChannelQuery", err, echo.ErrInternalServerError)
+		return apiError("createChannelQuery", echo.ErrInternalServerError, err)
 	}
 
 	i, err := res.LastInsertId()
 	if err != nil {
-		return apiError("LastInsertId", err, echo.ErrInternalServerError)
+		return apiError("LastInsertId", echo.ErrInternalServerError, err)
 	}
 	return c.String(http.StatusOK, strconv.FormatInt(i, 10))
 }

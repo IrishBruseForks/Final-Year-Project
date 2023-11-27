@@ -39,9 +39,11 @@ func runEchoServer() {
 
 	e := echo.New()
 	e.HideBanner = true
+	e.Validator = &CustomValidator{validator: validator.New()}
 
 	addMiddleware(e)
 	addRoutes(e)
+
 	e.Logger.Fatal(e.Start("localhost:1323"))
 	e.Close()
 }
@@ -59,26 +61,10 @@ func (cv *CustomValidator) Validate(i interface{}) error {
 }
 
 func addRoutes(e *echo.Echo) {
+
 	// Non-Auth Apis
 	e.GET("/status", getStatus)
 	e.POST("/auth/google", postAuthGoogle)
-
-	// Auth Apis
-	secret := getJwtSecretBytes()
-
-	jwtMiddleware := echojwt.WithConfig(echojwt.Config{
-		SigningKey: secret,
-		NewClaimsFunc: func(c echo.Context) jwt.Claims {
-			return new(AuthJwt)
-		},
-		Skipper: func(c echo.Context) bool {
-			return c.Path() == "/status" || c.Path() == "/auth/google"
-		},
-	})
-
-	e.Validator = &CustomValidator{validator: validator.New()}
-
-	e.Use(jwtMiddleware)
 
 	// Validate login
 	e.GET("/login", getLogin)
@@ -92,20 +78,14 @@ func addRoutes(e *echo.Echo) {
 	e.GET("/messages", getMessages)
 	e.POST("/messages", postMessages)
 
-	// Messages Endpoints
-	e.GET("/commands", getCommands)
-	e.POST("/commands", postCommands)
-
 	// Friends Endpoints
 	e.GET("/friends", getFriends)
 }
 
 func addMiddleware(e *echo.Echo) {
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
-		Format: "\n\n${method} ${status} ${uri} ${error}\n",
-		Skipper: func(c echo.Context) bool {
-			return (c.Path() == "/channels" || c.Path() == "/status") && (c.Request().Method == "GET" || c.Request().Method == "OPTIONS")
-		},
+		Format:  "\n\n${method} ${status} ${uri} ${error}\n",
+		Skipper: Skipper,
 	}))
 
 	e.Use(middleware.BodyDumpWithConfig(
@@ -114,15 +94,30 @@ func addMiddleware(e *echo.Echo) {
 				fmt.Println("Request: ", string(reqBody))
 				fmt.Print("Response:", string(resBody))
 			},
-			Skipper: func(c echo.Context) bool {
-				return (c.Path() == "/channels" || c.Path() == "/status") && (c.Request().Method == "GET" || c.Request().Method == "OPTIONS")
-			},
+			Skipper: Skipper,
 		},
 	))
 
 	e.Use(middleware.CORS())
 	e.Logger.SetLevel(0)
 
+	// Auth Apis
+	secret := getJwtSecretBytes()
+
+	jwtMiddleware := echojwt.WithConfig(echojwt.Config{
+		SigningKey: secret,
+		NewClaimsFunc: func(c echo.Context) jwt.Claims {
+			return new(AuthJwt)
+		},
+		Skipper: func(c echo.Context) bool {
+			return c.Path() == "/status" || c.Path() == "/auth/google"
+		},
+	})
+	e.Use(jwtMiddleware)
+}
+
+func Skipper(c echo.Context) bool {
+	return c.Request().Method == "OPTIONS" || (c.Path() == "/channels" || c.Path() == "/status") && (c.Request().Method == "GET")
 }
 
 func initOauth() {
@@ -193,8 +188,8 @@ func log(value error) {
 	fmt.Println(time.Now(), value.Error())
 }
 
-func apiError(prefix string, value error, httpError error) error {
-	fmt.Println("Error("+prefix+"):", value.Error())
+func apiError(prefix string, httpError error, value ...error) error {
+	fmt.Println(prefix+":", value)
 	return httpError
 }
 

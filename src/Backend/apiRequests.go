@@ -38,7 +38,7 @@ type AuthJwt struct {
 func postAuthGoogle(c echo.Context) error {
 	u := new(OAuth)
 	if err := c.Bind(u); err != nil {
-		return apiError("Bind", err, echo.ErrInternalServerError)
+		return apiError("Bind", echo.ErrInternalServerError, err)
 	}
 
 	if err := c.Validate(u); err != nil {
@@ -47,12 +47,12 @@ func postAuthGoogle(c echo.Context) error {
 
 	idTokenResp, err := exchangeTokenWithGoogle(u)
 	if err != nil {
-		return apiError("exchangeTokenWithGoogle", err, echo.ErrInternalServerError)
+		return apiError("exchangeTokenWithGoogle", echo.ErrInternalServerError, err)
 	}
 
 	statement, err := db.Prepare(`INSERT INTO Users (id,username,picture) VALUES (?,?,?)`)
 	if err != nil {
-		return apiError("db.Prepare", err, echo.ErrInternalServerError)
+		return apiError("db.Prepare", echo.ErrInternalServerError, err)
 	}
 	defer statement.Close()
 
@@ -68,7 +68,7 @@ func postAuthGoogle(c echo.Context) error {
 		jwt.RegisteredClaims{
 			Subject:   idTokenResp.Subject,
 			Issuer:    "chatalyst",
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 24 * 7)), // implement logout on frontend
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 24 * 7)), // 7 days
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
 		},
 	}
@@ -77,7 +77,7 @@ func postAuthGoogle(c echo.Context) error {
 
 	tokenString, err := jsonToken.SignedString(getJwtSecretBytes())
 	if err != nil {
-		return apiError("jsonToken.SignedString", err, echo.ErrInternalServerError)
+		return apiError("jsonToken.SignedString", echo.ErrInternalServerError, err)
 	}
 
 	return c.JSON(http.StatusOK, OAuthResponse{

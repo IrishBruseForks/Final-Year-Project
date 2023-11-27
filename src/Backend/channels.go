@@ -2,8 +2,8 @@ package main
 
 import (
 	"net/http"
-	"strconv"
 
+	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 )
 
@@ -18,7 +18,7 @@ func getChannels(c echo.Context) error {
 	`, jwt.Subject)
 
 	if err != nil {
-		return apiError("Query", err, echo.ErrInternalServerError)
+		return apiError("Query", echo.ErrInternalServerError, err)
 	}
 
 	var channels []ChannelResponse
@@ -28,14 +28,14 @@ func getChannels(c echo.Context) error {
 		err := rows.Scan(&channel.Id, &channel.Name, &channel.Picture, &channel.LastMessage)
 
 		if err != nil {
-			return apiError("Scan", err, echo.ErrInternalServerError)
+			return apiError("Scan", echo.ErrInternalServerError, err)
 		}
 
 		channels = append(channels, channel)
 	}
 
 	if err = rows.Err(); err != nil {
-		return apiError("rows", err, echo.ErrInternalServerError)
+		return apiError("rows", echo.ErrInternalServerError, err)
 	}
 
 	return c.JSON(http.StatusOK, channels)
@@ -47,7 +47,7 @@ func postChannels(c echo.Context) error {
 
 	newChannelRequest := new(PostChannelBody)
 	if err = c.Bind(&newChannelRequest); err != nil {
-		return apiError("Bind", err, echo.ErrInternalServerError)
+		return apiError("Bind", echo.ErrInternalServerError, err)
 	}
 
 	if err = c.Validate(newChannelRequest); err != nil {
@@ -57,18 +57,22 @@ func postChannels(c echo.Context) error {
 	// Add the user who created the group to the group
 	newChannelRequest.Users = append(newChannelRequest.Users, jwt.Subject)
 
-	createChannelQuery := `
-	INSERT INTO
-		Channels (name,picture,lastMessage)
-	VALUES
-		(?,?,?);
-	`
-	res, err := db.Exec(createChannelQuery, newChannelRequest.Name, newChannelRequest.Picture, 0) // TODO implement last channel message
+	id, err := uuid.NewRandom()
 	if err != nil {
-		return apiError("createChannelQuery", err, echo.ErrInternalServerError)
+		return apiError("uuid", echo.ErrInternalServerError, err)
 	}
 
-	channelId, _ := res.LastInsertId()
+	createChannelQuery := `
+	INSERT INTO
+		Channels (id,name,picture,lastMessage)
+	VALUES
+		(?,?,?,?);
+	`
+
+	_, err = db.Exec(createChannelQuery, id, newChannelRequest.Name, newChannelRequest.Picture, 0) // TODO implement last channel message
+	if err != nil {
+		return apiError("createChannelQuery", echo.ErrInternalServerError, err)
+	}
 
 	addUserToChannelQuery := `
 	INSERT INTO
@@ -78,15 +82,14 @@ func postChannels(c echo.Context) error {
 	`
 
 	for _, user := range newChannelRequest.Users {
-		_, err = db.Exec(addUserToChannelQuery, user, channelId)
+		_, err = db.Exec(addUserToChannelQuery, user, id)
 
 		if err != nil {
-			return apiError("userChannels", err, echo.ErrInternalServerError)
+			return apiError("userChannels", echo.ErrInternalServerError, err)
 		}
-
 	}
 
-	return c.String(http.StatusOK, strconv.FormatInt(channelId, 10))
+	return c.String(http.StatusOK, id.String())
 }
 
 func putChannels(c echo.Context) error {

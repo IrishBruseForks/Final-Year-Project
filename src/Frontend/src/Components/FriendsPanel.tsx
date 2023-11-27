@@ -46,7 +46,7 @@ function FriendsPanel() {
           <Divider />
           <List sx={{ maxHeight: "100%", overflow: "auto" }}>
             {data?.map((channel) => (
-              <ChannelItem username={channel.name} lastMessage={"" + channel.lastMessage} profilePic={channel.picture} key={channel.id} />
+              <ChannelItem id={channel.id} username={channel.name} lastMessage={"" + channel.lastMessage} profilePic={channel.picture} key={channel.id} />
             ))}
           </List>
         </>
