@@ -20,6 +20,7 @@ export interface ChannelResponse {
   name: string;
   picture: string;
   lastMessage?: number /* int64 */;
+  users: string[];
 }
 export interface GetMessageBody {
   channelId: number /* int64 */;
