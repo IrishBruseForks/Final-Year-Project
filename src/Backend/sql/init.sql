@@ -10,4 +10,9 @@ VALUES
         "2",
         "Test Account 2",
         "https://picsum.photos/id/20/200"
+    ),
+    (
+        "101915797943822058743",
+        "Ethan Conneely (IrishBruse)",
+        "https://lh3.googleusercontent.com/a/ACg8ocLIyC5EsYQxWNhiKBmQp_fkSebzHP65JDd6Q17FFyMxK0Y=s96-c"
     );

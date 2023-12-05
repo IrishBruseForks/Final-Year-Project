@@ -188,7 +188,7 @@ func log(value error) {
 	fmt.Println(time.Now(), value.Error())
 }
 
-func apiError(prefix string, httpError error, value ...error) error {
+func apiError(prefix string, httpError error, value error) error {
 	fmt.Println(prefix+":", value)
 	return httpError
 }

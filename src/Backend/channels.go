@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/google/uuid"
@@ -69,7 +70,7 @@ func postChannels(c echo.Context) error {
 		(?,?,?,?);
 	`
 
-	_, err = db.Exec(createChannelQuery, id, newChannelRequest.Name, newChannelRequest.Picture, 0) // TODO implement last channel message
+	_, err = db.Exec(createChannelQuery, id.String(), newChannelRequest.Name, newChannelRequest.Picture, 0) // TODO implement last channel message
 	if err != nil {
 		return apiError("createChannelQuery", echo.ErrInternalServerError, err)
 	}
@@ -82,7 +83,8 @@ func postChannels(c echo.Context) error {
 	`
 
 	for _, user := range newChannelRequest.Users {
-		_, err = db.Exec(addUserToChannelQuery, user, id)
+		fmt.Println(user, id)
+		_, err = db.Exec(addUserToChannelQuery, user, id.String())
 
 		if err != nil {
 			return apiError("userChannels", echo.ErrInternalServerError, err)
