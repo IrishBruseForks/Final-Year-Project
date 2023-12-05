@@ -23,7 +23,7 @@ type ChannelResponse struct {
 }
 
 type GetMessageBody struct {
-	ChannelId int64 `json:"channelId" validate:"required"`
+	ChannelId string `json:"channelId" validate:"required"`
 }
 
 type Friend struct {
@@ -33,7 +33,7 @@ type Friend struct {
 }
 
 type PostMessageBody struct {
-	ChannelId int64  `json:"channelId" validate:"required"`
+	ChannelId string `json:"channelId" validate:"required"`
 	Content   string `json:"content"`
 }
 

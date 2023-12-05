@@ -2,8 +2,8 @@ package main
 
 import (
 	"net/http"
-	"strconv"
 
+	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 )
 
@@ -58,21 +58,22 @@ func postMessages(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
 
+	id, err := uuid.NewRandom()
+	if err != nil {
+		return apiError("uuid", echo.ErrInternalServerError, err)
+	}
+
 	query := `
 	INSERT INTO
-		Messages (channelId,sentBy,sentOn,content)
+		Messages (id,channelId,sentBy,sentOn,content)
 	VALUES
-		(?,?,NOW(),?);
+		(?,?,?,NOW(),?);
 	`
 
-	res, err := db.Exec(query, msgRequest.ChannelId, jwt.Subject, msgRequest.Content)
+	_, err = db.Exec(query, id, msgRequest.ChannelId, jwt.Subject, msgRequest.Content)
 	if err != nil {
-		return apiError("createChannelQuery", echo.ErrInternalServerError, err)
+		return apiError("postMessagesQuery", echo.ErrInternalServerError, err)
 	}
 
-	i, err := res.LastInsertId()
-	if err != nil {
-		return apiError("LastInsertId", echo.ErrInternalServerError, err)
-	}
-	return c.String(http.StatusOK, strconv.FormatInt(i, 10))
+	return c.String(http.StatusOK, id.String())
 }

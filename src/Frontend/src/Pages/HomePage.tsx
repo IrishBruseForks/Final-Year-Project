@@ -12,9 +12,9 @@ function HomePage() {
 
   const [opened, setOpened] = useState(false);
 
-  const { username } = useParams<{ username: string }>();
+  const { uuid } = useParams<{ uuid: string }>();
 
-  console.log(username);
+  console.log(uuid);
 
   const toggleDrawer = (state: boolean) => {
     setOpened(state);

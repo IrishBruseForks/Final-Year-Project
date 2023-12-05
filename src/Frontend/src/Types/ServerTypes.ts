@@ -20,10 +20,9 @@ export interface ChannelResponse {
   name: string;
   picture: string;
   lastMessage?: number /* int64 */;
-  users: string[];
 }
 export interface GetMessageBody {
-  channelId: number /* int64 */;
+  channelId: string;
 }
 export interface Friend {
   id: string;
@@ -31,7 +30,7 @@ export interface Friend {
   picture: string;
 }
 export interface PostMessageBody {
-  channelId: number /* int64 */;
+  channelId: string;
   content: string;
 }
 export interface PostMessageResponse {
