@@ -20,6 +20,7 @@ type ChannelResponse struct {
 	Name        string `json:"name"`
 	Picture     string `json:"picture"`
 	LastMessage *int64 `json:"lastMessage"`
+	UserIDs     string `json:"userIds"`
 }
 
 type GetMessageBody struct {

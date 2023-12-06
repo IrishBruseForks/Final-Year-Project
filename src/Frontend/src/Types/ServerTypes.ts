@@ -16,6 +16,7 @@ export interface OAuthResponse {
   profilePicture: string;
 }
 export interface ChannelResponse {
+  userIDs: any;
   id: string;
   name: string;
   picture: string;

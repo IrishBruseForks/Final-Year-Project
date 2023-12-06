@@ -9,38 +9,40 @@ import (
 )
 
 func getChannels(c echo.Context) error {
-	jwt := getJwt(c)
+    jwt := getJwt(c)
 
-	// TODO return only chats the user is in
-	rows, err := db.Query(`
-	Select c.* FROM Channels c
-		JOIN Users_Channels uc ON c.id = uc.Channels_id
-	WHERE uc.Users_id = ?;
-	`, jwt.Subject)
+    rows, err := db.Query(`
+        SELECT c.id, c.name, c.picture, c.lastMessage, GROUP_CONCAT(uc.Users_id) as userIDs
+        FROM Channels c
+        JOIN Users_Channels uc ON c.id = uc.Channels_id
+        WHERE uc.Users_id = ?
+        GROUP BY c.id, c.name, c.picture, c.lastMessage;
+    `, jwt.Subject)
 
-	if err != nil {
-		return apiError("Query", echo.ErrInternalServerError, err)
-	}
+    if err != nil {
+        return apiError("Query", echo.ErrInternalServerError, err)
+    }
 
-	var channels []ChannelResponse
+    var channels []ChannelResponse
 
-	for rows.Next() {
-		var channel ChannelResponse
-		err := rows.Scan(&channel.Id, &channel.Name, &channel.Picture, &channel.LastMessage)
+    for rows.Next() {
+        var channel ChannelResponse
+        err := rows.Scan(&channel.Id, &channel.Name, &channel.Picture, &channel.LastMessage, &channel.UserIDs)
 
-		if err != nil {
-			return apiError("Scan", echo.ErrInternalServerError, err)
-		}
+        if err != nil {
+            return apiError("Scan", echo.ErrInternalServerError, err)
+        }
 
-		channels = append(channels, channel)
-	}
+        channels = append(channels, channel)
+    }
 
-	if err = rows.Err(); err != nil {
-		return apiError("rows", echo.ErrInternalServerError, err)
-	}
+    if err = rows.Err(); err != nil {
+        return apiError("rows", echo.ErrInternalServerError, err)
+    }
 
-	return c.JSON(http.StatusOK, channels)
+    return c.JSON(http.StatusOK, channels)
 }
+
 
 func postChannels(c echo.Context) error {
 	jwt := getJwt(c)
