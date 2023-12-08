@@ -38,9 +38,26 @@ async function GetLogin(): Promise<ChannelResponse[]> {
 /**
  * GET /channels
  */
-async function GetChannels(): Promise<ChannelResponse[]> {
-  const url = Constants.BackendUrl + "channels";
-  return AuthGet<ChannelResponse[]>(url);
+async function GetChannels(searchTerm = ""): Promise<ChannelResponse[]> {
+  const params = searchTerm ? { search: encodeURIComponent(searchTerm) } : {};
+  try {
+    const response = await axios.get<ChannelResponse[]>(`${Constants.BackendUrl}channels`, {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem(Constants.AccessTokenKey),
+      },
+      params,
+    });
+    return response.data;
+  } catch (error: unknown) {
+    // error is typed as unknown
+    // Check if the error is an instance of Error
+    if (error instanceof Error) {
+      enqueueSnackbar("Error fetching channels: " + error.message, { variant: "error" });
+    } else {
+      enqueueSnackbar("An unknown error occurred", { variant: "error" });
+    }
+    throw error;
+  }
 }
 
 /**

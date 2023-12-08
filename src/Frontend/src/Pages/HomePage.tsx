@@ -9,9 +9,7 @@ import Constants from "../Utility/Constants";
 
 function HomePage() {
   const isMobile = useMediaQuery("(max-width:899px)");
-
   const [opened, setOpened] = useState(false);
-
   const { uuid } = useParams<{ uuid: string }>();
 
   console.log(uuid);
@@ -19,8 +17,17 @@ function HomePage() {
   const toggleDrawer = (state: boolean) => {
     setOpened(state);
   };
+
+  // Effect for setting the document title and disabling body scroll
   useEffect(() => {
     document.title = Constants.AppName("Home");
+    // Disable body scroll
+    document.body.style.overflow = "hidden";
+
+    // Re-enable body scroll when component unmounts
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, []);
 
   return (
@@ -41,7 +48,7 @@ function HomePage() {
           }}
         >
           <Grid item sx={{ width: { xs: "75vw" } }}>
-            <FriendsPanel></FriendsPanel>
+            <FriendsPanel />
           </Grid>
         </SwipeableDrawer>
       )}
@@ -50,7 +57,7 @@ function HomePage() {
         {!isMobile && (
           <Grid item md={3} flexGrow={1}>
             <Paper sx={{ height: "100%" }}>
-              <FriendsPanel></FriendsPanel>
+              <FriendsPanel />
             </Paper>
           </Grid>
         )}

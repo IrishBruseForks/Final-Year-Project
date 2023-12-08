@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import SearchIcon from "@mui/icons-material/Search";
 import { Box, Divider, IconButton, TextField, Typography, List, InputAdornment } from "@mui/material";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import API from "../Utility/Api";
 import ChannelItem from "./ChannelItem";
 import { CreateChannelModal } from "./CreateChannelModal";
@@ -14,26 +14,14 @@ interface ChannelResponse {
   id: string;
   name: string;
   picture: string;
-  lastMessage?: number | string;
+  lastMessage?: number | string; // Update the type to handle undefined
 }
 
 const FriendsPanel: React.FC = () => {
+  const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [filteredChannels, setFilteredChannels] = useState<ChannelResponse[]>([]);
 
-  // Fetch all channels initially
-  const { data: channels, isLoading } = useQuery(["getChannels"], () => API.GetChannels());
-
-  // Effect to filter channels based on searchTerm
-  useEffect(() => {
-    if (channels) {
-      const lowerCaseSearchTerm = searchTerm.toLowerCase();
-      const filtered = channels.filter(
-        (channel) => channel.name.toLowerCase().includes(lowerCaseSearchTerm) || channel.id.toLowerCase().includes(lowerCaseSearchTerm)
-      );
-      setFilteredChannels(filtered);
-    }
-  }, [channels, searchTerm]);
+  const { data, isLoading } = useQuery(["getChannels", searchTerm], () => API.GetChannels(searchTerm)); // Update the query key
 
   const [openChannelModal, setOpenChannelModal] = useState<boolean>(false);
   const [openAddFriendModal, setOpenAddFriendModal] = useState<boolean>(false);
@@ -53,7 +41,6 @@ const FriendsPanel: React.FC = () => {
           justifyContent: "space-between",
           alignItems: "left",
           backgroundColor: "transparent",
-          maxHeight: "100%",
         }}
       >
         <Box sx={{ borderBottom: 1, display: "flex", alignItems: "center" }}>
@@ -79,7 +66,7 @@ const FriendsPanel: React.FC = () => {
           fullWidth
           variant="outlined"
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={(e) => setSearchTerm(e.target.value)} // Update the search term when input changes
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
@@ -90,16 +77,10 @@ const FriendsPanel: React.FC = () => {
         />
       </Box>
       <Divider />
-      <List sx={{ maxHeight: "100%", overflow: "auto" }}>
-        {!isLoading && filteredChannels.length > 0 ? (
-          filteredChannels.map((channel) => (
-            <ChannelItem
-              id={channel.id}
-              username={channel.name} // Assuming username is part of channel response
-              lastMessage={channel.lastMessage ? "" + channel.lastMessage : "No message"}
-              profilePic={channel.picture}
-              key={channel.id}
-            />
+      <List sx={{ maxHeight: "calc(89vh - 160px)", overflowY: "auto" }}>
+        {!isLoading && data ? (
+          data.map((channel) => (
+            <ChannelItem id={channel.id} username={channel.name} lastMessage={"" + channel.lastMessage} profilePic={channel.picture} key={channel.id} />
           ))
         ) : (
           <Typography>No channels found</Typography>

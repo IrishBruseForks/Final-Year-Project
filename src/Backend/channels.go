@@ -10,15 +10,28 @@ import (
 
 func getChannels(c echo.Context) error {
     jwt := getJwt(c)
+    searchTerm := c.QueryParam("search") // Retrieve the search term from query parameters
 
-    rows, err := db.Query(`
+    var query string
+    var args []interface{}
+
+    baseQuery := `
         SELECT c.id, c.name, c.picture, c.lastMessage, GROUP_CONCAT(uc.Users_id) as userIDs
         FROM Channels c
         JOIN Users_Channels uc ON c.id = uc.Channels_id
         WHERE uc.Users_id = ?
-        GROUP BY c.id, c.name, c.picture, c.lastMessage;
-    `, jwt.Subject)
+    `
+    args = append(args, jwt.Subject)
 
+    if searchTerm != "" {
+        // Modify the query to include a LIKE clause for search
+        query = baseQuery + " AND c.name LIKE ? GROUP BY c.id, c.name, c.picture, c.lastMessage;"
+        args = append(args, "%"+searchTerm+"%")
+    } else {
+        query = baseQuery + " GROUP BY c.id, c.name, c.picture, c.lastMessage;"
+    }
+
+    rows, err := db.Query(query, args...)
     if err != nil {
         return apiError("Query", echo.ErrInternalServerError, err)
     }
@@ -28,11 +41,9 @@ func getChannels(c echo.Context) error {
     for rows.Next() {
         var channel ChannelResponse
         err := rows.Scan(&channel.Id, &channel.Name, &channel.Picture, &channel.LastMessage, &channel.UserIDs)
-
         if err != nil {
             return apiError("Scan", echo.ErrInternalServerError, err)
         }
-
         channels = append(channels, channel)
     }
 
@@ -42,7 +53,6 @@ func getChannels(c echo.Context) error {
 
     return c.JSON(http.StatusOK, channels)
 }
-
 
 func postChannels(c echo.Context) error {
 	jwt := getJwt(c)
