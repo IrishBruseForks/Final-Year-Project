@@ -40,7 +40,7 @@ type CreateChannelModalProps = {
 };
 
 // Create the CreateChannelModal component
-export const CreateChannelModal: React.FC<CreateChannelModalProps> = ({ open, handleClose, defaultChannelName }) => {
+export const CreateChannelModal: React.FC<CreateChannelModalProps> = ({ open, handleClose }) => {
   // State variables to manage form input and errors
   const [channelName, setChannelName] = useState<string>("");
   const [channelPicture, setChannelPicture] = useState<string>("");

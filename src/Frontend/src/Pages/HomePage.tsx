@@ -61,7 +61,9 @@ function HomePage() {
             </Paper>
           </Grid>
         )}
-        <MessageView />
+        <Grid item xs={12} md={9}>
+          <MessageView />
+        </Grid>
       </Grid>
     </Stack>
   );
