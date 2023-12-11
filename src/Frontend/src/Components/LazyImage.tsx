@@ -15,8 +15,6 @@ export default function LazyImage({ title, src, sx, placeholder = <BrokenImageIc
   const [loaded, setLoaded] = useState(false);
 
   const onloaded = (event: React.SyntheticEvent<HTMLImageElement, Event>) => {
-    console.log(event);
-
     const img = event.currentTarget;
     img.style.opacity = "1";
     setLoaded(true);

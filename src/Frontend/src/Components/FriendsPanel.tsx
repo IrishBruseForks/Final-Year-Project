@@ -3,10 +3,10 @@ import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import SearchIcon from "@mui/icons-material/Search";
 import { Box, Divider, IconButton, InputAdornment, List, Stack, TextField, Typography } from "@mui/material";
 import React, { useEffect, useMemo, useState } from "react";
-import { useQuery } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import { ChannelResponse } from "../Types/ServerTypes";
-import API from "../Utility/Api";
+import Urls from "../Utility/Urls";
+import useApi from "../Utility/useApi";
 import { AddFriendModal } from "./AddFriendModal";
 import ChannelItem from "./ChannelItem";
 import { CreateChannelModal } from "./CreateChannelModal";
@@ -17,7 +17,7 @@ const FriendsPanel: React.FC = () => {
   const navigate = useNavigate();
 
   // Fetch all channels
-  const { data, isLoading } = useQuery<ChannelResponse[]>("getChannels", () => API.GetChannels());
+  const { data, isLoading } = useApi<ChannelResponse[]>("getChannels", Urls.Channels);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const searchData = useMemo<ChannelResponse[] | undefined>(() => data && filterChannels(data), [searchTerm, data]);

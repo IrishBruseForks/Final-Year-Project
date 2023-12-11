@@ -1,18 +1,22 @@
 import { Alert, Grid, LinearProgress, Stack } from "@mui/material";
+import axios from "axios";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Api from "../Utility/Api";
+import Urls from "../Utility/Urls";
+import useApi from "../Utility/useApi";
 
 function ServiceDownPage() {
   const navigate = useNavigate();
+  const { isError: serverDown } = useApi("getStatus", Urls.Status, null, { retry: (c, err) => c < 3 && (err as fet).response?.status !== 200 });
 
   useEffect(() => {
     const checkStatus = async () => {
       try {
-        await Api.Status();
+        await axios.get(Urls.Status);
         navigate("/");
       } catch (error) {
         // Catch Error
+        navigate("/serviceDown");
       }
     };
 

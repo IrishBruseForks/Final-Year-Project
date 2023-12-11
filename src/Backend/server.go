@@ -64,6 +64,7 @@ func addRoutes(e *echo.Echo) {
 
 	// Non-Auth Apis
 	e.GET("/status", getStatus)
+	e.GET("/status/authenticated", getStatus)
 	e.POST("/auth/google", postAuthGoogle)
 
 	// Validate login

@@ -1,24 +1,26 @@
-import React, { useState, useEffect } from "react";
 import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
   Button,
-  TextField,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
   Checkbox,
-  OutlinedInput,
-  ListItemText,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  FormControl,
   FormHelperText,
+  InputLabel,
+  ListItemText,
+  MenuItem,
+  OutlinedInput,
+  Select,
+  TextField,
 } from "@mui/material";
-import API from "../Utility/Api";
+import React, { useState } from "react";
 import { useQueryClient } from "react-query";
-import { PostChannelBody, Friend } from "../Types/ServerTypes";
+import { Friend, PostChannelBody } from "../Types/ServerTypes";
+import API from "../Utility/Api";
 import Constants from "../Utility/Constants";
+import Urls from "../Utility/Urls";
+import useApi from "../Utility/useApi";
 
 // Constants for styling the Select component
 const ITEM_HEIGHT = 48;
@@ -45,23 +47,13 @@ export const CreateChannelModal: React.FC<CreateChannelModalProps> = ({ open, ha
   const [channelName, setChannelName] = useState<string>("");
   const [channelPicture, setChannelPicture] = useState<string>("");
   const [selectedUserID, setSelectedUserID] = useState<string[]>([]);
-  const [users, setUsers] = useState<Friend[]>([]);
+
   const [selectError, setSelectError] = useState<boolean>(false); // State to track the select error
 
   // Query client for fetching data
   const queryClient = useQueryClient();
 
-  // Fetch the list of friends when the modal is opened
-  // Use useQuery here. Change this code
-  useEffect(() => {
-    if (open) {
-      API.GetFriends()
-        .then((fetchedUsers) => {
-          setUsers(fetchedUsers);
-        })
-        .catch((error) => console.error("Error fetching users: ", error));
-    }
-  }, [open]);
+  const { data: users } = useApi<Friend[]>("getFriends", Urls.Friends);
 
   // Handle changes in the selected users
   const handleUserChange = (event: { target: { value: any } }) => {
@@ -77,13 +69,14 @@ export const CreateChannelModal: React.FC<CreateChannelModalProps> = ({ open, ha
 
   // Handle form submission
   const handleSubmit = async () => {
+    if (users === undefined) {
+      return; // Do not proceed with channel creation
+    }
+
     if (selectedUserID.length === 0) {
       setSelectError(true); // Set error if no users are selected
       return; // Do not proceed with channel creation
     }
-
-    // Map the selected usernames to user IDs
-    // const selectedUserIds = selectedUserID.map((username) => users.find((user) => user.username === username)?.id);
 
     // Filter out any potential undefined values and join the usernames
     const finalChannelName = channelName.trim() || selectedUserID.join(", ");
@@ -119,7 +112,7 @@ export const CreateChannelModal: React.FC<CreateChannelModalProps> = ({ open, ha
   };
 
   return (
-    <Dialog open={open}  onClose={handleClose}>
+    <Dialog open={open} onClose={handleClose}>
       <DialogTitle>Create a New Channel</DialogTitle>
       <DialogContent>
         {/* Channel Name input */}
@@ -156,7 +149,7 @@ export const CreateChannelModal: React.FC<CreateChannelModalProps> = ({ open, ha
             MenuProps={MenuProps}
           >
             {/* List of users with checkboxes */}
-            {users.map((user) => (
+            {users?.map((user) => (
               <MenuItem key={user.id} value={user.username}>
                 <img src={user.picture} alt={user.username || "User"} style={{ height: "24px", marginRight: "8px", borderRadius: "50%" }} />
                 <ListItemText primary={user.username} />

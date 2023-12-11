@@ -1,12 +1,12 @@
 import Google from "@mui/icons-material/Google";
 import { Button, Stack, Typography } from "@mui/material";
 import { useGoogleLogin } from "@react-oauth/google";
+import axios from "axios";
 import { enqueueSnackbar } from "notistack";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import LazyImage from "../Components/LazyImage";
-import { OAuth } from "../Types/ServerTypes";
-import Api from "../Utility/Api";
+import { OAuth, OAuthResponse } from "../Types/ServerTypes";
 import Constants from "../Utility/Constants";
 
 function LoginPage() {
@@ -14,7 +14,7 @@ function LoginPage() {
 
   const login = useGoogleLogin({
     onSuccess: async (tokenResponse: OAuth) => {
-      const resp = await Api.AuthGoogle(tokenResponse.code);
+      const resp = (await axios.post(Constants.BackendUrl + "auth/google", { code: tokenResponse.code })).data as OAuthResponse;
 
       localStorage.setItem(Constants.AccessTokenKey, resp.token);
       localStorage.setItem(Constants.ProfilePictureKey, resp.profilePicture);

@@ -35,11 +35,9 @@ function HomePage() {
           anchor="left"
           open={opened}
           onOpen={() => {
-            console.log("open");
             toggleDrawer(true);
           }}
           onClose={() => {
-            console.log("close");
             toggleDrawer(false);
           }}
         >

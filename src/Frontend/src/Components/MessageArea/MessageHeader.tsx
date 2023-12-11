@@ -1,7 +1,7 @@
 import { Menu as MenuIcon } from "@mui/icons-material";
 import { AppBar, IconButton, Menu, MenuItem, Toolbar, Typography, useMediaQuery } from "@mui/material";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Constants from "../../Utility/Constants";
 import LazyImage from "../LazyImage";
 
@@ -9,6 +9,8 @@ function MessageHeader({ toggleDrawer }: { toggleDrawer: (open: boolean) => void
   const isMobile = useMediaQuery("(max-width:899px)");
   const [opened, setOpened] = useState<boolean>(false);
   const [profilePicture, setProfilePicture] = useState<string>("");
+
+  const anchorRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     setProfilePicture(localStorage.getItem(Constants.ProfilePictureKey)!);
@@ -42,14 +44,15 @@ function MessageHeader({ toggleDrawer }: { toggleDrawer: (open: boolean) => void
             aria-controls="menu-appbar"
             aria-haspopup="true"
             color="inherit"
+            ref={anchorRef}
           >
             <LazyImage src={profilePicture} title="Profile Picture" sx={{ height: 32, width: 32 }} />
           </IconButton>
           <Menu
             id="menu-appbar"
-            anchorEl={null}
+            anchorEl={anchorRef.current}
             anchorOrigin={{
-              vertical: "top",
+              vertical: "bottom",
               horizontal: "right",
             }}
             keepMounted

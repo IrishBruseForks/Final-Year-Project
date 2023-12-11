@@ -1,79 +1,16 @@
 import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { SnackbarProvider } from "notistack";
-import React, { createContext, useEffect } from "react";
+import React, { createContext } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import ErrorPage from "./Pages/ErrorPage";
-import HomePage from "./Pages/HomePage";
-import LoginPage from "./Pages/LoginPage";
-import ServiceDownPage from "./Pages/ServiceDownPage";
-import { default as API, default as Api } from "./Utility/Api";
+import { RouterProvider } from "react-router-dom";
+import Globals from "./Globals";
 import Constants from "./Utility/Constants";
+import { router } from "./router";
 
 export const ErrorContext = createContext<Error | null>(null);
 
-const router = createBrowserRouter([
-  {
-    path: "/login",
-    element: <LoginPage />,
-    errorElement: <ErrorPage />,
-  },
-  {
-    path: "/",
-    element: <HomePage />,
-    errorElement: <ErrorPage />,
-    children: [
-      {
-        path: "/:uuid",
-        element: <HomePage />,
-      },
-    ],
-  },
-  {
-    path: "/serviceDown",
-    element: <ServiceDownPage />,
-    errorElement: <ErrorPage />,
-  },
-  {
-    path: "*",
-    element: <ErrorPage />,
-    errorElement: <ErrorPage />,
-  },
-]);
-
 function App() {
-  useEffect(() => {
-    // Check to see if the backend is running
-    // if there is an exception redirect to service down page and keep retrying connection
-    CheckServiceStatus();
-    setInterval(() => {
-      CheckServiceStatus();
-    }, 5000);
-
-    // Check if we need to login again because we are either
-    // missing the access token
-    const token = localStorage.getItem(Constants.AccessTokenKey);
-
-    if (token === null) {
-      router.navigate("/login");
-    } else {
-      // Check if the user is authorised every time they reload the page
-      API.GetLogin().catch(() => {
-        localStorage.removeItem(Constants.AccessTokenKey);
-        localStorage.removeItem(Constants.ProfilePictureKey);
-        router.navigate("/login");
-      });
-    }
-
-    function CheckServiceStatus() {
-      Api.Status().catch(() => {
-        router.navigate("/serviceDown");
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   // For debugging the theme to disable set to null
   const themeOverride = null;
 
@@ -112,7 +49,13 @@ function App() {
     }
   });
 
-  const queryClient = new QueryClient({});
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        refetchOnWindowFocus: true,
+      },
+    },
+  });
 
   return (
     <GoogleOAuthProvider clientId={Constants.GoogleAppID}>
@@ -121,6 +64,7 @@ function App() {
           <SnackbarProvider maxSnack={3}>
             <ThemeProvider theme={theme}>
               <CssBaseline />
+              <Globals router={router} />
               <RouterProvider router={router} />
             </ThemeProvider>
           </SnackbarProvider>
