@@ -8,7 +8,7 @@ import ErrorPage from "./Pages/ErrorPage";
 import HomePage from "./Pages/HomePage";
 import LoginPage from "./Pages/LoginPage";
 import ServiceDownPage from "./Pages/ServiceDownPage";
-import Api from "./Utility/Api";
+import { default as API, default as Api } from "./Utility/Api";
 import Constants from "./Utility/Constants";
 
 export const ErrorContext = createContext<Error | null>(null);
@@ -59,7 +59,7 @@ function App() {
       router.navigate("/login");
     } else {
       // Check if the user is authorised every time they reload the page
-      Api.GetLogin().catch(() => {
+      API.GetLogin().catch(() => {
         localStorage.removeItem(Constants.AccessTokenKey);
         localStorage.removeItem(Constants.ProfilePictureKey);
         router.navigate("/login");

@@ -2,9 +2,9 @@ import { Menu as MenuIcon } from "@mui/icons-material";
 import { AppBar, IconButton, Menu, MenuItem, Stack, Toolbar, Typography, useMediaQuery } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { useEffect, useState } from "react";
+import Constants from "../Utility/Constants";
 import Image from "./Image";
 import MessageView from "./MessageArea/MessageView";
-import Constants from "../Utility/Constants";
 
 function FriendList() {
   const [opened, setOpened] = useState(false);
@@ -12,7 +12,7 @@ function FriendList() {
   const isMobile = useMediaQuery("(max-width:899px)");
 
   useEffect(() => {
-    document.title = Constants.AppName("Home");
+    document.title = Constants.AppName + " - Home";
     setProfilePicture(localStorage.getItem(Constants.ProfilePictureKey)!);
   }, []);
 

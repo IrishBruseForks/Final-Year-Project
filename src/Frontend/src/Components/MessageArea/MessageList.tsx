@@ -1,7 +1,7 @@
 import {} from "@mui/material";
-import { useParams } from "react-router-dom";
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
+import { useParams } from "react-router-dom";
 import { ChannelResponse } from "../../Types/ServerTypes";
 import API from "../../Utility/Api";
 
@@ -13,10 +13,11 @@ function MessageList() {
   useEffect(() => {
     setChannel(data?.filter((channel) => channel.id == uuid)[0]);
     console.log(data);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   console.log(uuid);
-  return <>{}</>;
+  return <>{channel}</>;
 }
 
 export default MessageList;

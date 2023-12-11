@@ -1,12 +1,10 @@
 import { Paper, Stack, SwipeableDrawer, useMediaQuery } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import FriendsPanel from "../Components/FriendsPanel";
 import MessageHeader from "../Components/MessageArea/MessageHeader";
-import Constants from "../Utility/Constants";
-import FriendList from "../Components/FriendList";
 import MessageView from "../Components/MessageArea/MessageView";
+import Constants from "../Utility/Constants";
 
 function HomePage() {
   const isMobile = useMediaQuery("(max-width:899px)");
@@ -18,7 +16,7 @@ function HomePage() {
 
   // Effect for setting the document title and disabling body scroll
   useEffect(() => {
-    document.title = Constants.AppName("Home");
+    document.title = Constants.AppName + " - Home";
     // Disable body scroll
     document.body.style.overflow = "hidden";
 
