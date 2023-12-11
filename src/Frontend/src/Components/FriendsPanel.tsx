@@ -2,8 +2,9 @@ import AddIcon from "@mui/icons-material/Add";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import SearchIcon from "@mui/icons-material/Search";
 import { Box, Divider, IconButton, InputAdornment, List, Stack, TextField, Typography } from "@mui/material";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useQuery } from "react-query";
+import { useNavigate, useParams } from "react-router-dom";
 import { ChannelResponse } from "../Types/ServerTypes";
 import API from "../Utility/Api";
 import { AddFriendModal } from "./AddFriendModal";
@@ -12,6 +13,8 @@ import { CreateChannelModal } from "./CreateChannelModal";
 
 const FriendsPanel: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
+
+  const navigate = useNavigate();
 
   // Fetch all channels
   const { data, isLoading } = useQuery<ChannelResponse[]>("getChannels", () => API.GetChannels());
@@ -25,6 +28,15 @@ const FriendsPanel: React.FC = () => {
   function filterChannels(value: ChannelResponse[]): ChannelResponse[] {
     return value?.filter((channel) => channel.name.toLowerCase().includes(searchTerm.toLowerCase()));
   }
+
+  const { uuid } = useParams<{ uuid: string }>();
+
+  useEffect(() => {
+    if (!uuid && data && data[0]) {
+      navigate(data[0].id);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data]);
 
   return (
     <Box>

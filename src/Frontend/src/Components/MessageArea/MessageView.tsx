@@ -1,5 +1,5 @@
 import SendIcon from "@mui/icons-material/Send";
-import { Box, Button, Grid, InputAdornment, Paper, Stack, TextField, Typography } from "@mui/material";
+import { Box, Button, Grid, InputAdornment, Paper, Stack, TextField } from "@mui/material";
 import MessageList from "./MessageList";
 
 function MessageView() {
@@ -18,15 +18,7 @@ function MessageView() {
               height: "100%",
             }}
           >
-            <Box sx={{ borderBottom: 1, display: "flex", alignItems: "center" }}>
-              <Typography sx={{ alignSelf: "center" }} variant="h5">
-                Channel Name Here
-              </Typography>
-            </Box>
-            {/* Channel History */}
-            <Box sx={{ flexGrow: 1 }}>
-              <MessageList />
-            </Box>
+            <MessageList />
           </Box>
         </Paper>
         <Paper sx={{ height: "10%" }}>
