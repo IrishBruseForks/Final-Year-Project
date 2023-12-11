@@ -1,7 +1,7 @@
 import AddIcon from "@mui/icons-material/Add";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import SearchIcon from "@mui/icons-material/Search";
-import { Box, Divider, IconButton, InputAdornment, List, TextField, Typography } from "@mui/material";
+import { Box, Divider, IconButton, InputAdornment, List, Stack, TextField, Typography } from "@mui/material";
 import React, { useMemo, useState } from "react";
 import { useQuery } from "react-query";
 import { ChannelResponse } from "../Types/ServerTypes";
@@ -41,45 +41,41 @@ const FriendsPanel: React.FC = () => {
         <Box sx={{ borderBottom: 1, display: "flex", alignItems: "center" }}>
           <Typography variant="h5">Chata-Lists</Typography>
         </Box>
-        <IconButton
-          sx={{ marginTop: 2, justifyContent: "flex-start" }}
-          onClick={() => {
-            setIsChannelModalOpen(true);
-          }}
-        >
-          <AddIcon />
-          <Typography sx={{ marginLeft: 0.5 }} variant="caption">
-            Create Channel
-          </Typography>
-        </IconButton>
-        <IconButton
-          sx={{ marginBottom: 0.5, justifyContent: "flex-start" }}
-          onClick={() => {
-            setIsAddFriendModalOpen(true);
-          }}
-        >
-          <PersonAddIcon />
-          <Typography sx={{ marginLeft: 0.5 }} variant="caption">
-            Add Friend
-          </Typography>
-        </IconButton>
-        <TextField
-          size="small"
-          autoFocus
-          margin="dense"
-          label="Find a Channel"
-          fullWidth
-          variant="outlined"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)} // Update the search term when input changes
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <SearchIcon />
-              </InputAdornment>
-            ),
-          }}
-        />
+        <Stack direction={"row"}>
+          <TextField
+            size="small"
+            autoFocus
+            margin="dense"
+            label="Find a Channel"
+            fullWidth
+            variant="outlined"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)} // Update the search term when input changes
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+            }}
+          />
+          <Stack direction={"row"} sx={{ height: "min-content", pt: 1, pl: 1 }}>
+            <IconButton
+              onClick={() => {
+                setIsAddFriendModalOpen(true);
+              }}
+            >
+              <PersonAddIcon />
+            </IconButton>
+            <IconButton
+              onClick={() => {
+                setIsChannelModalOpen(true);
+              }}
+            >
+              <AddIcon />
+            </IconButton>
+          </Stack>
+        </Stack>
       </Box>
       <Divider />
       <List sx={{ maxHeight: "calc(89vh - 160px)", overflowY: "auto" }}>
