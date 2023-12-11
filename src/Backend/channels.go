@@ -9,49 +9,37 @@ import (
 )
 
 func getChannels(c echo.Context) error {
-    jwt := getJwt(c)
-    searchTerm := c.QueryParam("search") // Retrieve the search term from query parameters
+	jwt := getJwt(c)
 
-    var query string
-    var args []interface{}
+	// TODO return only chats the user is in
+	rows, err := db.Query(`
+	Select c.* FROM Channels c
+		JOIN Users_Channels uc ON c.id = uc.Channels_id
+	WHERE uc.Users_id = ?;
+	`, jwt.Subject)
 
-    baseQuery := `
-        SELECT c.id, c.name, c.picture, c.lastMessage, GROUP_CONCAT(uc.Users_id) as userIDs
-        FROM Channels c
-        JOIN Users_Channels uc ON c.id = uc.Channels_id
-        WHERE uc.Users_id = ?
-    `
-    args = append(args, jwt.Subject)
+	if err != nil {
+		return apiError("Query", echo.ErrInternalServerError, err)
+	}
 
-    if searchTerm != "" {
-        // Modify the query to include a LIKE clause for search
-        query = baseQuery + " AND c.name LIKE ? GROUP BY c.id, c.name, c.picture, c.lastMessage;"
-        args = append(args, "%"+searchTerm+"%")
-    } else {
-        query = baseQuery + " GROUP BY c.id, c.name, c.picture, c.lastMessage;"
-    }
+	var channels []ChannelResponse
 
-    rows, err := db.Query(query, args...)
-    if err != nil {
-        return apiError("Query", echo.ErrInternalServerError, err)
-    }
+	for rows.Next() {
+		var channel ChannelResponse
+		err := rows.Scan(&channel.Id, &channel.Name, &channel.Picture, &channel.LastMessage)
 
-    var channels []ChannelResponse
+		if err != nil {
+			return apiError("Scan", echo.ErrInternalServerError, err)
+		}
 
-    for rows.Next() {
-        var channel ChannelResponse
-        err := rows.Scan(&channel.Id, &channel.Name, &channel.Picture, &channel.LastMessage, &channel.UserIDs)
-        if err != nil {
-            return apiError("Scan", echo.ErrInternalServerError, err)
-        }
-        channels = append(channels, channel)
-    }
+		channels = append(channels, channel)
+	}
 
-    if err = rows.Err(); err != nil {
-        return apiError("rows", echo.ErrInternalServerError, err)
-    }
+	if err = rows.Err(); err != nil {
+		return apiError("rows", echo.ErrInternalServerError, err)
+	}
 
-    return c.JSON(http.StatusOK, channels)
+	return c.JSON(http.StatusOK, channels)
 }
 
 func postChannels(c echo.Context) error {

@@ -1,10 +1,10 @@
-import React, { useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import SearchIcon from "@mui/icons-material/Search";
 import { Box, Divider, IconButton, TextField, Typography, List, InputAdornment } from "@mui/material";
-import { useQuery, useQueryClient } from "react-query";
+import { useQuery } from "react-query";
 import API from "../Utility/Api";
+import { AddFriendModal } from "./AddFriendModal";
 import ChannelItem from "./ChannelItem";
 import { CreateChannelModal } from "./CreateChannelModal";
 import { AddFriendModal } from "./AddFriendModal";
@@ -14,22 +14,29 @@ interface ChannelResponse {
   id: string;
   name: string;
   picture: string;
-  lastMessage?: number | string; // Update the type to handle undefined
+  lastMessage?: number | string;
 }
 
 const FriendsPanel: React.FC = () => {
-  const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState<string>("");
 
-  const { data, isLoading } = useQuery(["getChannels", searchTerm], () => API.GetChannels(searchTerm)); // Update the query key
+  // Fetch all channels
+  const { data, isLoading } = useQuery<ChannelResponse[]>("getChannels", () => API.GetChannels());
 
-  const [openChannelModal, setOpenChannelModal] = useState<boolean>(false);
-  const [openAddFriendModal, setOpenAddFriendModal] = useState<boolean>(false);
+  // Filter channels based on the search term
+  const filteredChannels = data?.filter((channel: ChannelResponse) => channel.name.toLowerCase().includes(searchTerm.toLowerCase()));
 
-  const handleOpenChannelModal = () => setOpenChannelModal(true);
-  const handleCloseChannelModal = () => setOpenChannelModal(false);
-  const handleOpenAddFriendModal = () => setOpenAddFriendModal(true);
-  const handleCloseAddFriendModal = () => setOpenAddFriendModal(false);
+  const [isChannelModalOpen, setIsChannelModalOpen] = useState<boolean>(false);
+  const [isAddFriendModalOpen, setIsAddFriendModalOpen] = useState<boolean>(false);
+
+  function searchChannels(value: string): void {
+    setSearchTerm(value);
+    console.log(data);
+
+    const filtered = data?.filter((channel) => channel.name.toLowerCase().includes(searchTerm.toLowerCase()));
+
+    setSearchData(filtered);
+  }
 
   return (
     <Box>
@@ -46,13 +53,23 @@ const FriendsPanel: React.FC = () => {
         <Box sx={{ borderBottom: 1, display: "flex", alignItems: "center" }}>
           <Typography variant="h5">Chata-Lists</Typography>
         </Box>
-        <IconButton sx={{ marginTop: 2, justifyContent: "flex-start" }} onClick={handleOpenChannelModal}>
+        <IconButton
+          sx={{ marginTop: 2, justifyContent: "flex-start" }}
+          onClick={() => {
+            setIsChannelModalOpen(true);
+          }}
+        >
           <AddIcon />
           <Typography sx={{ marginLeft: 0.5 }} variant="caption">
             Create Channel
           </Typography>
         </IconButton>
-        <IconButton sx={{ marginBottom: 0.5, justifyContent: "flex-start" }} onClick={handleOpenAddFriendModal}>
+        <IconButton
+          sx={{ marginBottom: 0.5, justifyContent: "flex-start" }}
+          onClick={() => {
+            setIsAddFriendModalOpen(true);
+          }}
+        >
           <PersonAddIcon />
           <Typography sx={{ marginLeft: 0.5 }} variant="caption">
             Add Friend
@@ -66,7 +83,7 @@ const FriendsPanel: React.FC = () => {
           fullWidth
           variant="outlined"
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)} // Update the search term when input changes
+          onChange={(e) => setSearchTerm(e.target.value)}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
@@ -78,16 +95,16 @@ const FriendsPanel: React.FC = () => {
       </Box>
       <Divider />
       <List sx={{ maxHeight: "calc(89vh - 160px)", overflowY: "auto" }}>
-        {!isLoading && data ? (
-          data.map((channel) => (
+        {!isLoading && filteredChannels && filteredChannels.length > 0 ? (
+          filteredChannels.map((channel: ChannelResponse) => (
             <ChannelItem id={channel.id} username={channel.name} lastMessage={"" + channel.lastMessage} profilePic={channel.picture} key={channel.id} />
           ))
         ) : (
           <Typography>No channels found</Typography>
         )}
       </List>
-      <CreateChannelModal open={openChannelModal} handleClose={handleCloseChannelModal} defaultChannelName={""} />
-      <AddFriendModal open={openAddFriendModal} handleClose={handleCloseAddFriendModal} />
+      <CreateChannelModal open={isChannelModalOpen} handleClose={() => setIsChannelModalOpen(false)} defaultChannelName={""} />
+      <AddFriendModal open={isAddFriendModalOpen} handleClose={() => setIsAddFriendModalOpen(false)} />
     </Box>
   );
 };

@@ -35,7 +35,7 @@ type Friend struct {
 
 type PostMessageBody struct {
 	ChannelId string `json:"channelId" validate:"required"`
-	Content   string `json:"content"`
+	Content   string `json:"content" validate:"required"`
 }
 
 type PostMessageResponse struct {

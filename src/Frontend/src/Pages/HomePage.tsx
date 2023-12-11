@@ -4,15 +4,13 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import FriendsPanel from "../Components/FriendsPanel";
 import MessageHeader from "../Components/MessageArea/MessageHeader";
-import MessageView from "../Components/MessageArea/MessageView";
 import Constants from "../Utility/Constants";
+import FriendList from "../Components/FriendList";
+import MessageView from "../Components/MessageArea/MessageView";
 
 function HomePage() {
   const isMobile = useMediaQuery("(max-width:899px)");
   const [opened, setOpened] = useState(false);
-  const { uuid } = useParams<{ uuid: string }>();
-
-  console.log(uuid);
 
   const toggleDrawer = (state: boolean) => {
     setOpened(state);
@@ -61,9 +59,7 @@ function HomePage() {
             </Paper>
           </Grid>
         )}
-        <Grid item xs={12} md={9}>
-          <MessageView />
-        </Grid>
+        <MessageView />
       </Grid>
     </Stack>
   );

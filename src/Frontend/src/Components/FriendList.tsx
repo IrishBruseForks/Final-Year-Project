@@ -2,11 +2,11 @@ import { Menu as MenuIcon } from "@mui/icons-material";
 import { AppBar, IconButton, Menu, MenuItem, Stack, Toolbar, Typography, useMediaQuery } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { useEffect, useState } from "react";
-import Image from "../Components/Image";
-import MessageView from "../Components/MessageArea/MessageView";
+import Image from "./Image";
+import MessageView from "./MessageArea/MessageView";
 import Constants from "../Utility/Constants";
 
-export function HomePage() {
+function FriendList() {
   const [opened, setOpened] = useState(false);
   const [profilePicture, setProfilePicture] = useState<string>("");
   const isMobile = useMediaQuery("(max-width:899px)");
@@ -71,3 +71,5 @@ export function HomePage() {
     </Stack>
   );
 }
+
+export default FriendList;

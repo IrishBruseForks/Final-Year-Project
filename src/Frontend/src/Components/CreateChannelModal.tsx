@@ -52,6 +52,7 @@ export const CreateChannelModal: React.FC<CreateChannelModalProps> = ({ open, ha
   const queryClient = useQueryClient();
 
   // Fetch the list of friends when the modal is opened
+  // Use useQuery here. Change this code
   useEffect(() => {
     if (open) {
       API.GetFriends()
@@ -118,7 +119,7 @@ export const CreateChannelModal: React.FC<CreateChannelModalProps> = ({ open, ha
   };
 
   return (
-    <Dialog open={open} onClose={handleClose}>
+    <Dialog open={open}  onClose={handleClose}>
       <DialogTitle>Create a New Channel</DialogTitle>
       <DialogContent>
         {/* Channel Name input */}
