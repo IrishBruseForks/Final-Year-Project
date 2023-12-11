@@ -1,9 +1,10 @@
-import { Box, Typography } from "@mui/material";
+import { Box, IconButton, Typography } from "@mui/material";
 import { useMemo } from "react";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { ChannelResponse } from "../../Types/ServerTypes";
 import API from "../../Utility/Api";
+import LazyImage from "../LazyImage";
 
 function MessageList() {
   const { uuid } = useParams<{ uuid: string }>();
@@ -19,11 +20,14 @@ function MessageList() {
     <>
       <Box sx={{ borderBottom: 1, display: "flex", alignItems: "center" }}>
         <Typography sx={{ alignSelf: "center" }} variant="h5">
+          <IconButton>
+            <LazyImage src={channel?.picture} title="Profile Picture" sx={{ height: 32, width: 32 }} />
+          </IconButton>
           {channel?.name}
         </Typography>
       </Box>
       {/* Channel History */}
-      <Box sx={{ flexGrow: 1 }}>{channel?.picture}</Box>
+      <Box sx={{ flexGrow: 1 }}></Box>
     </>
   );
 }

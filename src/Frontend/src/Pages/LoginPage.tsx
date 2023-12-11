@@ -4,7 +4,7 @@ import { useGoogleLogin } from "@react-oauth/google";
 import { enqueueSnackbar } from "notistack";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Image from "../Components/Image";
+import LazyImage from "../Components/LazyImage";
 import { OAuth } from "../Types/ServerTypes";
 import Api from "../Utility/Api";
 import Constants from "../Utility/Constants";
@@ -33,7 +33,7 @@ function LoginPage() {
 
   return (
     <Stack direction={"column"} alignItems={"center"} sx={{ minHeight: "100vh", pt: 8 }}>
-      <Image src="./Logo.png" title="Logo" sx={{ width: "24rem", height: "24rem" }} />
+      <LazyImage src="./Logo.png" title="Logo" sx={{ width: "24rem", height: "24rem" }} />
 
       <Typography variant="h2" align="center" sx={{ mb: 2, mt: 2 }}>
         {Constants.AppName}

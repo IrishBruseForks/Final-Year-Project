@@ -3,7 +3,7 @@ import { AppBar, IconButton, Menu, MenuItem, Toolbar, Typography, useMediaQuery 
 
 import { useEffect, useState } from "react";
 import Constants from "../../Utility/Constants";
-import Image from "../Image";
+import LazyImage from "../LazyImage";
 
 function MessageHeader({ toggleDrawer }: { toggleDrawer: (open: boolean) => void }) {
   const isMobile = useMediaQuery("(max-width:899px)");
@@ -43,7 +43,7 @@ function MessageHeader({ toggleDrawer }: { toggleDrawer: (open: boolean) => void
             aria-haspopup="true"
             color="inherit"
           >
-            <Image src={profilePicture} title="Profile Picture" sx={{ height: 32, width: 32 }} />
+            <LazyImage src={profilePicture} title="Profile Picture" sx={{ height: 32, width: 32 }} />
           </IconButton>
           <Menu
             id="menu-appbar"

@@ -3,7 +3,7 @@ import { AppBar, IconButton, Menu, MenuItem, Stack, Toolbar, Typography, useMedi
 import Grid from "@mui/material/Grid";
 import { useEffect, useState } from "react";
 import Constants from "../Utility/Constants";
-import Image from "./Image";
+import LazyImage from "./LazyImage";
 import MessageView from "./MessageArea/MessageView";
 
 function FriendList() {
@@ -43,7 +43,7 @@ function FriendList() {
           </Typography>
           <div>
             <IconButton size="large" aria-label="account of current user" aria-controls="menu-appbar" aria-haspopup="true" color="inherit">
-              <Image src={profilePicture} title="Profile Picture" sx={{ height: 32, width: 32 }} />
+              <LazyImage src={profilePicture} title="Profile Picture" sx={{ height: 32, width: 32 }} />
             </IconButton>
             <Menu
               id="menu-appbar"
