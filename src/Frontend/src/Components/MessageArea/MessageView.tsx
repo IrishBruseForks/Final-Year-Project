@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Grid, Box, Paper, Stack, TextField, Button, InputAdornment } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import MessageList from "./MessageList";

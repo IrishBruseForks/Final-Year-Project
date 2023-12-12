@@ -1,5 +1,5 @@
 import GroupsIcon from "@mui/icons-material/Groups";
-import { Box, IconButton, Typography } from "@mui/material";
+import { Avatar, Box, IconButton, Typography } from "@mui/material";
 import { useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { ChannelResponse } from "../../Types/ServerTypes";
@@ -7,8 +7,10 @@ import Urls from "../../Utility/Urls";
 import useApi from "../../Utility/useApi";
 import LazyImage from "../LazyImage";
 import MessageView from "./MessageView";
+import Constants from "../../Utility/Constants";
+import { format } from "date-fns";
 
-function MessageList({ messages }: { messages: any[]|undefined }) {
+function MessageList({ messages }: { messages: any[] | undefined }) {
   const { uuid } = useParams<{ uuid: string }>();
   const { data } = useApi<ChannelResponse[]>("getChannels", Urls.Channels);
 
@@ -17,6 +19,10 @@ function MessageList({ messages }: { messages: any[]|undefined }) {
   };
 
   const channel = useMemo(getChannel, [uuid, data]);
+
+  const getProfilePictureUrl = () => {
+    return localStorage.getItem(Constants.ProfilePictureKey) || ""; // Fallback to an empty string
+  };
 
   return (
     <>
@@ -29,8 +35,19 @@ function MessageList({ messages }: { messages: any[]|undefined }) {
         </Typography>
       </Box>
       <Box sx={{ flexGrow: 1 }}>
-        {messages?.map((message, _) => (
-          <div key={message.id}>{message.content}</div>
+        {messages?.map((message) => (
+          <Box key={message.id} sx={{ display: "flex", alignItems: "center", mb: 1 }}>
+            <Avatar src={getProfilePictureUrl()} sx={{ mr: 1 }}>
+              {message.sentBy[0]}
+            </Avatar>
+            <Box>
+              <Typography variant="body2">{message.sentBy}</Typography>
+              <Typography variant="caption" color="text.secondary">
+                {format(new Date(message.sentOn), "PPpp")} {/* Formatting the date */}
+              </Typography>
+              <Typography variant="body1">{message.content}</Typography>
+            </Box>
+          </Box>
         ))}
       </Box>
     </>
