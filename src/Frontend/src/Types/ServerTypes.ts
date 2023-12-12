@@ -16,14 +16,14 @@ export interface OAuthResponse {
   profilePicture: string;
 }
 export interface ChannelResponse {
-  userIDs: any;
   id: string;
   name: string;
   picture: string;
   lastMessage?: number /* int64 */;
+  userIds: string;
 }
 export interface GetMessageBody {
-  channelId: string;
+  ChannelId: string;
 }
 export interface Friend {
   id: string;

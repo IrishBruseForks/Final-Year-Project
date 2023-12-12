@@ -3,6 +3,7 @@ import { AppBar, IconButton, Menu, MenuItem, Toolbar, Typography, useMediaQuery 
 
 import { useEffect, useRef, useState } from "react";
 import Constants from "../../Utility/Constants";
+import { Logout } from "../../Utility/LoginHandler";
 import LazyImage from "../LazyImage";
 
 function MessageHeader({ toggleDrawer }: { toggleDrawer: (open: boolean) => void }) {
@@ -66,15 +67,7 @@ function MessageHeader({ toggleDrawer }: { toggleDrawer: (open: boolean) => void
             }}
           >
             <MenuItem>Profile</MenuItem>
-            <MenuItem
-              onClick={() => {
-                localStorage.removeItem(Constants.AccessTokenKey);
-                localStorage.removeItem(Constants.ProfilePictureKey);
-                window.location.reload();
-              }}
-            >
-              Logout
-            </MenuItem>
+            <MenuItem onClick={Logout}>Logout</MenuItem>
           </Menu>
         </Toolbar>
       </AppBar>

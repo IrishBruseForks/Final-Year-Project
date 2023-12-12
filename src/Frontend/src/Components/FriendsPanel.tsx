@@ -3,6 +3,7 @@ import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import SearchIcon from "@mui/icons-material/Search";
 import { Box, Divider, IconButton, InputAdornment, List, Stack, TextField, Typography } from "@mui/material";
 import React, { useEffect, useMemo, useState } from "react";
+import { useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import { ChannelResponse } from "../Types/ServerTypes";
 import Urls from "../Utility/Urls";
@@ -15,6 +16,8 @@ const FriendsPanel: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
 
   const navigate = useNavigate();
+
+  const client = useQueryClient();
 
   // Fetch all channels
   const { data, isLoading } = useApi<ChannelResponse[]>("getChannels", Urls.Channels, { refetchInterval: 2000 });
@@ -37,6 +40,11 @@ const FriendsPanel: React.FC = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
+
+  useEffect(() => {
+    client.invalidateQueries("getChannels");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [uuid]);
 
   return (
     <Box>

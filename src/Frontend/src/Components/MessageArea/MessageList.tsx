@@ -1,14 +1,13 @@
 import GroupsIcon from "@mui/icons-material/Groups";
 import { Avatar, Box, IconButton, Typography } from "@mui/material";
+import { format } from "date-fns";
 import { useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { ChannelResponse } from "../../Types/ServerTypes";
+import Constants from "../../Utility/Constants";
 import Urls from "../../Utility/Urls";
 import useApi from "../../Utility/useApi";
 import LazyImage from "../LazyImage";
-import MessageView from "./MessageView";
-import Constants from "../../Utility/Constants";
-import { format } from "date-fns";
 
 function MessageList({ messages }: { messages: any[] | undefined }) {
   const { uuid } = useParams<{ uuid: string }>();

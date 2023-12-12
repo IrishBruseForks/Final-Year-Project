@@ -29,6 +29,11 @@ function LoginPage() {
 
   useEffect(() => {
     document.title = Constants.AppName + " - Login";
+
+    if (localStorage.getItem(Constants.AccessTokenKey) !== null) {
+      navigate("/");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
