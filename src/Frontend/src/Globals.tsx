@@ -9,7 +9,7 @@ function Globals({ router }: { router: typeof import("./router").router }) {
 
   // Check to see if the backend is running
   // if there is an exception redirect to service down page and keep retrying connection
-  const { isError: serverFailed, isRefetchError } = useApi("getStatusGlobal", Urls.Status, null, { refetchInterval: 2000 });
+  const { isError: serverFailed, isRefetchError } = useApi("getStatusGlobal", Urls.Status, { refetchInterval: 2000 });
 
   useEffect(() => {
     // Check if we need to login again because we are either

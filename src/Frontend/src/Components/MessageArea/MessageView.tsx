@@ -1,22 +1,39 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Grid, Box, Paper, Stack, TextField, Button, InputAdornment } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import MessageList from "./MessageList";
 import Urls from "../../Utility/Urls";
 import axios from "axios";
 import Constants from "../../Utility/Constants";
+import useApi, { getConfig } from "../../Utility/useApi";
+import { PostMessageBody, PostMessageResponse } from "../../Types/ServerTypes";
+import { useParams } from "react-router-dom";
 
 function MessageView() {
   const [messageText, setMessageText] = useState("");
+  const { uuid } = useParams<{ uuid: string }>();
+
+  const { data: messages } = useApi<PostMessageResponse[]>("getMessages", Urls.Messages+"?id="+uuid, { refetchInterval: 2000 });
+
+  // useEffect(() => {
+  //   const fetchMessages = async () => {
+  //     const response = await axios.get(Constants.BackendUrl + Urls.Messages, getConfig());
+  //     setMessages(response.data);
+  //   };
+  //   fetchMessages();
+  // }, []);
+
 
   const handleSendMessage = async () => {
-    if (!messageText) return;
-
-    // Replace with actual logic to send a message
-    await axios.post(Constants.BackendUrl + Urls.Messages, { content: messageText });
-
-    setMessageText("");
-    // Optionally, you can refetch or update the messages list to show the new message
+    if (messageText === "") return;
+    if (!uuid) return;
+    try {
+      const newMessage: PostMessageBody = { content: messageText, channelId: uuid };
+      await axios.post(Constants.BackendUrl + Urls.Messages, newMessage, getConfig());
+      // setMessages([...messages, newMessage]);
+    } catch (error) {
+      console.log("Error sending Message:", error);
+    }
   };
 
   return (
@@ -34,7 +51,7 @@ function MessageView() {
               height: "100%",
             }}
           >
-            <MessageList />
+            <MessageList messages={messages} />
           </Box>
         </Paper>
         <Paper sx={{ height: "10%" }}>
