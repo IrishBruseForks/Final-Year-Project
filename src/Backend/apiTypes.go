@@ -24,7 +24,7 @@ type ChannelResponse struct {
 }
 
 type GetMessageBody struct {
-	ChannelId string `json:"channelId" validate:"required"`
+	ChannelId string `query:"id" validate:"required"`
 }
 
 type Friend struct {
