@@ -33,7 +33,7 @@ function LoginPage() {
 
   return (
     <Stack direction={"column"} alignItems={"center"} sx={{ minHeight: "100vh", pt: 8 }}>
-      <LazyImage src="./Logo.png" title="Logo" sx={{ width: "24rem", height: "24rem" }} />
+      <LazyImage src="./Logo.png" title="Logo" sx={{ width: "24rem", height: "24rem" }} placeholder={null} />
 
       <Typography variant="h2" align="center" sx={{ mb: 2, mt: 2 }}>
         {Constants.AppName}

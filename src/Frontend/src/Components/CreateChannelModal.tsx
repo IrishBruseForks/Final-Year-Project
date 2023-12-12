@@ -1,3 +1,4 @@
+import { AccountCircle } from "@mui/icons-material";
 import {
   Button,
   Checkbox,
@@ -22,6 +23,7 @@ import { Friend, PostChannelBody } from "../Types/ServerTypes";
 import Constants from "../Utility/Constants";
 import Urls from "../Utility/Urls";
 import useApi, { getConfig } from "../Utility/useApi";
+import LazyImage from "./LazyImage";
 
 // Constants for styling the Select component
 const ITEM_HEIGHT = 48;
@@ -118,6 +120,7 @@ export const CreateChannelModal: React.FC<CreateChannelModalProps> = ({ open, ha
           value={channelName}
           onChange={(e) => setChannelName(e.target.value)}
         />
+
         {/* Channel Picture URL input */}
         <TextField
           margin="dense"
@@ -128,7 +131,8 @@ export const CreateChannelModal: React.FC<CreateChannelModalProps> = ({ open, ha
           onChange={(e) => setChannelPicture(e.target.value)}
           placeholder="Enter a picture URL or leave blank for default"
         />
-        {/* User selection with checkboxes */}
+
+        {/* Add User selection with checkboxes */}
         <FormControl fullWidth margin="dense" error={selectError}>
           <InputLabel id="multiple-checkbox-label">Add Users</InputLabel>
           <Select
@@ -143,7 +147,12 @@ export const CreateChannelModal: React.FC<CreateChannelModalProps> = ({ open, ha
           >
             {users?.map((user) => (
               <MenuItem key={user.id} value={user.id}>
-                <img src={user.picture} alt={user.username || "User"} style={{ height: "24px", marginRight: "8px", borderRadius: "50%" }} />
+                <LazyImage
+                  src={user.picture}
+                  title={user.username || "User"}
+                  sx={{ height: "24px", marginRight: "8px", borderRadius: "50%" }}
+                  placeholder={<AccountCircle />}
+                />
                 <ListItemText primary={user.username} />
                 <Checkbox checked={selectedUserID.includes(user.id)} style={{ marginLeft: "auto" }} />
               </MenuItem>
@@ -152,6 +161,7 @@ export const CreateChannelModal: React.FC<CreateChannelModalProps> = ({ open, ha
           {selectError && <FormHelperText>Please select at least one user.</FormHelperText>}
         </FormControl>
       </DialogContent>
+
       <DialogActions>
         {/* Cancel button */}
         <Button onClick={handleClose}>Cancel</Button>
