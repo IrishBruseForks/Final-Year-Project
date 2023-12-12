@@ -6,10 +6,11 @@ import { ChannelResponse } from "../../Types/ServerTypes";
 import Urls from "../../Utility/Urls";
 import useApi from "../../Utility/useApi";
 import LazyImage from "../LazyImage";
+import MessageView from "./MessageView";
 
-function MessageList() {
+function MessageList({ messages }: { messages: any[]|undefined }) {
   const { uuid } = useParams<{ uuid: string }>();
-  const { data, isLoading } = useApi<ChannelResponse[]>("getChannels", Urls.Channels);
+  const { data } = useApi<ChannelResponse[]>("getChannels", Urls.Channels);
 
   const getChannel = () => {
     return data?.find((channel) => channel.id === uuid);
@@ -27,8 +28,11 @@ function MessageList() {
           {channel?.name}
         </Typography>
       </Box>
-      {/* Channel History */}
-      <Box sx={{ flexGrow: 1 }}></Box>
+      <Box sx={{ flexGrow: 1 }}>
+        {messages?.map((message, _) => (
+          <div key={message.id}>{message.content}</div>
+        ))}
+      </Box>
     </>
   );
 }
