@@ -24,7 +24,7 @@ func getLogin(c echo.Context) error {
 	}
 
 	jwt := user.Claims.(*AuthJwt)
-	fmt.Println(jwt)
+	fmt.Println(jwt.Name, "logged in")
 
 	return c.NoContent(http.StatusOK)
 }
