@@ -7,7 +7,7 @@ import useApi from "../Utility/useApi";
 
 function ServiceDownPage() {
   const navigate = useNavigate();
-  const { isError: serverDown } = useApi("getStatus", Urls.Status, null, { retry: (c, err) => c < 3 && (err as fet).response?.status !== 200 });
+  const { isError: serverDown } = useApi("getStatus", Urls.Status, null, { retry: (c, err) => c < 3 && (err as any).response?.status !== 200 });
 
   useEffect(() => {
     const checkStatus = async () => {

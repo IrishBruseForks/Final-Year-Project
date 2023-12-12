@@ -14,7 +14,7 @@ export default function useApi<TQueryFnData = unknown, TError = unknown, TData =
   }, options);
 }
 
-function getConfig(): AxiosRequestConfig {
+export function getConfig(): AxiosRequestConfig {
   return {
     timeout: 10000,
     headers: {

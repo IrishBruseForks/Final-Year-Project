@@ -14,13 +14,13 @@ import {
   Select,
   TextField,
 } from "@mui/material";
+import axios from "axios";
 import React, { useState } from "react";
 import { useQueryClient } from "react-query";
 import { Friend, PostChannelBody } from "../Types/ServerTypes";
-import API from "../Utility/Api";
 import Constants from "../Utility/Constants";
 import Urls from "../Utility/Urls";
-import useApi from "../Utility/useApi";
+import useApi, { getConfig } from "../Utility/useApi";
 
 // Constants for styling the Select component
 const ITEM_HEIGHT = 48;
@@ -101,7 +101,7 @@ export const CreateChannelModal: React.FC<CreateChannelModalProps> = ({ open, ha
 
     try {
       // Send a POST request to create the channel
-      await API.PostChannels(channelData);
+      await axios.post(Urls.Channels, channelData, getConfig());
       // Invalidate the queries to refresh the channel list
       queryClient.invalidateQueries("getChannels");
       // Close the modal
