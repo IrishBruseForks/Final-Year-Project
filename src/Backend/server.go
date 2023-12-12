@@ -118,7 +118,7 @@ func addMiddleware(e *echo.Echo) {
 }
 
 func Skipper(c echo.Context) bool {
-	return c.Request().Method == "OPTIONS" || (c.Path() == "/channels" || c.Path() == "/status") && (c.Request().Method == "GET")
+	return c.Request().Method == "OPTIONS" || (c.Path() == "/channels" || c.Path() == "/status" || c.Path() == "/login" || c.Path() == "/friends") && (c.Request().Method == "GET")
 }
 
 func initOauth() {
