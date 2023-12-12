@@ -14,7 +14,7 @@ function ChannelItem({ id, username, lastMessage, profilePic }: Props) {
     <>
       <ListItemButton
         onClick={() => {
-          navigate("/" + id);
+          navigate("/" + id); 
         }}
       >
         <Box display={"grid"} alignItems={"center"} gridTemplateColumns={"1fr auto"}>

@@ -12,6 +12,7 @@ import {
   MenuItem,
   OutlinedInput,
   Select,
+  SelectChangeEvent,
   TextField,
 } from "@mui/material";
 import axios from "axios";
@@ -56,15 +57,8 @@ export const CreateChannelModal: React.FC<CreateChannelModalProps> = ({ open, ha
   const { data: users } = useApi<Friend[]>("getFriends", Urls.Friends);
 
   // Handle changes in the selected users
-  const handleUserChange = (event: { target: { value: any } }) => {
-    setSelectError(false); // Reset the error state when user makes a selection
-    const {
-      target: { value },
-    } = event;
-    setSelectedUserID(
-      // On autofill we get a stringified value.
-      typeof value === "string" ? value.split(",") : value
-    );
+  const handleUserChange = (event: SelectChangeEvent<string[]>) => {
+    setSelectedUserID(event.target.value as string[]);
   };
 
   // Handle form submission
@@ -78,17 +72,16 @@ export const CreateChannelModal: React.FC<CreateChannelModalProps> = ({ open, ha
       return; // Do not proceed with channel creation
     }
 
-    // Filter out any potential undefined values and join the usernames
-    const finalChannelName = channelName.trim() || selectedUserID.join(", ");
+    // Use the provided channel name, or default to joined usernames of selected users
+    const finalChannelName = channelName.trim() || selectedUserID.map((id) => users.find((user) => user.id === id)?.username).join(", ");
 
-    // If finalChannelName is still empty at this point, log an error and return
     if (!finalChannelName) {
       console.error("Channel name cannot be empty.");
       return;
     }
 
     // Extract the user IDs from the selected usernames
-    const userIds = users.filter((user) => selectedUserID.includes(user.username)).map((user) => user.id);
+    const userIds = selectedUserID;
 
     const finalChannelPicture = channelPicture || localStorage.getItem(Constants.ProfilePictureKey) || "default_picture_url";
 
@@ -145,19 +138,17 @@ export const CreateChannelModal: React.FC<CreateChannelModalProps> = ({ open, ha
             value={selectedUserID}
             onChange={handleUserChange}
             input={<OutlinedInput label="Add Users" />}
-            renderValue={(selected) => selected.join(", ")}
+            renderValue={(selected) => selected.map((id) => users?.find((user) => user.id === id)?.username).join(", ")}
             MenuProps={MenuProps}
           >
-            {/* List of users with checkboxes */}
             {users?.map((user) => (
-              <MenuItem key={user.id} value={user.username}>
+              <MenuItem key={user.id} value={user.id}>
                 <img src={user.picture} alt={user.username || "User"} style={{ height: "24px", marginRight: "8px", borderRadius: "50%" }} />
                 <ListItemText primary={user.username} />
-                <Checkbox checked={selectedUserID.includes(user.username)} style={{ marginLeft: "auto" }} />
+                <Checkbox checked={selectedUserID.includes(user.id)} style={{ marginLeft: "auto" }} />
               </MenuItem>
             ))}
           </Select>
-          {/* Error message if no users are selected */}
           {selectError && <FormHelperText>Please select at least one user.</FormHelperText>}
         </FormControl>
       </DialogContent>
