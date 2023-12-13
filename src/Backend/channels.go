@@ -14,7 +14,6 @@ func getChannel(c echo.Context) error {
 
 	fmt.Println(channelId)
 
-	// TODO return only chats the user is in
 	rows, err := db.Query(`
 	SELECT
 		u.*
@@ -42,14 +41,37 @@ func getChannel(c echo.Context) error {
 
 		users = append(users, user)
 	}
+	var channel ChannelResponse
+
+	channel.Users = users
+
+	rows, err = db.Query(`
+	SELECT
+		*
+	FROM
+		Channels
+	WHERE
+		id = ?;
+	`, channelId)
+
+	if err != nil {
+		return apiError("Query", echo.ErrInternalServerError, err)
+	}
+
+	for rows.Next() {
+		err := rows.Scan(&channel.Id, &channel.Name, &channel.Picture, &channel.LastMessage)
+
+		if err != nil {
+			return apiError("Scan", echo.ErrInternalServerError, err)
+		}
+
+	}
 
 	if err = rows.Err(); err != nil {
 		return apiError("rows", echo.ErrInternalServerError, err)
 	}
 
-	return c.JSON(http.StatusOK, &ChannelResponse{
-		Users: users,
-	})
+	return c.JSON(http.StatusOK, &channel)
 }
 
 func getChannels(c echo.Context) error {

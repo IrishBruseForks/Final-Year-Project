@@ -1,7 +1,7 @@
 import SendIcon from "@mui/icons-material/Send";
 import { Box, Button, Grid, InputAdornment, Paper, Stack, TextField } from "@mui/material";
 import axios from "axios";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { PostMessageBody, PostMessageResponse } from "../../Types/ServerTypes";
 import Constants from "../../Utility/Constants";
@@ -13,14 +13,7 @@ function MessageView() {
   const [messageText, setMessageText] = useState("");
   const { uuid } = useParams<{ uuid: string }>();
 
-  const { data: apiMessages } = useApi<PostMessageResponse[]>(["getMessages", uuid], Urls.Messages + "?id=" + uuid, { refetchInterval: 5000 });
-
-  const messages = useMemo(() => {
-    if (apiMessages === undefined) return [];
-    return apiMessages.map((message) => {
-      return message;
-    });
-  }, [apiMessages]);
+  const { data: messages } = useApi<PostMessageResponse[]>(["getMessages", uuid], Urls.Messages + "?id=" + uuid, { refetchInterval: 5000 });
 
   const handleSendMessage = async () => {
     if (messageText === "") return;
