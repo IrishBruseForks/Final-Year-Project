@@ -90,7 +90,7 @@ const FriendsPanel: React.FC = () => {
         </Stack>
       </Box>
       <Divider />
-      <List sx={{ maxHeight: "calc(89vh - 160px)", overflowY: "auto" }}>
+      <List sx={{ maxHeight: "calc(100vh - 160px)", overflowY: "auto" }}>
         {!isLoading && searchData && searchData.length > 0 ? (
           searchData.map((channel: ChannelsResponse) => (
             <ChannelItem id={channel.id} username={channel.name} lastMessage={"" + channel.lastMessage} profilePic={channel.picture} key={channel.id} />
