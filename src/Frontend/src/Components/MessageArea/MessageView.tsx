@@ -13,7 +13,7 @@ function MessageView() {
   const [messageText, setMessageText] = useState("");
   const { uuid } = useParams<{ uuid: string }>();
 
-  const { data: apiMessages } = useApi<PostMessageResponse[]>("getMessages", Urls.Messages + "?id=" + uuid, { refetchInterval: 2000 });
+  const { data: apiMessages } = useApi<PostMessageResponse[]>(["getMessages", uuid], Urls.Messages + "?id=" + uuid, { refetchInterval: 5000 });
 
   const messages = useMemo(() => {
     if (apiMessages === undefined) return [];
