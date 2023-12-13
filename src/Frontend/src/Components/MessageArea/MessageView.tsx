@@ -28,7 +28,6 @@ function MessageView() {
     try {
       const newMessage: PostMessageBody = { content: messageText, channelId: uuid };
       await axios.post(Constants.BackendUrl + Urls.Messages, newMessage, getConfig());
-      // setMessages([...messages, newMessage]);
     } catch (error) {
       console.log("Error sending Message:", error);
     } finally {
