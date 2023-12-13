@@ -4,7 +4,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import { Box, Divider, IconButton, InputAdornment, List, Stack, TextField, Typography } from "@mui/material";
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { ChannelResponse } from "../Types/ServerTypes";
+import { ChannelsResponse } from "../Types/ServerTypes";
 import Urls from "../Utility/Urls";
 import useApi from "../Utility/useApi";
 import { AddFriendModal } from "./AddFriendModal";
@@ -17,15 +17,15 @@ const FriendsPanel: React.FC = () => {
   const navigate = useNavigate();
 
   // Fetch all channels
-  const { data, isLoading } = useApi<ChannelResponse[]>("getChannels", Urls.Channels, { refetchInterval: 2000 });
+  const { data, isLoading } = useApi<ChannelsResponse[]>("getChannels", Urls.Channels, { refetchInterval: 2000 });
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const searchData = useMemo<ChannelResponse[] | undefined>(() => data && filterChannels(data), [searchTerm, data]);
+  const searchData = useMemo<ChannelsResponse[] | undefined>(() => data && filterChannels(data), [searchTerm, data]);
 
   const [isChannelModalOpen, setIsChannelModalOpen] = useState<boolean>(false);
   const [isAddFriendModalOpen, setIsAddFriendModalOpen] = useState<boolean>(false);
 
-  function filterChannels(value: ChannelResponse[]): ChannelResponse[] {
+  function filterChannels(value: ChannelsResponse[]): ChannelsResponse[] {
     return value?.filter((channel) => channel.name.toLowerCase().includes(searchTerm.toLowerCase()));
   }
 
@@ -92,7 +92,7 @@ const FriendsPanel: React.FC = () => {
       <Divider />
       <List sx={{ maxHeight: "calc(89vh - 160px)", overflowY: "auto" }}>
         {!isLoading && searchData && searchData.length > 0 ? (
-          searchData.map((channel: ChannelResponse) => (
+          searchData.map((channel: ChannelsResponse) => (
             <ChannelItem id={channel.id} username={channel.name} lastMessage={"" + channel.lastMessage} profilePic={channel.picture} key={channel.id} />
           ))
         ) : (

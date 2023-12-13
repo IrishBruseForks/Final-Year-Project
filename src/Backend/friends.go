@@ -15,10 +15,10 @@ func getFriends(c echo.Context) error {
 		return apiError("Query", echo.ErrInternalServerError, err)
 	}
 
-	var Friends []Friend
+	var Friends []User
 
 	for rows.Next() {
-		var channel Friend
+		var channel User
 		err := rows.Scan(&channel.Id, &channel.Username, &channel.Picture)
 
 		if err != nil {

@@ -15,20 +15,21 @@ export interface OAuthResponse {
   token: string;
   profilePicture: string;
 }
-export interface ChannelResponse {
+export interface ChannelsResponse {
   id: string;
   name: string;
   picture: string;
   lastMessage?: number /* int64 */;
   userIds: string;
 }
-export interface GetMessageBody {
-  ChannelId: string;
+export interface ChannelResponse {
+  users: User[];
 }
-export interface Friend {
+export interface User {
   id: string;
   username: string;
   picture: string;
+  isBot?: boolean;
 }
 export interface PostMessageBody {
   channelId: string;

@@ -19,7 +19,7 @@ import {
 import axios from "axios";
 import React, { useState } from "react";
 import { useQueryClient } from "react-query";
-import { Friend, PostChannelBody } from "../Types/ServerTypes";
+import { PostChannelBody, User } from "../Types/ServerTypes";
 import Constants from "../Utility/Constants";
 import Urls from "../Utility/Urls";
 import useApi, { getConfig } from "../Utility/useApi";
@@ -56,7 +56,7 @@ export const CreateChannelModal: React.FC<CreateChannelModalProps> = ({ open, ha
   // Query client for fetching data
   const queryClient = useQueryClient();
 
-  const { data: users } = useApi<Friend[]>("getFriends", Urls.Friends);
+  const { data: users } = useApi<User[]>("getFriends", Urls.Friends);
 
   // Handle changes in the selected users
   const handleUserChange = (event: SelectChangeEvent<string[]>) => {

@@ -8,14 +8,8 @@ import (
 )
 
 func getMessages(c echo.Context) error {
-	var message GetMessageBody
-	if err := c.Bind(&message); err != nil {
-		return apiError("bind", echo.ErrInternalServerError, err)
-	}
-
-	if err := c.Validate(message); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err)
-	}
+	var channelId string
+	echo.QueryParamsBinder(c).MustString("id", &channelId)
 
 	query := `
 	SELECT
@@ -27,7 +21,7 @@ func getMessages(c echo.Context) error {
 	ORDER BY sentOn ASC;
 	`
 
-	rows, err := db.Query(query, message.ChannelId)
+	rows, err := db.Query(query, channelId)
 	if err != nil {
 		return apiError("getMessagesQuery", echo.ErrInternalServerError, err)
 	}

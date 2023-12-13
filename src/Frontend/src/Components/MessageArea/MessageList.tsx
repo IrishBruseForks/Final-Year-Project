@@ -3,7 +3,7 @@ import { Avatar, Box, IconButton, Typography } from "@mui/material";
 import { format } from "date-fns";
 import { useMemo } from "react";
 import { useParams } from "react-router-dom";
-import { ChannelResponse } from "../../Types/ServerTypes";
+import { ChannelsResponse } from "../../Types/ServerTypes";
 import Constants from "../../Utility/Constants";
 import Urls from "../../Utility/Urls";
 import useApi from "../../Utility/useApi";
@@ -11,7 +11,7 @@ import LazyImage from "../LazyImage";
 
 function MessageList({ messages }: { messages: any[] | undefined }) {
   const { uuid } = useParams<{ uuid: string }>();
-  const { data } = useApi<ChannelResponse[]>("getChannels", Urls.Channels);
+  const { data } = useApi<ChannelsResponse[]>("getChannels", Urls.Channels);
 
   const getChannel = () => {
     return data?.find((channel) => channel.id === uuid);

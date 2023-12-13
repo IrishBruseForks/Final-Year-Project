@@ -8,6 +8,50 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+func getChannel(c echo.Context) error {
+	var channelId string
+	echo.QueryParamsBinder(c).MustString("id", &channelId)
+
+	fmt.Println(channelId)
+
+	// TODO return only chats the user is in
+	rows, err := db.Query(`
+	SELECT
+		u.*
+	FROM
+		Users_Channels
+	JOIN
+		Users u ON u.id = Users_id
+	WHERE
+		Users_Channels.Channels_id = ?;
+	`, channelId)
+
+	if err != nil {
+		return apiError("Query", echo.ErrInternalServerError, err)
+	}
+
+	var users []User
+
+	for rows.Next() {
+		var user User
+		err := rows.Scan(&user.Id, &user.Username, &user.Picture, &user.IsBot)
+		fmt.Println(user)
+		if err != nil {
+			return apiError("Scan", echo.ErrInternalServerError, err)
+		}
+
+		users = append(users, user)
+	}
+
+	if err = rows.Err(); err != nil {
+		return apiError("rows", echo.ErrInternalServerError, err)
+	}
+
+	return c.JSON(http.StatusOK, &ChannelResponse{
+		Users: users,
+	})
+}
+
 func getChannels(c echo.Context) error {
 	jwt := getJwt(c)
 
@@ -22,10 +66,10 @@ func getChannels(c echo.Context) error {
 		return apiError("Query", echo.ErrInternalServerError, err)
 	}
 
-	var channels []ChannelResponse
+	var channels []ChannelsResponse
 
 	for rows.Next() {
-		var channel ChannelResponse
+		var channel ChannelsResponse
 		err := rows.Scan(&channel.Id, &channel.Name, &channel.Picture, &channel.LastMessage)
 
 		if err != nil {
