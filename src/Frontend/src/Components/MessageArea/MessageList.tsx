@@ -36,9 +36,7 @@ function MessageList({ messages }: { messages: any[] | undefined }) {
       <Box sx={{ flexGrow: 1 }}>
         {messages?.map((message) => (
           <Box key={message.id} sx={{ display: "flex", alignItems: "center", mb: 1 }}>
-            <Avatar src={getProfilePictureUrl()} sx={{ mr: 1 }}>
-              {message.sentBy[0]}
-            </Avatar>
+            <Avatar src={getProfilePictureUrl()} sx={{ mr: 1 }} />
             <Box>
               <Typography variant="body2">{message.sentBy}</Typography>
               <Typography variant="caption" color="text.secondary">
