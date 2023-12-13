@@ -1,28 +1,26 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { Grid, Box, Paper, Stack, TextField, Button, InputAdornment } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
-import MessageList from "./MessageList";
-import Urls from "../../Utility/Urls";
+import { Box, Button, Grid, InputAdornment, Paper, Stack, TextField } from "@mui/material";
 import axios from "axios";
-import Constants from "../../Utility/Constants";
-import useApi, { getConfig } from "../../Utility/useApi";
-import { PostMessageBody, PostMessageResponse } from "../../Types/ServerTypes";
+import { useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
+import { PostMessageBody, PostMessageResponse } from "../../Types/ServerTypes";
+import Constants from "../../Utility/Constants";
+import Urls from "../../Utility/Urls";
+import useApi, { getConfig } from "../../Utility/useApi";
+import MessageList from "./MessageList";
 
 function MessageView() {
   const [messageText, setMessageText] = useState("");
   const { uuid } = useParams<{ uuid: string }>();
 
-  const { data: messages } = useApi<PostMessageResponse[]>("getMessages", Urls.Messages+"?id="+uuid, { refetchInterval: 2000 });
+  const { data: apiMessages } = useApi<PostMessageResponse[]>("getMessages", Urls.Messages + "?id=" + uuid, { refetchInterval: 2000 });
 
-  // useEffect(() => {
-  //   const fetchMessages = async () => {
-  //     const response = await axios.get(Constants.BackendUrl + Urls.Messages, getConfig());
-  //     setMessages(response.data);
-  //   };
-  //   fetchMessages();
-  // }, []);
-
+  const messages = useMemo(() => {
+    if (apiMessages === undefined) return [];
+    return apiMessages.map((message) => {
+      return message;
+    });
+  }, [apiMessages]);
 
   const handleSendMessage = async () => {
     if (messageText === "") return;
@@ -33,6 +31,8 @@ function MessageView() {
       // setMessages([...messages, newMessage]);
     } catch (error) {
       console.log("Error sending Message:", error);
+    } finally {
+      setMessageText("");
     }
   };
 
@@ -68,7 +68,7 @@ function MessageView() {
               endAdornment: (
                 <InputAdornment position="end">
                   <Button variant="contained" endIcon={<SendIcon />} onClick={handleSendMessage}>
-                    Send
+                    <b>Send</b>
                   </Button>
                 </InputAdornment>
               ),
