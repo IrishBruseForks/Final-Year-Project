@@ -13,6 +13,9 @@
     "signup",
     "structs"
   ],
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "explicit"
+  },
   "emeraldwalk.runonsave": {
     "autoClearConsole": false,
     "commands": [
