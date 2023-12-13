@@ -20,7 +20,7 @@ function MessageList({ messages }: { messages: any[] | undefined }) {
   const channel = useMemo(getChannel, [uuid, data]);
 
   const getProfilePictureUrl = () => {
-    return localStorage.getItem(Constants.ProfilePictureKey) || ""; // Fallback to an empty string
+    return localStorage.getItem(Constants.ProfilePictureKey) || "";
   };
 
   return (
@@ -42,7 +42,7 @@ function MessageList({ messages }: { messages: any[] | undefined }) {
             <Box>
               <Typography variant="body2">{message.sentBy}</Typography>
               <Typography variant="caption" color="text.secondary">
-                {format(new Date(message.sentOn), "PPpp")} {/* Formatting the date */}
+                {format(new Date(message.sentOn), "PPpp")}
               </Typography>
               <Typography variant="body1">{message.content}</Typography>
             </Box>

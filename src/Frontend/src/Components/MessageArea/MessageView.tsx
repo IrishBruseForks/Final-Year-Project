@@ -15,14 +15,6 @@ function MessageView() {
 
   const { data: messages } = useApi<PostMessageResponse[]>("getMessages", Urls.Messages+"?id="+uuid, { refetchInterval: 2000 });
 
-  // useEffect(() => {
-  //   const fetchMessages = async () => {
-  //     const response = await axios.get(Constants.BackendUrl + Urls.Messages, getConfig());
-  //     setMessages(response.data);
-  //   };
-  //   fetchMessages();
-  // }, []);
-
 
   const handleSendMessage = async () => {
     if (messageText === "") return;
@@ -30,7 +22,6 @@ function MessageView() {
     try {
       const newMessage: PostMessageBody = { content: messageText, channelId: uuid };
       await axios.post(Constants.BackendUrl + Urls.Messages, newMessage, getConfig());
-      // setMessages([...messages, newMessage]);
     } catch (error) {
       console.log("Error sending Message:", error);
     }
