@@ -28,6 +28,13 @@ function MessageView() {
     }
   };
 
+  const handleKeyDown = (event: { key: string; preventDefault: () => void }) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      handleSendMessage();
+    }
+  };
+
   return (
     <Grid item xs={12} md={9} pr={2}>
       <Stack spacing={2} sx={{ height: "100%" }}>
@@ -55,6 +62,7 @@ function MessageView() {
             fullWidth
             value={messageText}
             onChange={(e) => setMessageText(e.target.value)}
+            onKeyDown={handleKeyDown} // Attach the handleKeyDown function here
             variant="outlined"
             InputProps={{
               endAdornment: (
