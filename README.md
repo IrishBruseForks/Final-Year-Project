@@ -10,7 +10,7 @@
 
 ## [Brainstorming](./Documentation/Brainstorming.md)
 
-## [Project Proposal](./Documentation/Proposal.md)
+## [Project Proposal](./Documentation/Proposal/)
 
 # Setup Instructions
 
