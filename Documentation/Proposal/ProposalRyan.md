@@ -4,7 +4,7 @@
 
 <h1 style="color: red;">Project Proposal</h1>
 
-<span > <strong style="color: red;">1. Student Name:</strong><span style="border: 1px solid red; padding: 5px; margin-left:10px;">Ethan Conneely (G00393941) and Ryan Harte (G00338424)</span></span>
+<span > <strong style="color: red;">1. Student Name:</strong><span style="border: 1px solid red; padding: 5px; margin-left:10px;">Ryan Harte (G00338424)</span></span>
 
 <span > <strong style="color: red;">2. Supervisor Name:</strong><span style="border: 1px solid red; padding: 5px; margin-left:10px;">Gemma O'Callaghan</span></span>
 
