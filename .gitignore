@@ -29,5 +29,5 @@ dist-ssr
 
 *.exe
 *.db
-
 *.blend1
+*.pem

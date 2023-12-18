@@ -34,9 +34,6 @@ func main() {
 }
 
 func runEchoServer() {
-	// Clear console output for debugging
-	fmt.Print("\033[H\033[2J")
-
 	e := echo.New()
 	e.HideBanner = true
 	e.Validator = &CustomValidator{validator: validator.New()}
@@ -44,7 +41,12 @@ func runEchoServer() {
 	addMiddleware(e)
 	addRoutes(e)
 
-	e.Logger.Fatal(e.Start("localhost:1323"))
+	host, found := os.LookupEnv("Host")
+	if !found {
+		panic("Host missing in .env")
+	}
+
+	e.Logger.Fatal(e.Start(host))
 	e.Close()
 }
 

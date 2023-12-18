@@ -12,8 +12,6 @@ func getChannel(c echo.Context) error {
 	var channelId string
 	echo.QueryParamsBinder(c).MustString("id", &channelId)
 
-	fmt.Println(channelId)
-
 	rows, err := db.Query(`
 	SELECT
 		u.*

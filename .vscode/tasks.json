@@ -39,6 +39,28 @@
         "cwd": "./src/Backend"
       },
       "problemMatcher": "$tsc"
+    },
+    {
+      "label": "Compile go for arm",
+      "type": "shell",
+      "command": "go build",
+      "options": {
+        "env": {
+          "GOOS": "linux",
+          "GOARCH": "arm"
+        },
+        "cwd": "./src/Backend"
+      },
+      "problemMatcher": "$go"
+    },
+    {
+      "label": "Upload to ec2",
+      "type": "shell",
+      "dependsOn": "Compile go for arm",
+      "command": "scp -i chatalyst.pem src/Backend/chatalyst ec2-user@ec2-52-211-28-65.eu-west-1.compute.amazonaws.com:~/",
+      "problemMatcher": [
+        "$go"
+      ]
     }
   ]
 }
