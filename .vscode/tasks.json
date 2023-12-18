@@ -4,7 +4,7 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Serve UI",
+      "label": "npm run dev",
       "type": "shell",
       "command": "npm run dev",
       "runOptions": {
@@ -17,7 +17,7 @@
       "problemMatcher": "$tsc"
     },
     {
-      "label": "Install Packages",
+      "label": "npm i",
       "type": "shell",
       "command": "npm install",
       "runOptions": {
@@ -29,7 +29,7 @@
       "problemMatcher": "$tsc"
     },
     {
-      "label": "Watch go backend",
+      "label": "air",
       "type": "shell",
       "command": "air",
       "runOptions": {

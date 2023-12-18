@@ -5,7 +5,6 @@ import React, { createContext } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { RouterProvider } from "react-router-dom";
 import Globals from "./Globals";
-import Constants from "./Utility/Constants";
 import { router } from "./router";
 
 export const ErrorContext = createContext<Error | null>(null);
@@ -58,7 +57,7 @@ function App() {
   });
 
   return (
-    <GoogleOAuthProvider clientId={Constants.GoogleAppID}>
+    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_APP_ID}>
       <React.StrictMode>
         <QueryClientProvider client={queryClient}>
           <SnackbarProvider maxSnack={3}>

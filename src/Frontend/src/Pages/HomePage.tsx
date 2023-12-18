@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import FriendsPanel from "../Components/FriendsPanel";
 import MessageHeader from "../Components/MessageArea/MessageHeader";
 import MessageView from "../Components/MessageArea/MessageView";
-import Constants from "../Utility/Constants";
 
 function HomePage() {
   const isMobile = useMediaQuery("(max-width:899px)");
@@ -16,7 +15,7 @@ function HomePage() {
 
   // Effect for setting the document title and disabling body scroll
   useEffect(() => {
-    document.title = Constants.AppName + " - Home";
+    document.title = import.meta.env.VITE_APP_TITLE + " - Home";
     // Disable body scroll
     document.body.style.overflow = "hidden";
 

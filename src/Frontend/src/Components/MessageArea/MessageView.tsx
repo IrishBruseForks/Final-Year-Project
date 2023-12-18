@@ -4,7 +4,6 @@ import axios from "axios";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { PostMessageBody, PostMessageResponse } from "../../Types/ServerTypes";
-import Constants from "../../Utility/Constants";
 import Urls from "../../Utility/Urls";
 import useApi, { getConfig } from "../../Utility/useApi";
 import MessageList from "./MessageList";
@@ -20,7 +19,7 @@ function MessageView() {
     if (!uuid) return;
     try {
       const newMessage: PostMessageBody = { content: messageText, channelId: uuid };
-      await axios.post(Constants.BackendUrl + Urls.Messages, newMessage, getConfig());
+      await axios.post(import.meta.env.VITE_API_URL + Urls.Messages, newMessage, getConfig());
     } catch (error) {
       console.log("Error sending Message:", error);
     } finally {

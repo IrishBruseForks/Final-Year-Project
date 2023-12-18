@@ -10,7 +10,7 @@ export default function useApi<TQueryFnData = unknown, TError = unknown, TData =
   return useQuery<TQueryFnData, TError, TData, TQueryKey>(
     queryKey,
     async (): Promise<TQueryFnData> => {
-      return (await axios.get(Constants.BackendUrl + url, getConfig())).data;
+      return (await axios.get(import.meta.env.VITE_API_URL + url, getConfig())).data;
     },
     options
   );

@@ -6,7 +6,7 @@ import Urls from "./Utility/Urls";
 import useApi from "./Utility/useApi";
 
 function Globals({ router }: { router: typeof import("./router").router }) {
-  const { isError: loginFailed } = useApi("getLogin", Urls.Login, { retry: false, refetchOnWindowFocus: true });
+  const { isError: loginFailed } = useApi("getLogin", Urls.Login);
 
   // Check to see if the backend is running
   // if there is an exception redirect to service down page and keep retrying connection
@@ -23,13 +23,17 @@ function Globals({ router }: { router: typeof import("./router").router }) {
     const token = localStorage.getItem(Constants.AccessTokenKey);
 
     if (token === null) {
+      console.log("Redirecting to login page from Globals due to no token");
+
       router.navigate("/login");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    if (loginFailed && window.location.pathname !== "/login") {
+    if (!loginFailed && window.location.pathname !== "/login") {
+      console.log("Redirecting to login page from Globals due to login failure");
+
       Logout();
       router.navigate("/login");
     }

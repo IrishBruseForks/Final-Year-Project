@@ -21,11 +21,11 @@ dist-ssr
 *.sln
 *.sw?
 
+*.env*
+
 *.pdf
 
 **/tmp/
-
-**/.env
 
 *.exe
 *.db
