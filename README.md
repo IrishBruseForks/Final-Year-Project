@@ -31,11 +31,7 @@ To run this application you will need:
 - VSCode
 - Air for golang hotreloading (Optional)
 
-## src/Frontend
-
-Install node 20 or above
-
-To serve the frontend run:
+## Frontend
 
 ```shell
 cd src/Frontend
@@ -43,9 +39,7 @@ npm install
 npm run dev
 ```
 
-## src/Backend
-
-Install go version 1.21 or greater
+## Backend
 
 ```shell
 cd src/Backend
