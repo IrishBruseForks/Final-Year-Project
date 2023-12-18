@@ -61,6 +61,16 @@
       "problemMatcher": [
         "$go"
       ]
-    }
+    },
+    {
+      "label": "Deploy UI",
+      "type": "shell",
+      "command": "npm run deploy",
+      "dependsOn": "Install Packages",
+      "options": {
+        "cwd": "./src/Frontend"
+      },
+      "problemMatcher": "$tsc"
+    },
   ]
 }

@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --open",
-    "build": "tsc && vite build",
+    "deploy": " vite build --outDir ../../../chatalyst-hosting/ && cd ../../ && echo chatalyst.ethanconneely.com > ../chatalyst-hosting/CNAME && cd ../chatalyst-hosting && copy index.html 404.html && git add . && git commit -m 'deploy' && git push origin main",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
