@@ -22,6 +22,15 @@ and you will need air which will hot reload the backend server for development
 
 or manual way
 
+### Requirements
+
+To run this application you will need:
+- Node 20+
+- Npm
+- GoLang 1.21+
+- VSCode
+- Air for golang hotreloading (Optional)
+
 ## src/Frontend
 
 Install node 20 or above
