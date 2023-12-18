@@ -12,7 +12,7 @@ function FriendList() {
   const isMobile = useMediaQuery("(max-width:899px)");
 
   useEffect(() => {
-    document.title = Constants.AppName + " - Home";
+    document.title = import.meta.env.VITE_APP_TITLE + " - Home";
     setProfilePicture(localStorage.getItem(Constants.ProfilePictureKey)!);
   }, []);
 

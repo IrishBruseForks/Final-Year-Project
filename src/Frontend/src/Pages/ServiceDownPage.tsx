@@ -7,10 +7,12 @@ import useApi from "../Utility/useApi";
 function ServiceDownPage() {
   const navigate = useNavigate();
 
-  const { isSuccess, isError: serverFailed } = useApi("getStatusGlobal", Urls.Status);
+  const { isSuccess } = useApi("getStatusGlobal", Urls.Status);
 
   useEffect(() => {
     if (isSuccess) {
+      console.log("Redirecting to home page from service down page");
+
       navigate("/");
     }
   }, [isSuccess, navigate]);

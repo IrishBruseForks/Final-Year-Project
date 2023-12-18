@@ -14,7 +14,7 @@ function LoginPage() {
 
   const login = useGoogleLogin({
     onSuccess: async (tokenResponse: OAuth) => {
-      const resp = (await axios.post(Constants.BackendUrl + "auth/google", { code: tokenResponse.code })).data as OAuthResponse;
+      const resp = (await axios.post(import.meta.env.VITE_API_URL + "auth/google", { code: tokenResponse.code })).data as OAuthResponse;
 
       localStorage.setItem(Constants.AccessTokenKey, resp.token);
       localStorage.setItem(Constants.ProfilePictureKey, resp.profilePicture);
@@ -28,7 +28,7 @@ function LoginPage() {
   });
 
   useEffect(() => {
-    document.title = Constants.AppName + " - Login";
+    document.title = import.meta.env.VITE_APP_TITLE + " - Login";
 
     if (localStorage.getItem(Constants.AccessTokenKey) !== null) {
       navigate("/");
@@ -41,7 +41,7 @@ function LoginPage() {
       <LazyImage src="./Logo.png" title="Logo" sx={{ width: "24rem", height: "24rem" }} placeholder={null} />
 
       <Typography variant="h2" align="center" sx={{ mb: 2, mt: 2 }}>
-        {Constants.AppName}
+        {import.meta.env.VITE_APP_TITLE}
       </Typography>
       <Typography sx={{ mb: 8 }}>The catalyst to all your messaging needs</Typography>
       <Button variant="contained" onClick={login}>
