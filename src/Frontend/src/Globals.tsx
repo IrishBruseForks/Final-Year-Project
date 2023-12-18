@@ -6,7 +6,7 @@ import Urls from "./Utility/Urls";
 import useApi from "./Utility/useApi";
 
 function Globals({ router }: { router: typeof import("./router").router }) {
-  const { isError: loginFailed } = useApi("getLogin", Urls.Login);
+  const { isError: loginFailed } = useApi("getLogin", Urls.Login, { retry: false, refetchInterval: 5000 });
 
   // Check to see if the backend is running
   // if there is an exception redirect to service down page and keep retrying connection
