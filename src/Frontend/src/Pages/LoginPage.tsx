@@ -1,24 +1,20 @@
 import Google from "@mui/icons-material/Google";
 import { Button, Stack, Typography } from "@mui/material";
 import { useGoogleLogin } from "@react-oauth/google";
-import axios from "axios";
 import { enqueueSnackbar } from "notistack";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../Auth/useAuth";
 import LazyImage from "../Components/LazyImage";
-import { OAuth, OAuthResponse } from "../Types/ServerTypes";
-import Constants from "../Utility/Constants";
+import { OAuth } from "../Types/ServerTypes";
 
 function LoginPage() {
+  const { login } = useAuth();
   const navigate = useNavigate();
 
-  const login = useGoogleLogin({
+  const googleLogin = useGoogleLogin({
     onSuccess: async (tokenResponse: OAuth) => {
-      const resp = (await axios.post(import.meta.env.VITE_API_URL + "auth/google", { code: tokenResponse.code })).data as OAuthResponse;
-
-      localStorage.setItem(Constants.AccessTokenKey, resp.token);
-      localStorage.setItem(Constants.ProfilePictureKey, resp.profilePicture);
-
+      await login(tokenResponse);
       navigate("/");
     },
     onError: (error) => {
@@ -29,10 +25,6 @@ function LoginPage() {
 
   useEffect(() => {
     document.title = import.meta.env.VITE_APP_TITLE + " - Login";
-
-    if (localStorage.getItem(Constants.AccessTokenKey) !== null) {
-      navigate("/");
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -44,7 +36,7 @@ function LoginPage() {
         {import.meta.env.VITE_APP_TITLE}
       </Typography>
       <Typography sx={{ mb: 8 }}>The catalyst to all your messaging needs</Typography>
-      <Button variant="contained" onClick={login}>
+      <Button variant="contained" onClick={googleLogin}>
         Login With Google <Google sx={{ margin: "0 0 0 0.5rem" }} />
       </Button>
     </Stack>

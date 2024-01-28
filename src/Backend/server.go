@@ -95,8 +95,15 @@ func addMiddleware(e *echo.Echo) {
 	e.Use(middleware.BodyDumpWithConfig(
 		middleware.BodyDumpConfig{
 			Handler: func(c echo.Context, reqBody []byte, resBody []byte) {
-				fmt.Println("Request: ", string(reqBody))
-				fmt.Print("Response:", string(resBody))
+
+				req := string(resBody)
+				if len(req) > 0 {
+					fmt.Println("Request: ", req)
+				}
+				resp := string(resBody)
+				if len(resp) > 0 {
+					fmt.Print("Response:", resp)
+				}
 			},
 			Skipper: Skipper,
 		},

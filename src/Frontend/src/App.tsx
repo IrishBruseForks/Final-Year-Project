@@ -1,10 +1,9 @@
 import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
-import { GoogleOAuthProvider } from "@react-oauth/google";
 import { SnackbarProvider } from "notistack";
 import React, { createContext } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { RouterProvider } from "react-router-dom";
-import Globals from "./Globals";
+import { AuthProvider } from "./Auth/AuthProvider";
 import { router } from "./router";
 
 export const ErrorContext = createContext<Error | null>(null);
@@ -57,19 +56,18 @@ function App() {
   });
 
   return (
-    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_APP_ID}>
+    <AuthProvider clientId={import.meta.env.VITE_GOOGLE_APP_ID}>
       <React.StrictMode>
         <QueryClientProvider client={queryClient}>
           <SnackbarProvider maxSnack={3}>
             <ThemeProvider theme={theme}>
               <CssBaseline />
-              <Globals router={router} />
               <RouterProvider router={router} />
             </ThemeProvider>
           </SnackbarProvider>
         </QueryClientProvider>
       </React.StrictMode>
-    </GoogleOAuthProvider>
+    </AuthProvider>
   );
 }
 

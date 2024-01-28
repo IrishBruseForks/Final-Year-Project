@@ -2,20 +2,20 @@ import { Menu as MenuIcon } from "@mui/icons-material";
 import { AppBar, IconButton, Menu, MenuItem, Toolbar, Typography, useMediaQuery } from "@mui/material";
 
 import { useEffect, useRef, useState } from "react";
-import Constants from "../../Utility/Constants";
-import { Logout } from "../../Utility/LoginHandler";
+import { useAuth } from "../../Auth/useAuth";
 import LazyImage from "../LazyImage";
 
 function MessageHeader({ toggleDrawer }: { toggleDrawer: (open: boolean) => void }) {
+  const { user, logout } = useAuth();
   const isMobile = useMediaQuery("(max-width:899px)");
   const [opened, setOpened] = useState<boolean>(false);
-  const [profilePicture, setProfilePicture] = useState<string>("");
+  const [profilePicture, setProfilePicture] = useState<string>();
 
   const anchorRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    setProfilePicture(localStorage.getItem(Constants.ProfilePictureKey)!);
-  }, []);
+    setProfilePicture(user?.profilePicture);
+  }, [user?.profilePicture]);
 
   return (
     <>
@@ -67,7 +67,7 @@ function MessageHeader({ toggleDrawer }: { toggleDrawer: (open: boolean) => void
             }}
           >
             <MenuItem>Profile</MenuItem>
-            <MenuItem onClick={Logout}>Logout</MenuItem>
+            <MenuItem onClick={logout}>Logout</MenuItem>
           </Menu>
         </Toolbar>
       </AppBar>

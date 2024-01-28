@@ -19,8 +19,8 @@ import {
 import axios from "axios";
 import React, { useState } from "react";
 import { useQueryClient } from "react-query";
+import { useAuth } from "../Auth/useAuth";
 import { PostChannelBody, User } from "../Types/ServerTypes";
-import Constants from "../Utility/Constants";
 import Urls from "../Utility/Urls";
 import useApi, { getConfig } from "../Utility/useApi";
 import LazyImage from "./LazyImage";
@@ -46,6 +46,8 @@ type CreateChannelModalProps = {
 
 // Create the CreateChannelModal component
 export const CreateChannelModal: React.FC<CreateChannelModalProps> = ({ open, handleClose }) => {
+  const { user } = useAuth();
+
   // State variables to manage form input and errors
   const [channelName, setChannelName] = useState<string>("");
   const [channelPicture, setChannelPicture] = useState<string>("");
@@ -85,7 +87,7 @@ export const CreateChannelModal: React.FC<CreateChannelModalProps> = ({ open, ha
     // Extract the user IDs from the selected usernames
     const userIds = selectedUserID;
 
-    const finalChannelPicture = channelPicture || localStorage.getItem(Constants.ProfilePictureKey) || "default_picture_url";
+    const finalChannelPicture = channelPicture || user?.profilePicture || "default_picture_url";
 
     // Create the channel data object
     const channelData: PostChannelBody = {

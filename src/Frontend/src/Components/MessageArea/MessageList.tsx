@@ -1,7 +1,6 @@
 import GroupsIcon from "@mui/icons-material/Groups";
 import { Avatar, Box, IconButton, Typography } from "@mui/material";
 import { format } from "date-fns";
-import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { ChannelResponse, PostMessageResponse } from "../../Types/ServerTypes";
 import Urls from "../../Utility/Urls";
@@ -14,15 +13,11 @@ function MessageList({ messages }: { messages: PostMessageResponse[] | undefined
 
   const getProfilePictureUrl = (message: PostMessageResponse) => {
     return (
-      channel?.users.find((c) => {
+      channel?.users?.find((c) => {
         return c.id === message.sentBy;
       })?.picture || ""
     );
   };
-
-  useEffect(() => {
-    console.log(channel?.name);
-  }, [channel?.name]);
 
   return (
     <>
@@ -42,7 +37,7 @@ function MessageList({ messages }: { messages: PostMessageResponse[] | undefined
               {/* {channel.users[0]} */}
               <Typography variant="body2">
                 {
-                  channel?.users.find((c) => {
+                  channel?.users?.find((c) => {
                     return c.id === message.sentBy;
                   })?.username
                 }

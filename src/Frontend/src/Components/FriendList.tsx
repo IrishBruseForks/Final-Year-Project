@@ -2,18 +2,17 @@ import { Menu as MenuIcon } from "@mui/icons-material";
 import { AppBar, IconButton, Menu, MenuItem, Stack, Toolbar, Typography, useMediaQuery } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { useEffect, useState } from "react";
-import Constants from "../Utility/Constants";
+import { useAuth } from "../Auth/useAuth";
 import LazyImage from "./LazyImage";
 import MessageView from "./MessageArea/MessageView";
 
 function FriendList() {
+  const { user } = useAuth();
   const [opened, setOpened] = useState(false);
-  const [profilePicture, setProfilePicture] = useState<string>("");
   const isMobile = useMediaQuery("(max-width:899px)");
 
   useEffect(() => {
     document.title = import.meta.env.VITE_APP_TITLE + " - Home";
-    setProfilePicture(localStorage.getItem(Constants.ProfilePictureKey)!);
   }, []);
 
   const toggleDrawer = (state: boolean) => {
@@ -43,7 +42,7 @@ function FriendList() {
           </Typography>
           <div>
             <IconButton size="large" aria-label="account of current user" aria-controls="menu-appbar" aria-haspopup="true" color="inherit">
-              <LazyImage src={profilePicture} title="Profile Picture" sx={{ height: 32, width: 32 }} />
+              <LazyImage src={user?.profilePicture} title="Profile Picture" sx={{ height: 32, width: 32 }} />
             </IconButton>
             <Menu
               id="menu-appbar"
