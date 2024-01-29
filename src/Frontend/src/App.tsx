@@ -19,49 +19,63 @@ function App() {
   // https://mui.com/material-ui/customization/default-theme/
   const theme = createTheme({
     palette: {
+      mode: mode,
       primary: {
         main: "#47b25c",
-        contrastText: "rgba(255,255,255,0.87)",
-        dark: "#47b25c",
-        light: "#47b25c",
+        contrastText: "rgba(255, 255, 255, 0.87)",
       },
       secondary: {
-        main: "#f50057",
+        main: "#cb4c45",
       },
       background: {
-        default: "#242b33",
-        paper: "#31373f",
+        default: "#242B33",
+        paper: "#31373F",
       },
       text: {
         primary: "#ffffff",
-        secondary: "rgba(222,222,222,0.7)",
+        secondary: "#acacac",
       },
+      divider: "#31373F",
+    },
+    shape: {
+      borderRadius: 10,
     },
     typography: {
       fontFamily: ["Poppins", '"Helvetica Neue"', "Arial", "sans-serif"].join(","),
     },
     components: {
+      MuiAppBar: {
+        styleOverrides: {
+          root: {
+            backgroundColor: "#31373F",
+            color: "#fff",
+            backgroundImage: "none",
+          },
+        },
+      },
       MuiCssBaseline: {
         styleOverrides: {
           body: {
-            scrollbarColor: "#6b6b6b #2b2b2b",
             "&::-webkit-scrollbar, & *::-webkit-scrollbar": {
-              backgroundColor: "#2b2b2b",
+              width: 12,
+            },
+            "&::-webkit-scrollbar-track, & *::-webkit-scrollbar-track": {
+              width: "1rem",
+              backgroundColor: "#31373f",
             },
             "&::-webkit-scrollbar-thumb, & *::-webkit-scrollbar-thumb": {
               borderRadius: 8,
-              backgroundColor: "#6b6b6b",
+              backgroundColor: "#50545b",
               minHeight: 24,
-              border: "3px solid #2b2b2b",
             },
             "&::-webkit-scrollbar-thumb:focus, & *::-webkit-scrollbar-thumb:focus": {
-              backgroundColor: "#959595",
+              backgroundColor: "#6b6f77",
             },
             "&::-webkit-scrollbar-thumb:active, & *::-webkit-scrollbar-thumb:active": {
-              backgroundColor: "#959595",
+              backgroundColor: "#6b6f77",
             },
             "&::-webkit-scrollbar-thumb:hover, & *::-webkit-scrollbar-thumb:hover": {
-              backgroundColor: "#959595",
+              backgroundColor: "#6b6f77",
             },
             "&::-webkit-scrollbar-corner, & *::-webkit-scrollbar-corner": {
               backgroundColor: "#2b2b2b",
@@ -78,7 +92,7 @@ function App() {
       },
       MuiDrawer: {
         styleOverrides: {
-          paper: { backgroundColor: "#272727", backgroundImage: "linear-gradient(rgba(255, 255, 255, 0.01), rgba(255, 255, 255, 0.0))" },
+          // paper: { backgroundColor: "#272727", backgroundImage: "linear-gradient(rgba(255, 255, 255, 0.01), rgba(255, 255, 255, 0.0))" },
         },
       },
     },
