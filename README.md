@@ -46,6 +46,16 @@ cd src/Backend
 go run .
 ```
 
+## src/LLM
+
+To run the llm for inteligent smart replies you will need to install https://github.com/oobabooga/text-generation-webui  
+The instructions are in the repo.
+
+The model we are using for development is this one
+https://huggingface.co/TheBloke/open-llama-3b-v2-wizard-evol-instuct-v2-196k-GGUF
+but any open llama model would work fine this one was chosen as it is able to run on my gpu which gives much faster results.
+And means when running the golang backend my cpu is freed up to run that.
+
 ## Documentation
 
 ### [Brainstorming](./Documentation/Brainstorming.md)
