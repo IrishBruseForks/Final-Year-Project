@@ -4,7 +4,7 @@ import Grid from "@mui/material/Grid";
 import { useEffect, useState } from "react";
 import { useAuth } from "../Auth/useAuth";
 import LazyImage from "./LazyImage";
-import MessageView from "./MessageArea/MessageView";
+import MessageView from "./Messages/MessageView";
 
 function FriendList() {
   const { user } = useAuth();
@@ -20,7 +20,7 @@ function FriendList() {
   };
 
   return (
-    <Stack sx={{ height: "100vh" }}>
+    <Stack>
       <AppBar position="relative">
         <Toolbar>
           {isMobile && (
@@ -64,7 +64,7 @@ function FriendList() {
           </div>
         </Toolbar>
       </AppBar>
-      <Grid container columnSpacing={2} flexGrow={1}>
+      <Grid container columnSpacing={2} sx={{ maxHeight: "100%" }}>
         <MessageView />
       </Grid>
     </Stack>

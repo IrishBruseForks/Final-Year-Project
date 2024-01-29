@@ -1,8 +1,8 @@
 import { createBrowserRouter } from "react-router-dom";
 import { GuardedRoute } from "./Auth/GuardedRoute";
 import ErrorPage from "./Pages/ErrorPage";
-import HomePage from "./Pages/HomePage";
 import LoginPage from "./Pages/LoginPage";
+import MessagesPage from "./Pages/MessagesPage";
 
 export const router = createBrowserRouter([
   {
@@ -12,12 +12,12 @@ export const router = createBrowserRouter([
   },
   {
     path: "/",
-    element: <GuardedRoute component={<HomePage />} />,
+    element: <GuardedRoute component={<MessagesPage />} />,
     errorElement: <ErrorPage />,
     children: [
       {
         path: "/:uuid",
-        element: <GuardedRoute component={<HomePage />} />,
+        element: <GuardedRoute component={<MessagesPage />} />,
       },
     ],
   },

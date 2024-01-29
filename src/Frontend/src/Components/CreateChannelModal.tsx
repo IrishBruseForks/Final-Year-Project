@@ -96,9 +96,11 @@ export const CreateChannelModal: React.FC<CreateChannelModalProps> = ({ open, ha
       picture: finalChannelPicture,
     };
 
+    if (!user) return;
+
     try {
       // Send a POST request to create the channel
-      await axios.post(import.meta.env.VITE_API_URL + Urls.Channels, channelData, getConfig());
+      await axios.post(import.meta.env.VITE_API_URL + Urls.Channels, channelData, getConfig(user));
       // Invalidate the queries to refresh the channel list
       queryClient.invalidateQueries("getChannels");
       // Close the modal

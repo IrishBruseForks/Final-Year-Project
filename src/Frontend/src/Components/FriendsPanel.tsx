@@ -39,7 +39,7 @@ const FriendsPanel: React.FC = () => {
   }, [data]);
 
   return (
-    <Box>
+    <Stack>
       <Box
         sx={{
           p: 1,
@@ -90,7 +90,13 @@ const FriendsPanel: React.FC = () => {
         </Stack>
       </Box>
       <Divider />
-      <List sx={{ maxHeight: "calc(100vh - 160px)", overflowY: "auto" }}>
+      <List
+        sx={{
+          flex: "1 1 auto",
+          overflowY: "auto",
+          height: "0px", // CSS makes no sense
+        }}
+      >
         {!isLoading && searchData && searchData.length > 0 ? (
           searchData.map((channel: ChannelsResponse) => (
             <ChannelItem id={channel.id} username={channel.name} lastMessage={"" + channel.lastMessage} profilePic={channel.picture} key={channel.id} />
@@ -101,7 +107,7 @@ const FriendsPanel: React.FC = () => {
       </List>
       <CreateChannelModal open={isChannelModalOpen} handleClose={() => setIsChannelModalOpen(false)} defaultChannelName={""} />
       <AddFriendModal open={isAddFriendModalOpen} handleClose={() => setIsAddFriendModalOpen(false)} />
-    </Box>
+    </Stack>
   );
 };
 

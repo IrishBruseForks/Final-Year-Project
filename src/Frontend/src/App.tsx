@@ -1,4 +1,5 @@
-import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
+import { Box, CssBaseline, ThemeProvider, createTheme } from "@mui/material";
+import {} from "@mui/material/colors";
 import { SnackbarProvider } from "notistack";
 import React, { createContext } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
@@ -18,12 +19,56 @@ function App() {
   // https://mui.com/material-ui/customization/default-theme/
   const theme = createTheme({
     palette: {
-      mode: mode,
+      primary: {
+        main: "#47b25c",
+        contrastText: "rgba(255,255,255,0.87)",
+        dark: "#47b25c",
+        light: "#47b25c",
+      },
+      secondary: {
+        main: "#f50057",
+      },
+      background: {
+        default: "#242b33",
+        paper: "#31373f",
+      },
+      text: {
+        primary: "#ffffff",
+        secondary: "rgba(222,222,222,0.7)",
+      },
     },
     typography: {
       fontFamily: ["Poppins", '"Helvetica Neue"', "Arial", "sans-serif"].join(","),
     },
     components: {
+      MuiCssBaseline: {
+        styleOverrides: {
+          body: {
+            scrollbarColor: "#6b6b6b #2b2b2b",
+            "&::-webkit-scrollbar, & *::-webkit-scrollbar": {
+              backgroundColor: "#2b2b2b",
+            },
+            "&::-webkit-scrollbar-thumb, & *::-webkit-scrollbar-thumb": {
+              borderRadius: 8,
+              backgroundColor: "#6b6b6b",
+              minHeight: 24,
+              border: "3px solid #2b2b2b",
+            },
+            "&::-webkit-scrollbar-thumb:focus, & *::-webkit-scrollbar-thumb:focus": {
+              backgroundColor: "#959595",
+            },
+            "&::-webkit-scrollbar-thumb:active, & *::-webkit-scrollbar-thumb:active": {
+              backgroundColor: "#959595",
+            },
+            "&::-webkit-scrollbar-thumb:hover, & *::-webkit-scrollbar-thumb:hover": {
+              backgroundColor: "#959595",
+            },
+            "&::-webkit-scrollbar-corner, & *::-webkit-scrollbar-corner": {
+              backgroundColor: "#2b2b2b",
+            },
+          },
+        },
+      },
       MuiButton: {
         styleOverrides: {
           root: {
@@ -62,7 +107,9 @@ function App() {
           <SnackbarProvider maxSnack={3}>
             <ThemeProvider theme={theme}>
               <CssBaseline />
-              <RouterProvider router={router} />
+              <Box sx={{}}>
+                <RouterProvider router={router} />
+              </Box>
             </ThemeProvider>
           </SnackbarProvider>
         </QueryClientProvider>

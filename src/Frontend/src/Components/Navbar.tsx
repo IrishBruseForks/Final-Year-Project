@@ -2,10 +2,10 @@ import { Menu as MenuIcon } from "@mui/icons-material";
 import { AppBar, IconButton, Menu, MenuItem, Toolbar, Typography, useMediaQuery } from "@mui/material";
 
 import { useEffect, useRef, useState } from "react";
-import { useAuth } from "../../Auth/useAuth";
-import LazyImage from "../LazyImage";
+import { useAuth } from "../Auth/useAuth";
+import LazyImage from "./LazyImage";
 
-function MessageHeader({ toggleDrawer }: { toggleDrawer: (open: boolean) => void }) {
+function Navbar({ toggleDrawer }: { toggleDrawer: (open: boolean) => void }) {
   const { user, logout } = useAuth();
   const isMobile = useMediaQuery("(max-width:899px)");
   const [opened, setOpened] = useState<boolean>(false);
@@ -75,4 +75,4 @@ function MessageHeader({ toggleDrawer }: { toggleDrawer: (open: boolean) => void
   );
 }
 
-export default MessageHeader;
+export default Navbar;
