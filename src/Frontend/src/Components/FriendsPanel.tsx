@@ -1,7 +1,7 @@
 import AddIcon from "@mui/icons-material/Add";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import SearchIcon from "@mui/icons-material/Search";
-import { Box, Divider, IconButton, InputAdornment, List, Stack, TextField, Typography } from "@mui/material";
+import { Box, Divider, IconButton, InputAdornment, LinearProgress, List, Stack, TextField, Typography } from "@mui/material";
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ChannelsResponse } from "../Types/ServerTypes";
@@ -92,6 +92,7 @@ const FriendsPanel: React.FC = () => {
       <Divider />
       <List
         sx={{
+          pl: 1,
           flex: "1 1 auto",
           overflowY: "auto",
           height: { md: "0px" }, // CSS makes no sense
@@ -102,7 +103,12 @@ const FriendsPanel: React.FC = () => {
             <ChannelItem id={channel.id} username={channel.name} lastMessage={"" + channel.lastMessage} profilePic={channel.picture} key={channel.id} />
           ))
         ) : (
-          <Typography>No channels found</Typography>
+          <>
+            <LinearProgress />
+            <Typography textAlign={"center"} lineHeight={4}>
+              No channels found
+            </Typography>
+          </>
         )}
       </List>
       <CreateChannelModal open={isChannelModalOpen} handleClose={() => setIsChannelModalOpen(false)} defaultChannelName={""} />

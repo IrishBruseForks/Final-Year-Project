@@ -65,6 +65,7 @@ function MessageView() {
         sx={{
           px: { xs: 0, md: 1 },
           flex: "1 1 auto",
+          display: "flex",
           overflowY: "auto",
           height: "0px",
           flexDirection: "column-reverse",

@@ -1,4 +1,5 @@
-import axios, { AxiosRequestConfig } from "axios";
+import axios, { AxiosError, AxiosRequestConfig } from "axios";
+import { enqueueSnackbar } from "notistack";
 import { QueryKey, UseQueryOptions, UseQueryResult, useQuery } from "react-query";
 import { useAuth } from "../Auth/useAuth";
 import { OAuthResponse } from "../Types/ServerTypes";
@@ -16,8 +17,18 @@ export default function useApi<TQueryFnData = unknown, TError = unknown, TData =
       if (!user) {
         return Promise.reject("Error getting user");
       }
+      try {
+        return (await axios.get(import.meta.env.VITE_API_URL + url, getConfig(user))).data as TQueryFnData;
+      } catch (error) {
+        const err = error as AxiosError;
+        if ((err as AxiosError).isAxiosError) {
+          enqueueSnackbar(err.message + ": " + err.code, { variant: "error" });
+        } else {
+          enqueueSnackbar<"error">(error as any);
+        }
 
-      return (await axios.get(import.meta.env.VITE_API_URL + url, getConfig(user))).data;
+        throw error;
+      }
     },
     options
   );

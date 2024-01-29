@@ -27,6 +27,9 @@ function App() {
       secondary: {
         main: "#cb4c45",
       },
+      error: {
+        main: "#cb4c45",
+      },
       background: {
         default: "#242B33",
         paper: "#31373F",
