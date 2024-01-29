@@ -35,6 +35,7 @@ function Navbar({ toggleDrawer }: { toggleDrawer: (open: boolean) => void }) {
               <MenuIcon />
             </IconButton>
           )}
+          <LazyImage src="./Icon_Big.png" sx={{ height: "3rem" }}></LazyImage>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             Chatalyst
           </Typography>

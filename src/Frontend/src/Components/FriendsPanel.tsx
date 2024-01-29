@@ -51,7 +51,7 @@ const FriendsPanel: React.FC = () => {
         }}
       >
         <Box sx={{ borderBottom: 1, display: "flex", alignItems: "center" }}>
-          <Typography variant="h5">Chata-Lists</Typography>
+          <Typography variant="h5">Channels</Typography>
         </Box>
         <Stack direction={"row"}>
           <TextField
@@ -94,7 +94,7 @@ const FriendsPanel: React.FC = () => {
         sx={{
           flex: "1 1 auto",
           overflowY: "auto",
-          height: "0px", // CSS makes no sense
+          height: { md: "0px" }, // CSS makes no sense
         }}
       >
         {!isLoading && searchData && searchData.length > 0 ? (

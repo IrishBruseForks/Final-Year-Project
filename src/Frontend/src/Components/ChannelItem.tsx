@@ -1,5 +1,7 @@
-import { Avatar, Box, Divider, ListItemButton, Typography } from "@mui/material";
+import { GroupsRounded } from "@mui/icons-material";
+import { Box, Divider, ListItemButton, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import LazyImage from "./LazyImage";
 
 type Props = {
   id: string;
@@ -18,9 +20,9 @@ function ChannelItem({ id, username, lastMessage, profilePic }: Props) {
         }}
       >
         <Box display={"grid"} alignItems={"center"} gridTemplateColumns={"1fr auto"}>
-          {/* Profile picture (Avatar component can be used here) */}
+          {/* Profile picture */}
           <Box gridRow={"span 2"}>
-            <Avatar src={profilePic} alt="Profile Picture" sx={{ width: 60, height: 60, marginRight: 2 }} />
+            <LazyImage src={profilePic} placeholder={<GroupsRounded />} sx={{ width: 60, height: 60, marginRight: 2, borderRadius: "50%" }} />
           </Box>
 
           {/* Name and other text stacked vertically */}
@@ -28,8 +30,7 @@ function ChannelItem({ id, username, lastMessage, profilePic }: Props) {
             {username}
           </Typography>
           <Typography noWrap color={"text.secondary"}>
-            {/* {lastMessage} */}
-            &nbsp;
+            {lastMessage}
           </Typography>
         </Box>
       </ListItemButton>

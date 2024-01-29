@@ -5,7 +5,7 @@ import { cloneElement, useRef, useState } from "react";
 interface ImageProps {
   title?: string;
   src?: string;
-  placeholder?: JSX.Element | null;
+  placeholder?: JSX.Element;
   sx?: SxProps<Theme>;
 }
 
@@ -26,7 +26,7 @@ export default function LazyImage({ title, src, sx, placeholder = <BrokenImageIc
 
   return (
     <>
-      {!loaded && cloneElement(placeholder ?? <Box />, { sx: sx })}
+      {!loaded && cloneElement(placeholder, { sx: sx })}
       {<Box component="img" ref={imgElement} src={src} title={title} loading="lazy" onLoad={onloaded} sx={{ opacity: 0, position: "absolute", ...sx }} />}
     </>
   );

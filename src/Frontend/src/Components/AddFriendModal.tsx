@@ -1,5 +1,5 @@
 import { Dialog } from "@mui/material";
-import React, { useState } from "react";
+import React from "react";
 
 interface AddFriendModalProps {
   open: boolean;
@@ -7,8 +7,6 @@ interface AddFriendModalProps {
 }
 
 export const AddFriendModal: React.FC<AddFriendModalProps> = ({ open, handleClose }) => {
-  const [userId, setUserId] = useState<string>("");
-
   const handleAddFriend = () => {
     // Logic to handle adding a friend
     handleClose();

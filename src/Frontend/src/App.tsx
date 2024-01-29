@@ -57,14 +57,14 @@ function App() {
         styleOverrides: {
           body: {
             "&::-webkit-scrollbar, & *::-webkit-scrollbar": {
-              width: 12,
+              width: 10,
             },
             "&::-webkit-scrollbar-track, & *::-webkit-scrollbar-track": {
               width: "1rem",
-              backgroundColor: "#31373f",
+              backgroundColor: "transparent",
             },
             "&::-webkit-scrollbar-thumb, & *::-webkit-scrollbar-thumb": {
-              borderRadius: 8,
+              borderRadius: 5,
               backgroundColor: "#50545b",
               minHeight: 24,
             },
@@ -92,7 +92,7 @@ function App() {
       },
       MuiDrawer: {
         styleOverrides: {
-          // paper: { backgroundColor: "#272727", backgroundImage: "linear-gradient(rgba(255, 255, 255, 0.01), rgba(255, 255, 255, 0.0))" },
+          paper: { backgroundColor: "#272727", backgroundImage: "linear-gradient(rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.0))" },
         },
       },
     },

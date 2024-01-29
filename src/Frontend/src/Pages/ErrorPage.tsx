@@ -1,5 +1,5 @@
 import { ErrorOutline } from "@mui/icons-material";
-import { Box, Grid, Paper, Stack, Typography } from "@mui/material";
+import { Box, Grid, Link, Paper, Stack, Typography } from "@mui/material";
 import { useRouteError } from "react-router-dom";
 
 function ErrorPage() {
@@ -31,9 +31,9 @@ function ErrorPage() {
                   return (
                     <Typography variant="body2" align="left" color="error">
                       {parts[0]}
-                      <a href={link} style={{ color: "white" }}>
+                      <Link href={link} sx={{ color: "white" }}>
                         {link}
-                      </a>
+                      </Link>
                     </Typography>
                   );
                 })}

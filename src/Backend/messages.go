@@ -18,7 +18,7 @@ func getMessages(c echo.Context) error {
 		Messages
 	WHERE
 		channelId = ?
-	ORDER BY sentOn DESC;
+	ORDER BY sentOn ASC;
 	`
 
 	rows, err := db.Query(query, channelId)

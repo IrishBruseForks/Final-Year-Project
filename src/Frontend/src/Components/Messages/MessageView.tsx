@@ -29,12 +29,13 @@ function MessageView() {
     if (messageText === "") return;
     if (!uuid) return;
     if (!user) return;
+
     try {
       const newMessage: PostMessageBody = { content: messageText, channelId: uuid };
       await axios.post(import.meta.env.VITE_API_URL + Urls.Messages, newMessage, getConfig(user));
     } catch (error) {
       console.log("Error sending Message:", error);
-      enqueueSnackbar(error as any, { variant: "error" });
+      enqueueSnackbar(error as any);
     } finally {
       setMessageText("");
     }
@@ -51,20 +52,21 @@ function MessageView() {
   };
 
   return (
-    <Stack flexBasis={0} flexGrow={1} p={2} m={2} borderRadius={1} bgcolor="background.paper">
+    <Stack flexBasis={0} flexGrow={1} p={1.5} sx={{ m: { xs: 1, md: 2 } }} borderRadius={1} bgcolor="background.paper">
       <Box sx={{ borderBottom: 1, display: "flex", alignItems: "center" }}>
         <Typography sx={{ textAlign: "justify" }} variant="h5">
           <IconButton>
-            <LazyImage src={channel?.picture} title="Profile Picture" sx={{ height: 32, width: 32 }} placeholder={<GroupsIcon />} />
+            <LazyImage src={channel?.picture} title="Profile Picture" sx={{ height: 32, width: 32, borderRadius: "50%" }} placeholder={<GroupsIcon />} />
           </IconButton>
           {channel?.name}
         </Typography>
       </Box>
       <List
         sx={{
+          px: { xs: 0, md: 1 },
           flex: "1 1 auto",
           overflowY: "auto",
-          height: "0px", // CSS makes no sense
+          height: "0px",
           flexDirection: "column-reverse",
         }}
       >
