@@ -22,7 +22,7 @@ import { useQueryClient } from "react-query";
 import { useAuth } from "../Auth/useAuth";
 import { PostChannelBody, User } from "../Types/ServerTypes";
 import Urls from "../Utility/Urls";
-import useApi, { getConfig } from "../Utility/useApi";
+import { getApiConfig, useApi } from "../Utility/useApi";
 import LazyImage from "./LazyImage";
 
 // Constants for styling the Select component
@@ -100,7 +100,7 @@ export const CreateChannelModal: React.FC<CreateChannelModalProps> = ({ open, ha
 
     try {
       // Send a POST request to create the channel
-      await axios.post(import.meta.env.VITE_API_URL + Urls.Channels, channelData, getConfig(user));
+      await axios.post(import.meta.env.VITE_API_URL + Urls.Channels, channelData, getApiConfig(user));
       // Invalidate the queries to refresh the channel list
       queryClient.invalidateQueries("getChannels");
       // Close the modal

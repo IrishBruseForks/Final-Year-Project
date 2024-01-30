@@ -9,7 +9,7 @@ import { useParams } from "react-router-dom";
 import { useAuth } from "../../Auth/useAuth";
 import { ChannelResponse, PostMessageBody, PostMessageResponse } from "../../Types/ServerTypes";
 import Urls from "../../Utility/Urls";
-import useApi, { getConfig } from "../../Utility/useApi";
+import { getApiConfig, useApi } from "../../Utility/useApi";
 import LazyImage from "../LazyImage";
 
 function MessageView() {
@@ -32,7 +32,7 @@ function MessageView() {
 
     try {
       const newMessage: PostMessageBody = { content: messageText, channelId: uuid };
-      await axios.post(import.meta.env.VITE_API_URL + Urls.Messages, newMessage, getConfig(user));
+      await axios.post(import.meta.env.VITE_API_URL + Urls.Messages, newMessage, getApiConfig(user));
     } catch (error) {
       console.log("Error sending Message:", error);
       enqueueSnackbar(error as any);

@@ -6,7 +6,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ChannelsResponse } from "../Types/ServerTypes";
 import Urls from "../Utility/Urls";
-import useApi from "../Utility/useApi";
+import { useRefetchApi } from "../Utility/useApi";
 import { AddFriendModal } from "./AddFriendModal";
 import ChannelItem from "./ChannelItem";
 import { CreateChannelModal } from "./CreateChannelModal";
@@ -17,7 +17,7 @@ const FriendsPanel: React.FC = () => {
   const navigate = useNavigate();
 
   // Fetch all channels
-  const { data, isLoading } = useApi<ChannelsResponse[]>("getChannels", Urls.Channels, { refetchInterval: 2000 });
+  const { data, isLoading } = useRefetchApi<ChannelsResponse[]>("getChannels", Urls.Channels, { refetchInterval: 2000 });
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const searchData = useMemo<ChannelsResponse[] | undefined>(() => data && filterChannels(data), [searchTerm, data]);
