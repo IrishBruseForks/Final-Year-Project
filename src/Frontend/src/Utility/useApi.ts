@@ -7,6 +7,7 @@ import { OAuthResponse } from "../Types/ServerTypes";
 export function useApi<TQueryFnData = unknown, TError = unknown, TData = TQueryFnData, TQueryKey extends QueryKey = QueryKey>(
   queryKey: TQueryKey,
   url: string,
+  errorMessage: string,
   options?: Omit<UseQueryOptions<TQueryFnData, TError, TData, TQueryKey>, "queryKey" | "queryFn">
 ): UseQueryResult<TData, TError> {
   const { user } = useAuth();
@@ -20,11 +21,10 @@ export function useApi<TQueryFnData = unknown, TError = unknown, TData = TQueryF
       try {
         return (await axios.get(import.meta.env.VITE_API_URL + url, getApiConfig(user))).data as TQueryFnData;
       } catch (error) {
-        const err = error as AxiosError;
-        if ((err as AxiosError).isAxiosError) {
-          enqueueSnackbar(err.message, { variant: "error" });
+        if (error instanceof AxiosError && error.isAxiosError) {
+          enqueueSnackbar(errorMessage + " - " + error.message, { variant: "error" });
         } else {
-          enqueueSnackbar<"error">(error as any);
+          enqueueSnackbar(error as any, { variant: "error" });
         }
 
         throw error;
@@ -37,9 +37,10 @@ export function useApi<TQueryFnData = unknown, TError = unknown, TData = TQueryF
 export function useRefetchApi<TQueryFnData = unknown, TError = unknown, TData = TQueryFnData, TQueryKey extends QueryKey = QueryKey>(
   queryKey: TQueryKey,
   url: string,
+  errorMessage: string,
   options?: Omit<UseQueryOptions<TQueryFnData, TError, TData, TQueryKey>, "queryKey" | "queryFn">
 ): UseQueryResult<TData, TError> {
-  return useApi(queryKey, url, {
+  return useApi(queryKey, url, errorMessage, {
     ...options,
     refetchInterval(data, query) {
       if (typeof options?.refetchInterval !== "number") return false;

@@ -17,7 +17,7 @@ const FriendsPanel: React.FC = () => {
   const navigate = useNavigate();
 
   // Fetch all channels
-  const { data, isLoading } = useRefetchApi<ChannelsResponse[]>("getChannels", Urls.Channels, { refetchInterval: 2000 });
+  const { data, isLoading } = useRefetchApi<ChannelsResponse[]>("getChannels", Urls.Channels, "Error fetching channels", { refetchInterval: 2000 });
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const searchData = useMemo<ChannelsResponse[] | undefined>(() => data && filterChannels(data), [searchTerm, data]);

@@ -58,7 +58,7 @@ export const CreateChannelModal: React.FC<CreateChannelModalProps> = ({ open, ha
   // Query client for fetching data
   const queryClient = useQueryClient();
 
-  const { data: users } = useApi<User[]>("getFriends", Urls.Friends);
+  const { data: users } = useApi<User[]>("getFriends", Urls.Friends, "Error getting friends list");
 
   // Handle changes in the selected users
   const handleUserChange = (event: SelectChangeEvent<string[]>) => {
