@@ -1,5 +1,6 @@
 import GroupsIcon from "@mui/icons-material/Groups";
 import SendIcon from "@mui/icons-material/Send";
+import UploadIcon from "@mui/icons-material/Upload";
 import { Avatar, Box, Button, IconButton, InputAdornment, List, ListItemButton, Stack, TextField, Typography } from "@mui/material";
 import axios from "axios";
 import { format } from "date-fns";
@@ -9,17 +10,21 @@ import { useParams } from "react-router-dom";
 import { useAuth } from "../../Auth/useAuth";
 import { ChannelResponse, PostMessageBody, PostMessageResponse } from "../../Types/ServerTypes";
 import Urls from "../../Utility/Urls";
-import { getApiConfig, useApi } from "../../Utility/useApi";
+import { getApiConfig, useRefetchApi } from "../../Utility/useApi";
 import LazyImage from "../LazyImage";
 
 function MessageView() {
   const { uuid } = useParams<{ uuid: string }>();
-  const { data: messages } = useApi<PostMessageResponse[]>(["getMessages", uuid], Urls.Messages + "?id=" + uuid, { refetchInterval: 5000 });
+  const { data: messages } = useRefetchApi<PostMessageResponse[]>(["getMessages", uuid], Urls.Messages + "?id=" + uuid, "Error fetching messages", {
+    refetchInterval: 5000,
+  });
   const { user } = useAuth();
-  const { data: channel } = useApi<ChannelResponse>(["getChannel", uuid], Urls.Channel + "?id=" + uuid);
+  const { data: channel } = useRefetchApi<ChannelResponse>(["getChannel", uuid], Urls.Channel + "?id=" + uuid, "Error fetching channels");
 
-  const handleKeyDown = (event: { key: string; preventDefault: () => void }) => {
-    if (event.key === "Enter") {
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    console.log(event);
+
+    if (!event.shiftKey && event.key === "Enter") {
       event.preventDefault();
       handleSendMessage();
     }
@@ -97,26 +102,36 @@ function MessageView() {
           </ListItemButton>
         ))}
       </List>
-      <TextField
-        size="medium"
-        autoFocus
-        margin="dense"
-        label="Message"
-        fullWidth
-        value={messageText}
-        onChange={(e) => setMessageText(e.target.value)}
-        onKeyDown={handleKeyDown} // Attach the handleKeyDown function here
-        variant="outlined"
-        InputProps={{
-          endAdornment: (
-            <InputAdornment position="end">
-              <Button variant="contained" endIcon={<SendIcon />} onClick={handleSendMessage} sx={{ color: "text.primary" }}>
-                <b>Send</b>
-              </Button>
-            </InputAdornment>
-          ),
-        }}
-      />
+      <Stack direction={"row"} display={"flex"} alignItems={"center"} justifyContent={"center"} gap={1}>
+        <Box>
+          <IconButton onClick={() => {}}>
+            <UploadIcon />
+          </IconButton>
+        </Box>
+        <TextField
+          size="medium"
+          autoFocus
+          margin="dense"
+          label="Message"
+          autoComplete="on"
+          multiline={true}
+          maxRows={4}
+          fullWidth
+          value={messageText}
+          onChange={(e) => setMessageText(e.target.value)}
+          onKeyDown={(e) => handleKeyDown(e)}
+          variant="outlined"
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <Button variant="contained" endIcon={<SendIcon />} onClick={handleSendMessage} sx={{ color: "text.primary" }}>
+                  <b>Send</b>
+                </Button>
+              </InputAdornment>
+            ),
+          }}
+        />
+      </Stack>
     </Stack>
   );
 }
