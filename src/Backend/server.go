@@ -46,7 +46,8 @@ func runEchoServer() {
 		panic("Host missing in .env")
 	}
 
-	e.Logger.Fatal(e.StartTLS(host, "chain.crt", "private.key"))
+	// e.Logger.Fatal(e.StartTLS(host, "chain.crt", "private.key"))
+	e.Logger.Fatal(e.Start(host))
 	e.Close()
 }
 
@@ -78,6 +79,7 @@ func addRoutes(e *echo.Echo) {
 	e.PUT("/channels", putChannels)
 
 	e.GET("/channel", getChannel)
+	e.GET("/channel/recentMessage", getRecentMessage)
 
 	// Messages Endpoints
 	e.GET("/messages", getMessages)

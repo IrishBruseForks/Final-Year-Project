@@ -72,6 +72,32 @@ func getChannel(c echo.Context) error {
 	return c.JSON(http.StatusOK, &channel)
 }
 
+func getRecentMessage(c echo.Context) error {
+	var channelId string
+	echo.QueryParamsBinder(c).MustString("id", &channelId)
+
+	row := db.QueryRow(`
+	SELECT
+		content
+	FROM
+		Messages m
+	WHERE
+		m.channelId = ?
+	ORDER BY
+		m.sentOn
+	DESC LIMIT 1;
+	`, channelId)
+
+	var message string
+
+	err := row.Scan(&message)
+	if err != nil {
+		return apiError("Row Scan", echo.ErrInternalServerError, err)
+	}
+
+	return c.String(http.StatusOK, message)
+}
+
 func getChannels(c echo.Context) error {
 	jwt := getJwt(c)
 
