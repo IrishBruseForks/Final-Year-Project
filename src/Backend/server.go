@@ -46,7 +46,7 @@ func runEchoServer() {
 		panic("Host missing in .env")
 	}
 
-	e.Logger.Fatal(e.Start(host))
+	e.Logger.Fatal(e.StartTLS(host, "chain.crt", "private.key"))
 	e.Close()
 }
 
@@ -65,6 +65,7 @@ func (cv *CustomValidator) Validate(i interface{}) error {
 func addRoutes(e *echo.Echo) {
 
 	// Non-Auth Apis
+	e.GET("/", getStatus)
 	e.GET("/status", getStatus)
 	e.POST("/auth/google", postAuthGoogle)
 
@@ -93,6 +94,7 @@ func addMiddleware(e *echo.Echo) {
 	}))
 
 	e.Use(middleware.Recover())
+	e.Use(middleware.Logger())
 	e.Use(middleware.BodyDumpWithConfig(
 		middleware.BodyDumpConfig{
 			Handler: func(c echo.Context, reqBody []byte, resBody []byte) {
@@ -122,7 +124,7 @@ func addMiddleware(e *echo.Echo) {
 			return new(AuthJwt)
 		},
 		Skipper: func(c echo.Context) bool {
-			return c.Path() == "/status" || c.Path() == "/auth/google"
+			return c.Path() == "/" || c.Path() == "/status" || c.Path() == "/auth/google"
 		},
 	})
 	e.Use(jwtMiddleware)
