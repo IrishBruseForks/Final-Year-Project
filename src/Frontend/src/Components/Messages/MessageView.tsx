@@ -59,15 +59,15 @@ function MessageView() {
       <List
         sx={{
           px: { xs: 0, md: 1 },
-          flex: "1 1 auto",
+          flexBasis: 1,
+          flexGrow: 1,
           display: "flex",
           overflowY: "auto",
-          height: "0px",
           flexDirection: "column-reverse",
         }}
       >
         {messages?.map((message) => (
-          <ListItemButton key={message.sentOn} sx={{ display: "flex", alignItems: "start", mb: 1, borderRadius: 1 }}>
+          <ListItemButton key={message.sentOn} sx={{ flexGrow: 0, height: "min-content", display: "flex", alignItems: "start", mb: 1, borderRadius: 1 }}>
             <Avatar src={getProfilePictureUrl(message)} sx={{ mr: 1 }} />
             <Box width="100%">
               {/* {channel.users[0]} */}
