@@ -92,6 +92,7 @@ func addMiddleware(e *echo.Echo) {
 		Skipper: Skipper,
 	}))
 
+	e.Use(middleware.Recover())
 	e.Use(middleware.BodyDumpWithConfig(
 		middleware.BodyDumpConfig{
 			Handler: func(c echo.Context, reqBody []byte, resBody []byte) {

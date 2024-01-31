@@ -15,20 +15,11 @@ import LazyImage from "../LazyImage";
 
 function MessageView() {
   const { uuid } = useParams<{ uuid: string }>();
-  const { data: messages } = useRefetchApi<PostMessageResponse[]>(["getMessages", uuid], Urls.Messages + "?id=" + uuid, "Error fetching messages", {
+  const { data: messages } = useRefetchApi<PostMessageResponse[]>(["getMessages", uuid], Urls.Messages + "?id=" + uuid, "Fetching messages", {
     refetchInterval: 5000,
   });
   const { user } = useAuth();
-  const { data: channel } = useRefetchApi<ChannelResponse>(["getChannel", uuid], Urls.Channel + "?id=" + uuid, "Error fetching channels");
-
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    console.log(event);
-
-    if (!event.shiftKey && event.key === "Enter") {
-      event.preventDefault();
-      handleSendMessage();
-    }
-  };
+  const { data: channel } = useRefetchApi<ChannelResponse>(["getChannel", uuid], Urls.Channel + "?id=" + uuid, "Fetching channels");
 
   const handleSendMessage = async () => {
     if (messageText === "") return;
@@ -38,11 +29,10 @@ function MessageView() {
     try {
       const newMessage: PostMessageBody = { content: messageText, channelId: uuid };
       await axios.post(import.meta.env.VITE_API_URL + Urls.Messages, newMessage, getApiConfig(user));
+      setMessageText("");
     } catch (error) {
       console.log("Error sending Message:", error);
       enqueueSnackbar(error as any);
-    } finally {
-      setMessageText("");
     }
   };
 
@@ -119,12 +109,17 @@ function MessageView() {
           fullWidth
           value={messageText}
           onChange={(e) => setMessageText(e.target.value)}
-          onKeyDown={(e) => handleKeyDown(e)}
+          onKeyDown={(e) => {
+            if (!e.shiftKey && e.key === "Enter") {
+              e.preventDefault();
+              handleSendMessage();
+            }
+          }}
           variant="outlined"
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
-                <Button variant="contained" endIcon={<SendIcon />} onClick={handleSendMessage} sx={{ color: "text.primary" }}>
+                <Button variant="contained" endIcon={<SendIcon />} onClick={handleSendMessage}>
                   <b>Send</b>
                 </Button>
               </InputAdornment>

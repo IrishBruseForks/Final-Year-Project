@@ -17,7 +17,7 @@ const FriendsPanel: React.FC = () => {
   const navigate = useNavigate();
 
   // Fetch all channels
-  const { data, isLoading } = useRefetchApi<ChannelsResponse[]>("getChannels", Urls.Channels, "Error fetching channels", { refetchInterval: 2000 });
+  const { data, isLoading, isError } = useRefetchApi<ChannelsResponse[]>("getChannels", Urls.Channels, "Fetching channels", { refetchInterval: 2000 });
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const searchData = useMemo<ChannelsResponse[] | undefined>(() => data && filterChannels(data), [searchTerm, data]);
@@ -98,17 +98,16 @@ const FriendsPanel: React.FC = () => {
           height: { md: "0px" }, // CSS makes no sense
         }}
       >
+        {isError && <LinearProgress />}
+
         {!isLoading && searchData && searchData.length > 0 ? (
           searchData.map((channel: ChannelsResponse) => (
             <ChannelItem id={channel.id} username={channel.name} lastMessage={"" + channel.lastMessage} profilePic={channel.picture} key={channel.id} />
           ))
         ) : (
-          <>
-            <LinearProgress />
-            <Typography textAlign={"center"} lineHeight={4}>
-              No channels found
-            </Typography>
-          </>
+          <Typography textAlign={"center"} py={4}>
+            No channels found
+          </Typography>
         )}
       </List>
       <CreateChannelModal open={isChannelModalOpen} handleClose={() => setIsChannelModalOpen(false)} defaultChannelName={""} />
