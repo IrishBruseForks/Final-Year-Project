@@ -1,25 +1,58 @@
 import GroupsIcon from "@mui/icons-material/Groups";
 import SendIcon from "@mui/icons-material/Send";
 import UploadIcon from "@mui/icons-material/Upload";
-import { Avatar, Box, Button, IconButton, InputAdornment, List, ListItemButton, Stack, TextField, Typography } from "@mui/material";
+import { Box, Button, IconButton, InputAdornment, List, Stack, TextField, Typography } from "@mui/material";
 import axios from "axios";
-import { format } from "date-fns";
 import { enqueueSnackbar } from "notistack";
 import { useState } from "react";
+import { useMutation, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { useAuth } from "../../Auth/useAuth";
 import { ChannelResponse, PostMessageBody, PostMessageResponse } from "../../Types/ServerTypes";
 import Urls from "../../Utility/Urls";
 import { getApiConfig, useRefetchApi } from "../../Utility/useApi";
 import LazyImage from "../LazyImage";
+import Message from "./Message";
 
 function MessageView() {
   const { uuid } = useParams<{ uuid: string }>();
-  const { data: messages } = useRefetchApi<PostMessageResponse[]>(["getMessages", uuid], Urls.Messages + "?id=" + uuid, "Fetching messages", {
+  const getMessageKey = ["getMessages", uuid];
+  const { data: messages } = useRefetchApi<PostMessageResponse[]>(getMessageKey, Urls.Messages + "?id=" + uuid, "Fetching messages", {
     refetchInterval: 5000,
   });
+  const queryClient = useQueryClient();
   const { user } = useAuth();
+
   const { data: channel } = useRefetchApi<ChannelResponse>(["getChannel", uuid], Urls.Channel + "?id=" + uuid, "Fetching channels");
+
+  // Implement optimistic
+  const { isLoading, mutate, variables } = useMutation({
+    mutationFn: async (newMessage: PostMessageBody) => {
+      await axios.post(import.meta.env.VITE_API_URL + Urls.Messages, newMessage, getApiConfig(user!));
+    },
+
+    // onMutate: async (newTodo) => {
+    //   // Cancel any outgoing refetches
+    //   // (so they don't overwrite our optimistic update)
+    //   await queryClient.cancelQueries({ queryKey: getMessageKey });
+
+    //   // Snapshot the previous value
+    //   const previousTodos = queryClient.getQueryData(getMessageKey);
+
+    //   // Optimistically update to the new value
+    //   queryClient.setQueryData(getMessageKey, (old: any) => [...old, newTodo]);
+
+    //   // Return a context object with the snapshotted value
+    //   return { previousTodos };
+    // },
+
+    // make sure to _return_ the Promise from the query invalidation
+    // so that the mutation stays in `pending` state until the refetch is finished
+    onSettled: async () => {
+      console.log("Settled");
+      return await queryClient.invalidateQueries({ queryKey: getMessageKey });
+    },
+  });
 
   const handleSendMessage = async () => {
     if (messageText === "") return;
@@ -28,7 +61,7 @@ function MessageView() {
 
     try {
       const newMessage: PostMessageBody = { content: messageText, channelId: uuid };
-      await axios.post(import.meta.env.VITE_API_URL + Urls.Messages, newMessage, getApiConfig(user));
+      await mutate(newMessage);
       setMessageText("");
     } catch (error) {
       console.log("Error sending Message:", error);
@@ -37,14 +70,6 @@ function MessageView() {
   };
 
   const [messageText, setMessageText] = useState("");
-
-  const getProfilePictureUrl = (message: PostMessageResponse) => {
-    return (
-      channel?.users?.find((c) => {
-        return c.id === message.sentBy;
-      })?.picture || ""
-    );
-  };
 
   return (
     <Stack flexBasis={0} flexGrow={1} p={1.5} sx={{ m: { xs: 1, md: 2 } }} borderRadius={1} bgcolor="background.paper">
@@ -66,30 +91,16 @@ function MessageView() {
           flexDirection: "column-reverse",
         }}
       >
+        {isLoading && variables && (
+          // This is where the message is being optimistically updated
+          <Message
+            key={"pending"}
+            message={{ content: variables.content, sentOn: new Date(Date.now()).toString(), channelId: uuid ?? "", sentBy: "user.id" }}
+            channel={channel}
+          ></Message>
+        )}
         {messages?.map((message) => (
-          <ListItemButton key={message.sentOn} sx={{ flexGrow: 0, height: "min-content", display: "flex", alignItems: "start", mb: 1, borderRadius: 1 }}>
-            <Avatar src={getProfilePictureUrl(message)} sx={{ mr: 1 }} />
-            <Box width="100%">
-              {/* {channel.users[0]} */}
-
-              <Box display="flex" justifyContent={"space-between"}>
-                <Typography variant="body2">
-                  {
-                    channel?.users?.find((c) => {
-                      return c.id === message.sentBy;
-                    })?.username
-                  }
-                </Typography>
-                <Typography variant="body2" color="text.secondary" pr={"auto"}>
-                  {format(new Date(message.sentOn), "PPpp")}
-                </Typography>
-              </Box>
-
-              <Typography variant="body1" textAlign={"justify"}>
-                {message.content}
-              </Typography>
-            </Box>
-          </ListItemButton>
+          <Message key={message.sentOn} message={message} channel={channel}></Message>
         ))}
       </List>
       <Stack direction={"row"} display={"flex"} alignItems={"center"} justifyContent={"center"} gap={1}>

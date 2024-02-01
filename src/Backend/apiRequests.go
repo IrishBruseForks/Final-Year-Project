@@ -3,14 +3,19 @@ package main
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"io"
 	"net/http"
 	"time"
 
+	"github.com/labstack/gommon/log"
+
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/labstack/echo/v4"
 )
+
+func getRoot(c echo.Context) error {
+	return c.String(http.StatusOK, "Hello there 😁")
+}
 
 func getStatus(c echo.Context) error {
 	return c.String(http.StatusOK, "Alive")
@@ -24,7 +29,7 @@ func getLogin(c echo.Context) error {
 	}
 
 	jwt := user.Claims.(*AuthJwt)
-	fmt.Println(jwt.Name, "logged in")
+	log.Error(jwt.Name, "logged in")
 
 	return c.NoContent(http.StatusOK)
 }
@@ -38,7 +43,8 @@ type AuthJwt struct {
 func postAuthGoogle(c echo.Context) error {
 	u := new(OAuth)
 	if err := c.Bind(u); err != nil {
-		return apiError("Bind", echo.ErrInternalServerError, err)
+		log.Error(err)
+		return echo.ErrInternalServerError
 	}
 
 	if err := c.Validate(u); err != nil {
@@ -47,19 +53,20 @@ func postAuthGoogle(c echo.Context) error {
 
 	idTokenResp, err := exchangeTokenWithGoogle(u)
 	if err != nil {
-		return apiError("exchangeTokenWithGoogle", echo.ErrInternalServerError, err)
+		log.Error(err)
+		return echo.ErrInternalServerError
 	}
 
 	statement, err := db.Prepare(`INSERT INTO Users (id,username,picture) VALUES (?,?,?)`)
 	if err != nil {
-		return apiError("db.Prepare", echo.ErrInternalServerError, err)
+		return echo.ErrInternalServerError
 	}
 	defer statement.Close()
 
 	// TODO check if value is in db already
 	_, err = statement.Exec(idTokenResp.Subject, idTokenResp.Name, idTokenResp.Picture)
 	if err != nil {
-		log(err)
+		panic(err)
 	}
 
 	claims := &AuthJwt{
@@ -77,11 +84,12 @@ func postAuthGoogle(c echo.Context) error {
 
 	tokenString, err := jsonToken.SignedString(getJwtSecretBytes())
 	if err != nil {
-		return apiError("jsonToken.SignedString", echo.ErrInternalServerError, err)
+		return echo.ErrInternalServerError
 	}
 
 	return c.JSON(http.StatusOK, OAuthResponse{
 		Token:          tokenString,
+		Id:             idTokenResp.ID,
 		ProfilePicture: idTokenResp.Picture,
 	})
 }

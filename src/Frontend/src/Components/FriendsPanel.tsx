@@ -39,7 +39,7 @@ const FriendsPanel: React.FC = () => {
   }, [data]);
 
   return (
-    <Stack>
+    <Stack sx={{ md: { width: "33%" }, overflow: "hidden" }}>
       <Box
         sx={{
           p: 1,
@@ -95,6 +95,7 @@ const FriendsPanel: React.FC = () => {
           pl: 1,
           flex: "1 1 auto",
           overflowY: "auto",
+          width: "100%",
           height: { md: "0px" }, // CSS makes no sense
         }}
       >
@@ -102,7 +103,7 @@ const FriendsPanel: React.FC = () => {
 
         {!isLoading && searchData && searchData.length > 0 ? (
           searchData.map((channel: ChannelsResponse) => (
-            <ChannelItem id={channel.id} username={channel.name} lastMessage={"" + channel.lastMessage} profilePic={channel.picture} key={channel.id} />
+            <ChannelItem id={channel.id} username={channel.name} lastMessage={channel.lastMessage} profilePic={channel.picture} key={channel.id} />
           ))
         ) : (
           <Typography textAlign={"center"} py={4}>

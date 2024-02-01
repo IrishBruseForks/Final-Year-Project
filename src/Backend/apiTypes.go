@@ -12,14 +12,15 @@ type PostChannelBody struct {
 
 type OAuthResponse struct {
 	Token          string `json:"token"`
+	Id             string `json:"id"`
 	ProfilePicture string `json:"profilePicture"`
 }
 
 type ChannelsResponse struct {
-	Id          string `json:"id"`
-	Name        string `json:"name"`
-	Picture     string `json:"picture"`
-	LastMessage *int64 `json:"lastMessage"`
+	Id          string  `json:"id"`
+	Name        string  `json:"name"`
+	Picture     string  `json:"picture"`
+	LastMessage *string `json:"lastMessage"`
 }
 
 type ChannelResponse struct {

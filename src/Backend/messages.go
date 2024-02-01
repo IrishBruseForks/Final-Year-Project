@@ -3,6 +3,8 @@ package main
 import (
 	"net/http"
 
+	"github.com/labstack/gommon/log"
+
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 )
@@ -23,7 +25,8 @@ func getMessages(c echo.Context) error {
 
 	rows, err := db.Query(query, channelId)
 	if err != nil {
-		return apiError("getMessagesQuery", echo.ErrInternalServerError, err)
+		log.Error(err)
+		return echo.ErrInternalServerError
 	}
 
 	messages := make([]PostMessageResponse, 0)
@@ -32,7 +35,8 @@ func getMessages(c echo.Context) error {
 		var msg PostMessageResponse
 		err := rows.Scan(&msg.ChannelId, &msg.SentBy, &msg.SentOn, &msg.Content)
 		if err != nil {
-			return apiError("rows.Scan", echo.ErrInternalServerError, err)
+			log.Error(err)
+			return echo.ErrInternalServerError
 		}
 		messages = append(messages, msg)
 	}
@@ -46,7 +50,8 @@ func postMessages(c echo.Context) error {
 	msgRequest := new(PostMessageBody)
 
 	if err := c.Bind(&msgRequest); err != nil {
-		return apiError("Bind", echo.ErrInternalServerError, err)
+		log.Error(err)
+		return echo.ErrInternalServerError
 	}
 
 	if err := c.Validate(msgRequest); err != nil {
@@ -55,7 +60,8 @@ func postMessages(c echo.Context) error {
 
 	id, err := uuid.NewRandom()
 	if err != nil {
-		return apiError("uuid", echo.ErrInternalServerError, err)
+		log.Error(err)
+		return echo.ErrInternalServerError
 	}
 
 	query := `
@@ -67,7 +73,8 @@ func postMessages(c echo.Context) error {
 
 	_, err = db.Exec(query, id, msgRequest.ChannelId, jwt.Subject, msgRequest.Content)
 	if err != nil {
-		return apiError("postMessagesQuery", echo.ErrInternalServerError, err)
+		log.Error(err)
+		return echo.ErrInternalServerError
 	}
 
 	return c.String(http.StatusOK, id.String())

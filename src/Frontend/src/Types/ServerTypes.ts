@@ -13,13 +13,14 @@ export interface PostChannelBody {
 }
 export interface OAuthResponse {
   token: string;
+  id: string;
   profilePicture: string;
 }
 export interface ChannelsResponse {
   id: string;
   name: string;
   picture: string;
-  lastMessage?: number /* int64 */;
+  lastMessage?: string;
 }
 export interface ChannelResponse {
   id: string;

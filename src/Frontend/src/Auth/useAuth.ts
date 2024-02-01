@@ -4,7 +4,7 @@ import Constants from "../Utility/Constants";
 import { useLocalStorage } from "../Utility/useLocalstorage";
 
 export function useAuth() {
-  const [user, setUser] = useLocalStorage<OAuthResponse | undefined>(Constants.UserKey, undefined);
+  const [user, setUser] = useLocalStorage<OAuthResponse>(Constants.UserKey, undefined as any);
 
   return {
     user,
@@ -13,7 +13,7 @@ export function useAuth() {
       setUser(resp.data as OAuthResponse);
     },
     logout() {
-      setUser(undefined);
+      setUser(undefined as any);
       window.location.reload();
     },
   };

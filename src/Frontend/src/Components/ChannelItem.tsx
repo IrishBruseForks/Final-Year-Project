@@ -6,15 +6,17 @@ import LazyImage from "./LazyImage";
 type Props = {
   id: string;
   username: string;
-  lastMessage: string;
+  lastMessage?: string;
   profilePic: string;
 };
 
 function ChannelItem({ id, username, lastMessage, profilePic }: Props) {
   const navigate = useNavigate();
+
   return (
     <>
       <ListItemButton
+        sx={{ width: "100%" }}
         onClick={() => {
           navigate("/" + id);
         }}
@@ -30,7 +32,7 @@ function ChannelItem({ id, username, lastMessage, profilePic }: Props) {
             {username}
           </Typography>
           <Typography noWrap color={"text.secondary"}>
-            {lastMessage}
+            {lastMessage ?? ""}
           </Typography>
         </Box>
       </ListItemButton>

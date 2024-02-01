@@ -14,7 +14,6 @@ Table Channels {
     id char(36) [pk]
     name text
     picture text
-    lastMessage char(36)
 }
 
 Table Messages {
