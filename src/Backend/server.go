@@ -81,6 +81,8 @@ func addRoutes(e *echo.Echo) {
 	e.POST("/channels", postChannels)
 	e.PUT("/channels", putChannels)
 
+	e.GET("/replies", getReplies)
+
 	e.GET("/channel", getChannel)
 
 	// Messages Endpoints
