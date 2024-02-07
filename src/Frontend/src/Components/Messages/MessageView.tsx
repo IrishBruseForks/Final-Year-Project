@@ -127,7 +127,7 @@ function MessageView() {
           value={messageText}
           onChange={(e) => setMessageText(e.target.value)} // Update the message text state on change
           onKeyDown={(e) => {
-            // Send the message when Enter is pressed (without Shift)
+            // Send the message when Enter is pressed
             if (!e.shiftKey && e.key === "Enter") {
               e.preventDefault();
               handleSendMessage();
