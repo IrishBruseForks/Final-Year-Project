@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Button, IconButton, InputAdornment, List, Stack, TextField, Typography } from '@mui/material';
+import { Box, Button, IconButton, InputAdornment, List, Stack, TextField, Typography, useMediaQuery } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import UploadIcon from '@mui/icons-material/Upload';
 import GroupsIcon from '@mui/icons-material/Groups'; // Import the icon for group chat
@@ -13,6 +13,12 @@ import Urls from '../../Utility/Urls'; // Utility for managing URLs
 import { getApiConfig, useRefetchApi } from '../../Utility/useApi'; // API config and custom hook for API calls
 import LazyImage from '../LazyImage'; // Component for lazy-loading images
 import Message from './Message'; // Import the Message component for displaying individual messages
+
+// Define the MobileSwitch component for responsive layout
+function MobileSwitch({ mobile, desktop }: { mobile: JSX.Element; desktop: JSX.Element }) {
+  const isMobile = !useMediaQuery("(min-width:900px)");
+  return isMobile ? mobile : desktop;
+}
 
 // Define the MessageView component
 function MessageView() {
@@ -28,7 +34,6 @@ function MessageView() {
   // Fetch channel data using a custom hook
   const { data: channel } = useRefetchApi<ChannelResponse>(['getChannel', uuid], Urls.Channel + '?id=' + uuid, 'Fetching channels');
 
-  // Setup a mutation for sending a new message
   const { isLoading, mutate } = useMutation({
     mutationFn: async (newMessage: PostMessageBody) => {
       // Function to call the API and send the new message
@@ -41,7 +46,7 @@ function MessageView() {
     },
   });
 
-  const [messageText, setMessageText] = useState(''); // State for the smart reply message input text
+  const [messageText, setMessageText] = useState(''); // State for the message input text for smart replies
   const [smartReplies] = useState(['Reply 1', 'Reply 2', 'Reply 3']); // Static smart replies for demonstration
 
   // Function to handle sending a message
@@ -63,6 +68,28 @@ function MessageView() {
   const handleSmartReply = (reply: string) => {
     setMessageText(reply);
   };
+
+  // Define mobile layout for smart replies
+  const mobileLayout = (
+    <Stack direction="column" spacing={1}>
+      {smartReplies.map((reply, index) => (
+        <Button key={index} variant="outlined" onClick={() => handleSmartReply(reply)} fullWidth>
+          {reply}
+        </Button>
+      ))}
+    </Stack>
+  );
+
+  // Define desktop layout for smart replies
+  const desktopLayout = (
+    <Box sx={{ mb: 2, display: 'flex', justifyContent: 'space-around' }}>
+      {smartReplies.map((reply, index) => (
+        <Button key={index} variant="outlined" onClick={() => handleSmartReply(reply)}>
+          {reply}
+        </Button>
+      ))}
+    </Box>
+  );
 
   // Render the component UI
   return (
@@ -98,14 +125,8 @@ function MessageView() {
         ))}
       </List>
       {/* Smart Replies Section */}
-      <Box sx={{ mb: 2, display: 'flex', justifyContent: 'space-around' }}>
-        {/* Display smart reply buttons */}
-        {smartReplies.map((reply, index) => (
-          <Button key={index} variant="outlined" onClick={() => handleSmartReply(reply)}>
-            {reply} {/* Display the reply text on the button */}
-          </Button>
-        ))}
-      </Box>
+      {/* Use MobileSwitch to choose between mobile and desktop layouts */}
+      <MobileSwitch mobile={mobileLayout} desktop={desktopLayout} />
       {/* Message Input Section */}
       <Stack direction={"row"} display={"flex"} alignItems={"center"} justifyContent={"center"} gap={1}>
         {/* Upload Button (no functionality shown in this snippet) */}
@@ -127,7 +148,7 @@ function MessageView() {
           value={messageText}
           onChange={(e) => setMessageText(e.target.value)} // Update the message text state on change
           onKeyDown={(e) => {
-            // Send the message when Enter is pressed
+            // Send the message when Enter is pressed (without Shift)
             if (!e.shiftKey && e.key === "Enter") {
               e.preventDefault();
               handleSendMessage();
