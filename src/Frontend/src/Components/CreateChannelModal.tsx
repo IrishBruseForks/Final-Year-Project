@@ -170,7 +170,7 @@ export const CreateChannelModal: React.FC<CreateChannelModalProps> = ({ open, ha
         {/* Cancel button */}
         <Button onClick={handleClose}>Cancel</Button>
         {/* Create button */}
-        <Button onClick={handleSubmit} color="primary" variant="contained">
+        <Button onClick={handleSubmit} color="primary" variant="contained">-
           Create
         </Button>
       </DialogActions>
