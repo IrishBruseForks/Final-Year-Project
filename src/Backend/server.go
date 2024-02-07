@@ -2,16 +2,17 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 	"os"
 
-	_ "github.com/go-sql-driver/mysql"
-	"github.com/labstack/gommon/log"
-
 	"github.com/go-playground/validator"
+	_ "github.com/go-sql-driver/mysql"
 	jwt "github.com/golang-jwt/jwt/v5"
+	"github.com/jesses-code-adventures/utapi-go"
 	echojwt "github.com/labstack/echo-jwt/v4"
 	echo "github.com/labstack/echo/v4"
 	middleware "github.com/labstack/echo/v4/middleware"
+	"github.com/labstack/gommon/log"
 	oauth2 "golang.org/x/oauth2"
 	googleOauth "golang.org/x/oauth2/google"
 )
@@ -21,6 +22,7 @@ var InfoLog *log.Logger
 var config *oauth2.Config
 var db *sql.DB
 var useSSL bool = false
+var utApi *utapi.UtApi
 
 type CustomValidator struct {
 	validator *validator.Validate
@@ -137,6 +139,16 @@ func initOauth() {
 		},
 		RedirectURL: "postmessage",
 		Endpoint:    googleOauth.Endpoint,
+	}
+}
+
+func initUploading() {
+	utApi, err := utapi.NewUtApi()
+	_ = utApi
+	if err != nil {
+		fmt.Println("Error creating uploadthing api handler")
+		fmt.Println(fmt.Errorf("%s", err))
+		os.Exit(1)
 	}
 }
 

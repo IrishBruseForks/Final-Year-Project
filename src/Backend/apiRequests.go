@@ -59,6 +59,7 @@ func postAuthGoogle(c echo.Context) error {
 
 	statement, err := db.Prepare(`INSERT INTO Users (id,username,picture) VALUES (?,?,?)`)
 	if err != nil {
+		log.Error(err)
 		return echo.ErrInternalServerError
 	}
 	defer statement.Close()
@@ -66,7 +67,8 @@ func postAuthGoogle(c echo.Context) error {
 	// TODO check if value is in db already
 	_, err = statement.Exec(idTokenResp.Subject, idTokenResp.Name, idTokenResp.Picture)
 	if err != nil {
-		panic(err)
+		log.Error(err)
+		// return echo.ErrInternalServerError
 	}
 
 	claims := &AuthJwt{
