@@ -41,7 +41,7 @@ function MessageView() {
     },
   });
 
-  const [messageText, setMessageText] = useState(''); // State for the message input text
+  const [messageText, setMessageText] = useState(''); // State for the smart reply message input text
   const [smartReplies] = useState(['Reply 1', 'Reply 2', 'Reply 3']); // Static smart replies for demonstration
 
   // Function to handle sending a message
