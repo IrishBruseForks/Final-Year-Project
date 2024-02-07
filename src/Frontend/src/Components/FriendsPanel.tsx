@@ -39,7 +39,7 @@ const FriendsPanel: React.FC = () => {
   }, [data]);
 
   return (
-    <Stack sx={{ md: { width: "33%" }, overflow: "hidden" }}>
+    <Stack>
       <Box
         sx={{
           p: 1,

@@ -31,7 +31,7 @@ function ChannelItem({ id, username, lastMessage, profilePic }: Props) {
           <Typography noWrap variant="h6">
             {username}
           </Typography>
-          <Typography noWrap color={"text.secondary"}>
+          <Typography noWrap color={"text.secondary"} sx={{ maxWidth: "200px" }}>
             {lastMessage ?? ""}
           </Typography>
         </Box>

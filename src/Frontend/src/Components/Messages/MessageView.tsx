@@ -1,18 +1,18 @@
-import GroupsIcon from '@mui/icons-material/Groups'; // Import the icon for group chat
-import SendIcon from '@mui/icons-material/Send';
-import UploadIcon from '@mui/icons-material/Upload';
-import { Box, Button, IconButton, InputAdornment, List, Stack, TextField, Typography, useMediaQuery } from '@mui/material';
-import axios from 'axios'; // Import axios for making HTTP requests
-import { enqueueSnackbar } from 'notistack'; // Import enqueueSnackbar for showing snackbars (notifications)
-import { useState } from 'react';
-import { useMutation, useQueryClient } from 'react-query'; // Import from react-query for server state management
-import { useParams } from 'react-router-dom'; // Import useParams hook for getting URL parameters
-import { useAuth } from '../../Auth/useAuth'; // Custom hook for authentication
-import { ChannelResponse, PostMessageBody, PostMessageResponse } from '../../Types/ServerTypes'; // Import type definitions
-import Urls from '../../Utility/Urls'; // Utility for managing URLs
-import { getApiConfig, useRefetchApi } from '../../Utility/useApi'; // API config and custom hook for API calls
-import LazyImage from '../LazyImage'; // Component for lazy-loading images
-import Message from './Message'; // Import the Message component for displaying individual messages
+import GroupsIcon from "@mui/icons-material/Groups"; // Import the icon for group chat
+import SendIcon from "@mui/icons-material/Send";
+import UploadIcon from "@mui/icons-material/Upload";
+import { Box, Button, IconButton, InputAdornment, List, Stack, TextField, Typography, useMediaQuery } from "@mui/material";
+import axios from "axios"; // Import axios for making HTTP requests
+import { enqueueSnackbar } from "notistack"; // Import enqueueSnackbar for showing snackbars (notifications)
+import { useState } from "react";
+import { useMutation, useQueryClient } from "react-query"; // Import from react-query for server state management
+import { useParams } from "react-router-dom"; // Import useParams hook for getting URL parameters
+import { useAuth } from "../../Auth/useAuth"; // Custom hook for authentication
+import { ChannelResponse, PostMessageBody, PostMessageResponse } from "../../Types/ServerTypes"; // Import type definitions
+import Urls from "../../Utility/Urls"; // Utility for managing URLs
+import { getApiConfig, useRefetchApi } from "../../Utility/useApi"; // API config and custom hook for API calls
+import LazyImage from "../LazyImage"; // Component for lazy-loading images
+import Message from "./Message"; // Import the Message component for displaying individual messages
 
 // Define the MobileSwitch component for responsive layout
 function MobileSwitch({ mobile, desktop }: { mobile: JSX.Element; desktop: JSX.Element }) {
@@ -23,16 +23,16 @@ function MobileSwitch({ mobile, desktop }: { mobile: JSX.Element; desktop: JSX.E
 // Define the MessageView component
 function MessageView() {
   const { uuid } = useParams<{ uuid: string }>(); // Get the 'uuid' from the URL parameters
-  const getMessageKey = ['getMessages', uuid]; // Define a key for caching messages
+  const getMessageKey = ["getMessages", uuid]; // Define a key for caching messages
   // Fetch messages using a custom hook and refetch them every 5000ms
-  const { data: messages } = useRefetchApi<PostMessageResponse[]>(getMessageKey, Urls.Messages + '?id=' + uuid, 'Fetching messages', {
+  const { data: messages } = useRefetchApi<PostMessageResponse[]>(getMessageKey, Urls.Messages + "?id=" + uuid, "Fetching messages", {
     refetchInterval: 5000,
   });
   const queryClient = useQueryClient(); // Access the QueryClient to manage queries and cache
   const { user } = useAuth(); // Use the custom useAuth hook to access the user's authentication status
 
   // Fetch channel data using a custom hook
-  const { data: channel } = useRefetchApi<ChannelResponse>(['getChannel', uuid], Urls.Channel + '?id=' + uuid, 'Fetching channels');
+  const { data: channel } = useRefetchApi<ChannelResponse>(["getChannel", uuid], Urls.Channel + "?id=" + uuid, "Fetching channels");
 
   const { isLoading, mutate } = useMutation({
     mutationFn: async (newMessage: PostMessageBody) => {
@@ -41,30 +41,30 @@ function MessageView() {
     },
     // Callback function after mutation is settled to refresh messages
     onSettled: async () => {
-      console.log('Settled');
+      console.log("Settled");
       return await queryClient.invalidateQueries({ queryKey: getMessageKey });
     },
   });
 
-  const [messageText, setMessageText] = useState(''); // State for the message input text for smart replies
+  const [messageText, setMessageText] = useState(""); // State for the message input text for smart replies
   // const [smartReplies] = useState(['Reply 1', 'Reply 2', 'Reply 3']); // Static smart replies for demonstration
   const [smartReplies] = useState([
-    'Lorem ipsum dolor sit amet Sed do eiusmod tempor incididunt ut labore Sed do eiusmod tempor incididunt ut labore',
-    'Consectetur adipiscing elit',
-    'Sed do eiusmod tempor incididunt ut labore'
+    "Lorem ipsum dolor sit amet Sed do eiusmod tempor incididunt ut labore Sed do eiusmod tempor incididunt ut labore",
+    "Consectetur adipiscing elit",
+    "Sed do eiusmod tempor incididunt ut labore",
   ]); // Static smart replies for demonstration
 
   // Function to handle sending a message
   const handleSendMessage = async () => {
-    if (messageText === '' || !uuid || !user) return; // Check for empty message, missing uuid, or user
+    if (messageText === "" || !uuid || !user) return; // Check for empty message, missing uuid, or user
 
     try {
       // Create a message object and send it
       const newMessage: PostMessageBody = { content: messageText, channelId: uuid };
       await mutate(newMessage);
-      setMessageText(''); // Clear the input after sending
+      setMessageText(""); // Clear the input after sending
     } catch (error) {
-      console.log('Error sending Message:', error);
+      console.log("Error sending Message:", error);
       enqueueSnackbar(error as any); // Show an error notification
     }
   };
@@ -87,7 +87,7 @@ function MessageView() {
 
   // Define desktop layout for smart replies
   const desktopLayout = (
-    <Box sx={{ mb: 2, display: 'flex', justifyContent: 'space-around' }}>
+    <Box sx={{ mb: 2, display: "flex", justifyContent: "space-around" }}>
       {smartReplies.map((reply, index) => (
         <Button key={index} variant="outlined" onClick={() => handleSmartReply(reply)}>
           {reply}
