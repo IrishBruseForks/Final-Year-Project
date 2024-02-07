@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import { Box, Button, IconButton, InputAdornment, List, Stack, TextField, Typography, useMediaQuery } from '@mui/material';
+import GroupsIcon from '@mui/icons-material/Groups'; // Import the icon for group chat
 import SendIcon from '@mui/icons-material/Send';
 import UploadIcon from '@mui/icons-material/Upload';
-import GroupsIcon from '@mui/icons-material/Groups'; // Import the icon for group chat
+import { Box, Button, IconButton, InputAdornment, List, Stack, TextField, Typography, useMediaQuery } from '@mui/material';
 import axios from 'axios'; // Import axios for making HTTP requests
 import { enqueueSnackbar } from 'notistack'; // Import enqueueSnackbar for showing snackbars (notifications)
+import { useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query'; // Import from react-query for server state management
 import { useParams } from 'react-router-dom'; // Import useParams hook for getting URL parameters
 import { useAuth } from '../../Auth/useAuth'; // Custom hook for authentication
@@ -47,7 +47,12 @@ function MessageView() {
   });
 
   const [messageText, setMessageText] = useState(''); // State for the message input text for smart replies
-  const [smartReplies] = useState(['Reply 1', 'Reply 2', 'Reply 3']); // Static smart replies for demonstration
+  // const [smartReplies] = useState(['Reply 1', 'Reply 2', 'Reply 3']); // Static smart replies for demonstration
+  const [smartReplies] = useState([
+    'Lorem ipsum dolor sit amet Sed do eiusmod tempor incididunt ut labore Sed do eiusmod tempor incididunt ut labore',
+    'Consectetur adipiscing elit',
+    'Sed do eiusmod tempor incididunt ut labore'
+  ]); // Static smart replies for demonstration
 
   // Function to handle sending a message
   const handleSendMessage = async () => {
@@ -115,10 +120,6 @@ function MessageView() {
           flexDirection: "column-reverse",
         }}
       >
-        {/* Show a loading message if messages are being fetched */}
-        {isLoading && (
-          <Typography>Loading messages...</Typography>
-        )}
         {/* Map over the fetched messages and display them */}
         {messages?.map((message) => (
           <Message key={message.sentOn} message={message} channel={channel}></Message>
