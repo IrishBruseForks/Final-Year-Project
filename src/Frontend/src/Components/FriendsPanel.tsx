@@ -39,7 +39,13 @@ const FriendsPanel: React.FC = () => {
   }, [data]);
 
   return (
-    <Stack>
+    <Stack
+      sx={{
+        bgcolor: "background.paper", // Use a theme color or specific hex color
+        minHeight: "0vh", // Adjust based on your layout needs
+        // Other styling as needed
+      }}
+    >
       <Box
         sx={{
           p: 1,
