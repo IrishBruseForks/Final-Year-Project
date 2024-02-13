@@ -1,7 +1,7 @@
 import GroupsIcon from "@mui/icons-material/Groups"; // Import the icon for group chat
 import SendIcon from "@mui/icons-material/Send";
 import UploadIcon from "@mui/icons-material/Upload";
-import { Box, Button, IconButton, InputAdornment, List, Stack, TextField, Typography, useMediaQuery } from "@mui/material";
+import { Box, Button, Chip, Grid, IconButton, InputAdornment, List, Stack, TextField, Typography, useMediaQuery } from "@mui/material";
 import axios from "axios"; // Import axios for making HTTP requests
 import { enqueueSnackbar } from "notistack"; // Import enqueueSnackbar for showing snackbars (notifications)
 import { useState } from "react";
@@ -74,27 +74,47 @@ function MessageView() {
     setMessageText(reply);
   };
 
-  // Define mobile layout for smart replies
-  const mobileLayout = (
-    <Stack direction="column" spacing={1}>
-      {smartReplies.map((reply, index) => (
-        <Button key={index} variant="outlined" onClick={() => handleSmartReply(reply)} fullWidth>
-          {reply}
-        </Button>
-      ))}
-    </Stack>
-  );
+// Modified mobileLayout with Chips wrapped in a Box for individual sizing
+const mobileLayout = (
+  <Stack direction="column" spacing={1}>
+    {smartReplies.map((reply, index) => (
+      <Box key={index} sx={{ display: 'flex', justifyContent: 'center' }}> {/* Container to control sizing */}
+        <Chip
+          label={reply}
+          onClick={() => handleSmartReply(reply)}
+          variant="outlined"
+          sx={{
+            maxWidth: 300, // Set a specific maxWidth for each Chip
+            overflow: 'hidden',
+            whiteSpace: 'nowrap',
+            textOverflow: 'ellipsis',
+          }}
+        />
+      </Box>
+    ))}
+  </Stack>
+);
 
-  // Define desktop layout for smart replies
-  const desktopLayout = (
-    <Box sx={{ mb: 2, display: "flex", justifyContent: "space-around" }}>
-      {smartReplies.map((reply, index) => (
-        <Button key={index} variant="outlined" onClick={() => handleSmartReply(reply)}>
-          {reply}
-        </Button>
-      ))}
-    </Box>
-  );
+// Adjusted desktopLayout using Grid for equal sizing and spacing of Chips
+const desktopLayout = (
+  <Grid container spacing={2} justifyContent="center" sx={{ mb: 2 }}> {/* Adjust spacing as needed */}
+    {smartReplies.map((reply, index) => (
+      <Grid item xs={4} key={index}> {/* xs=4 for 3 items per row, adjust as necessary */}
+        <Chip
+          label={reply}
+          onClick={() => handleSmartReply(reply)}
+          variant="outlined"
+          sx={{
+            width: '100%', // Ensure the Chip fills its container
+            overflow: 'hidden',
+            whiteSpace: 'nowrap',
+            textOverflow: 'ellipsis',
+          }}
+        />
+      </Grid>
+    ))}
+  </Grid>
+);
 
   // Render the component UI
   return (
