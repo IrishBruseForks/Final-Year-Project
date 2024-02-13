@@ -8,7 +8,6 @@ import (
 	"github.com/go-playground/validator"
 	_ "github.com/go-sql-driver/mysql"
 	jwt "github.com/golang-jwt/jwt/v5"
-	"github.com/jesses-code-adventures/utapi-go"
 	echojwt "github.com/labstack/echo-jwt/v4"
 	echo "github.com/labstack/echo/v4"
 	middleware "github.com/labstack/echo/v4/middleware"
@@ -22,7 +21,6 @@ var InfoLog *log.Logger
 var config *oauth2.Config
 var db *sql.DB
 var useSSL bool = false
-var utApi *utapi.UtApi
 
 type CustomValidator struct {
 	validator *validator.Validate
@@ -144,16 +142,6 @@ func initOauth() {
 	}
 }
 
-func initUploading() {
-	utApi, err := utapi.NewUtApi()
-	_ = utApi
-	if err != nil {
-		fmt.Println("Error creating uploadthing api handler")
-		fmt.Println(fmt.Errorf("%s", err))
-		os.Exit(1)
-	}
-}
-
 func initDatabase() {
 	sqlUrl, found := os.LookupEnv("SqlUrl")
 	if !found {
@@ -165,6 +153,8 @@ func initDatabase() {
 	if err != nil {
 		panic(err)
 	}
+
+	db.Exec("SET NAMES 'utf8mb4' COLLATE 'utf8mb4_0900_ai_ci';")
 }
 
 func Skipper(c echo.Context) bool {
