@@ -12,7 +12,7 @@ function Message({ message, channel }: { message: PostMessageResponse; channel?:
   }
 
   return (
-    <ListItemButton sx={{ flexGrow: 0, height: "min-content", display: "flex", alignItems: "start", mb: 1, borderRadius: 1 }}>
+    <ListItemButton sx={{ flexGrow: 0, height: "min-content", display: "flex", alignItems: "start", mb: 1, borderRadius: 1, bgcolor: '' }}>
       <Avatar src={getProfilePictureUrl(message)} sx={{ mr: 1 }} />
       <Box width="100%">
         {/* {channel.users[0]} */}

@@ -16,7 +16,7 @@ function ChannelItem({ id, username, lastMessage, profilePic }: Props) {
   return (
     <>
       <ListItemButton
-        sx={{ width: "100%" }}
+        sx={{ width: "100%", bgcolor: 'background.paper' }}
         onClick={() => {
           navigate("/" + id);
         }}
