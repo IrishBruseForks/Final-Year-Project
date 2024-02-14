@@ -1,6 +1,6 @@
 -- SQL dump generated using DBML (dbml-lang.org)
 -- Database: MySQL
--- Generated at: 2024-02-01T00:00:47.363Z
+-- Generated at: 2024-02-14T02:07:42.330Z
 
 CREATE TABLE `Users` (
   `id` char(32) PRIMARY KEY,
@@ -20,7 +20,8 @@ CREATE TABLE `Messages` (
   `channelId` char(36),
   `sentBy` char(32),
   `sentOn` timestamp,
-  `content` text
+  `content` text,
+  `image` varchar(255)
 );
 
 CREATE TABLE `Users_Channels` (

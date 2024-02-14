@@ -3,6 +3,7 @@ import { Avatar, Box, IconButton, ListItemButton, Tooltip, Typography, useMediaQ
 import { format } from "date-fns";
 import { useState } from "react";
 import { ChannelResponse, PostMessageResponse } from "../../Types/ServerTypes";
+import LazyImage from "../LazyImage";
 
 interface MessageProps {
   message: PostMessageResponse;
@@ -61,6 +62,7 @@ function Message({ message, channel, onReply }: MessageProps) {
           <Typography variant="body1">{message.content}</Typography>
         </Box>
       </Box>
+      <LazyImage src={message.image} placeholder={<div />} sx={{ pl: 6 }} />
       <Box
         sx={{
           position: "absolute", // Position the timestamp absolutely

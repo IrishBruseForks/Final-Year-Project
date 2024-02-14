@@ -87,7 +87,7 @@ export const CreateChannelModal: React.FC<CreateChannelModalProps> = ({ open, ha
     // Extract the user IDs from the selected usernames
     const userIds = selectedUserID;
 
-    const finalChannelPicture = channelPicture || user?.profilePicture || "default_picture_url";
+    const finalChannelPicture = channelPicture || "default_picture_url";
 
     // Create the channel data object
     const channelData: PostChannelBody = {

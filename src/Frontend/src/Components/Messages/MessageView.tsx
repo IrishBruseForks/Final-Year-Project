@@ -25,18 +25,14 @@ function MessageView() {
   const { uuid } = useParams<{ uuid: string }>(); // Get the 'uuid' from the URL parameters
   const getMessageKey = ["getMessages", uuid]; // Define a key for caching messages
   // Fetch messages using a custom hook and refetch them every 5000ms
-  const { data: messages } = useRefetchApi<PostMessageResponse[]>(getMessageKey, Urls.Messages + "?id=" + uuid, "Fetching messages", {
-    refetchInterval: 5000,
-  });
+  const { data: messages } = useRefetchApi<PostMessageResponse[]>(getMessageKey, Urls.Messages + "?id=" + uuid, "Fetching messages", { refetchInterval: 2000 });
   const queryClient = useQueryClient(); // Access the QueryClient to manage queries and cache
   const { user } = useAuth(); // Use the custom useAuth hook to access the user's authentication status
 
+  const [file, setFile] = useState<File | undefined>(); // State for the file upload
+
   // Fetch channel data using a custom hook
   const { data: channel } = useRefetchApi<ChannelResponse>(["getChannel", uuid], Urls.Channel + "?id=" + uuid, "Fetching channels");
-
-   // State to track which message is being replied to
-  const [replyTo, setReplyTo] = useState(null);
-
 
   const { mutate } = useMutation({
     mutationFn: async (newMessage: PostMessageBody) => {
@@ -45,29 +41,41 @@ function MessageView() {
     },
     // Callback function after mutation is settled to refresh messages
     onSettled: async () => {
-      console.log("Settled");
+      setMessageText("");
       return await queryClient.invalidateQueries({ queryKey: getMessageKey });
     },
   });
-  
 
   const [messageText, setMessageText] = useState(""); // State for the message input text for smart replies
-  // const [smartReplies] = useState(['Reply 1', 'Reply 2', 'Reply 3']); // Static smart replies for demonstration
+
+  // Static smart replies for demonstration
   const [smartReplies] = useState([
     "Lorem ipsum dolor sit amet Sed do eiusmod tempor incididunt ut labore Sed do eiusmod tempor incididunt ut labore",
     "Consectetur adipiscing elit",
     "Sed do eiusmod tempor incididunt ut labore",
   ]); // Static smart replies for demonstration
 
-  // Function to handle sending a message
-  const handleSendMessage = async () => {
-    if (messageText === "" || !uuid || !user) return; // Check for empty message, missing uuid, or user
+  const toBase64 = (file: File): Promise<string | undefined> =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result?.toString());
+      reader.onerror = reject;
+    });
 
+  // Function to handle sending a message
+  const sendMessage = async () => {
     try {
       // Create a message object and send it
-      const newMessage: PostMessageBody = { content: messageText, channelId: uuid };
-      await mutate(newMessage);
-      setMessageText(""); // Clear the input after sending
+      if (messageText === "" || !uuid || !user) return; // Check for empty message, missing uuid, or user
+
+      let fileBase64: string | undefined;
+      if (file) {
+        fileBase64 = (await toBase64(file))?.split(",")[1];
+      }
+
+      const newMessage: PostMessageBody = { content: messageText, channelId: uuid, image: fileBase64 };
+      mutate(newMessage);
     } catch (error) {
       console.log("Error sending Message:", error);
       enqueueSnackbar(error as any); // Show an error notification
@@ -82,39 +90,31 @@ function MessageView() {
   // Modified mobileLayout with Chips wrapped in a Box for individual sizing
   const mobileLayout = (
     <Stack direction="column" spacing={1}>
-      {smartReplies.map((reply, index) => {
-        // Calculate the width based on the maximum length of text
-        const maxWidth = Math.max(...smartReplies.map(reply => reply.length)) * 10; // Adjust multiplier as per your requirement
-  
-        return (
-          <Box key={index} sx={{ display: "flex", justifyContent: "center" }}>
-            {" "}
-            {/* Container to control sizing */}
-            <Chip
-              label={reply}
-              onClick={() => handleSmartReply(reply)}
-              variant="outlined"
-              sx={{
-                width: 350, // Set a specific width for each Chip
-                overflow: "hidden",
-                whiteSpace: "nowrap",
-                textOverflow: "ellipsis",
-              }}
-            />
-          </Box>
-        );
-      })}
+      {smartReplies.map((reply, index) => (
+        <Box key={index} sx={{ display: "flex", justifyContent: "center" }}>
+          {/* Container to control sizing */}
+          <Chip
+            label={reply}
+            onClick={() => handleSmartReply(reply)}
+            variant="outlined"
+            sx={{
+              maxWidth: 300, // Set a specific maxWidth for each Chip
+              overflow: "hidden",
+              whiteSpace: "nowrap",
+              textOverflow: "ellipsis",
+            }}
+          />
+        </Box>
+      ))}
     </Stack>
   );
 
   // Adjusted desktopLayout using Grid for equal sizing and spacing of Chips
   const desktopLayout = (
     <Grid container spacing={2} justifyContent="center" sx={{ mb: 2 }}>
-      {" "}
       {/* Adjust spacing as needed */}
       {smartReplies.map((reply, index) => (
         <Grid item xs={4} key={index}>
-          {" "}
           {/* xs=4 for 3 items per row, adjust as necessary */}
           <Chip
             label={reply}
@@ -158,7 +158,7 @@ function MessageView() {
       >
         {/* Map over the fetched messages and display them */}
         {messages?.map((message) => (
-          <Message key={message.sentOn} message={message} channel={channel}></Message>
+          <Message key={message.sentOn} message={message} channel={channel} />
         ))}
       </List>
       {/* Smart Replies Section */}
@@ -166,12 +166,19 @@ function MessageView() {
       <MobileSwitch mobile={mobileLayout} desktop={desktopLayout} />
       {/* Message Input Section */}
       <Stack direction={"row"} display={"flex"} alignItems={"center"} justifyContent={"center"} gap={1}>
-        {/* Upload Button (no functionality shown in this snippet) */}
-        <Box>
-          <IconButton onClick={() => {}}>
-            <UploadIcon />
-          </IconButton>
-        </Box>
+        {/* Upload Button */}
+        <Button component="label" sx={{ width: "1px" }}>
+          <UploadIcon />
+          <input
+            hidden
+            type="file"
+            accept="image/*"
+            onChange={(e) => {
+              setFile(e.target.files?.item(0) ?? undefined);
+              e.target.value = null as any;
+            }}
+          />
+        </Button>
         {/* Text Field for typing the message */}
         <TextField
           size="medium"
@@ -188,14 +195,14 @@ function MessageView() {
             // Send the message when Enter is pressed (without Shift)
             if (!e.shiftKey && e.key === "Enter") {
               e.preventDefault();
-              handleSendMessage();
+              sendMessage();
             }
           }}
           variant="outlined"
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
-                <Button variant="contained" endIcon={<SendIcon />} onClick={handleSendMessage}>
+                <Button variant="contained" endIcon={<SendIcon />} onClick={sendMessage}>
                   <b>Send</b> {/* Send Button */}
                 </Button>
               </InputAdornment>

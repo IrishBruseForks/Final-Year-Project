@@ -5,7 +5,6 @@ go 1.21.1
 require (
 	github.com/go-sql-driver/mysql v1.7.1
 	github.com/golang-jwt/jwt/v5 v5.0.0
-	github.com/jesses-code-adventures/utapi-go v0.1.15
 	github.com/joho/godotenv v1.5.1
 	github.com/labstack/echo/v4 v4.11.2
 	golang.org/x/oauth2 v0.13.0

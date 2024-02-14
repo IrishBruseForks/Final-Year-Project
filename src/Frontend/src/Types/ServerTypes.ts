@@ -40,6 +40,7 @@ export interface PostMessageBody {
   channelId: string;
   content: string;
   replyToId?: string;
+  image?: string;
 }
 export interface PostMessageResponse {
   username: string;
@@ -48,4 +49,5 @@ export interface PostMessageResponse {
   sentOn: string;
   content: string;
   replyToId?: string;
+  image?: string;
 }

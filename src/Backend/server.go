@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"os"
+	"strings"
 
 	"github.com/go-playground/validator"
 	_ "github.com/go-sql-driver/mysql"
@@ -31,6 +32,7 @@ func main() {
 	e.Validator = &CustomValidator{validator: validator.New()}
 	log.SetHeader("${short_file}:${line}")
 	log.EnableColor()
+	log.SetLevel(log.DEBUG)
 	loadEnv()
 
 	defer db.Close()
@@ -79,7 +81,6 @@ func addRoutes(e *echo.Echo) {
 	e.PUT("/channels", putChannels)
 
 	e.GET("/replies", getReplies)
-
 	e.GET("/channel", getChannel)
 
 	// Messages Endpoints
@@ -157,5 +158,5 @@ func initDatabase() {
 }
 
 func Skipper(c echo.Context) bool {
-	return c.Request().Method == "OPTIONS"
+	return c.Request().Method == "OPTIONS" || c.Path() == "/channels" || strings.Contains(c.Path(), "/messages")
 }

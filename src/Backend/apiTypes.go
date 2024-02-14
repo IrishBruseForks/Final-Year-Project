@@ -35,17 +35,19 @@ type User struct {
 	Id       string `json:"id" validate:"required"`
 	Username string `json:"username" validate:"required"`
 	Picture  string `json:"picture" validate:"required"`
-	IsBot    *bool  `json:"isBot" validate:"required"`
+	IsBot    *bool  `json:"isBot"`
 }
 
 type PostMessageBody struct {
-	ChannelId string `json:"channelId" validate:"required"`
-	Content   string `json:"content" validate:"required"`
+	ChannelId string  `json:"channelId" validate:"required"`
+	Content   string  `json:"content" validate:"required"`
+	Image     *string `json:"image" validate:"required"`
 }
 
 type PostMessageResponse struct {
-	ChannelId string `json:"channelId"`
-	SentBy    string `json:"sentBy"`
-	SentOn    string `json:"sentOn"`
-	Content   string `json:"content"`
+	ChannelId string  `json:"channelId"`
+	SentBy    string  `json:"sentBy"`
+	SentOn    string  `json:"sentOn"`
+	Content   string  `json:"content"`
+	Image     *string `json:"image"`
 }
