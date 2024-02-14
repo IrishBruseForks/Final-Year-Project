@@ -34,7 +34,11 @@ function MessageView() {
   // Fetch channel data using a custom hook
   const { data: channel } = useRefetchApi<ChannelResponse>(["getChannel", uuid], Urls.Channel + "?id=" + uuid, "Fetching channels");
 
-  const { isLoading, mutate } = useMutation({
+   // State to track which message is being replied to
+  const [replyTo, setReplyTo] = useState(null);
+
+
+  const { mutate } = useMutation({
     mutationFn: async (newMessage: PostMessageBody) => {
       // Function to call the API and send the new message
       await axios.post(import.meta.env.VITE_API_URL + Urls.Messages, newMessage, getApiConfig(user!));
@@ -45,6 +49,7 @@ function MessageView() {
       return await queryClient.invalidateQueries({ queryKey: getMessageKey });
     },
   });
+  
 
   const [messageText, setMessageText] = useState(""); // State for the message input text for smart replies
   // const [smartReplies] = useState(['Reply 1', 'Reply 2', 'Reply 3']); // Static smart replies for demonstration
@@ -74,47 +79,53 @@ function MessageView() {
     setMessageText(reply);
   };
 
-// Modified mobileLayout with Chips wrapped in a Box for individual sizing
-const mobileLayout = (
-  <Stack direction="column" spacing={1}>
-    {smartReplies.map((reply, index) => (
-      <Box key={index} sx={{ display: 'flex', justifyContent: 'center' }}> {/* Container to control sizing */}
-        <Chip
-          label={reply}
-          onClick={() => handleSmartReply(reply)}
-          variant="outlined"
-          sx={{
-            maxWidth: 300, // Set a specific maxWidth for each Chip
-            overflow: 'hidden',
-            whiteSpace: 'nowrap',
-            textOverflow: 'ellipsis',
-          }}
-        />
-      </Box>
-    ))}
-  </Stack>
-);
+  // Modified mobileLayout with Chips wrapped in a Box for individual sizing
+  const mobileLayout = (
+    <Stack direction="column" spacing={1}>
+      {smartReplies.map((reply, index) => (
+        <Box key={index} sx={{ display: "flex", justifyContent: "center" }}>
+          {" "}
+          {/* Container to control sizing */}
+          <Chip
+            label={reply}
+            onClick={() => handleSmartReply(reply)}
+            variant="outlined"
+            sx={{
+              maxWidth: 300, // Set a specific maxWidth for each Chip
+              overflow: "hidden",
+              whiteSpace: "nowrap",
+              textOverflow: "ellipsis",
+            }}
+          />
+        </Box>
+      ))}
+    </Stack>
+  );
 
-// Adjusted desktopLayout using Grid for equal sizing and spacing of Chips
-const desktopLayout = (
-  <Grid container spacing={2} justifyContent="center" sx={{ mb: 2 }}> {/* Adjust spacing as needed */}
-    {smartReplies.map((reply, index) => (
-      <Grid item xs={4} key={index}> {/* xs=4 for 3 items per row, adjust as necessary */}
-        <Chip
-          label={reply}
-          onClick={() => handleSmartReply(reply)}
-          variant="outlined"
-          sx={{
-            width: '100%', // Ensure the Chip fills its container
-            overflow: 'hidden',
-            whiteSpace: 'nowrap',
-            textOverflow: 'ellipsis',
-          }}
-        />
-      </Grid>
-    ))}
-  </Grid>
-);
+  // Adjusted desktopLayout using Grid for equal sizing and spacing of Chips
+  const desktopLayout = (
+    <Grid container spacing={2} justifyContent="center" sx={{ mb: 2 }}>
+      {" "}
+      {/* Adjust spacing as needed */}
+      {smartReplies.map((reply, index) => (
+        <Grid item xs={4} key={index}>
+          {" "}
+          {/* xs=4 for 3 items per row, adjust as necessary */}
+          <Chip
+            label={reply}
+            onClick={() => handleSmartReply(reply)}
+            variant="outlined"
+            sx={{
+              width: "100%", // Ensure the Chip fills its container
+              overflow: "hidden",
+              whiteSpace: "nowrap",
+              textOverflow: "ellipsis",
+            }}
+          />
+        </Grid>
+      ))}
+    </Grid>
+  );
 
   // Render the component UI
   return (

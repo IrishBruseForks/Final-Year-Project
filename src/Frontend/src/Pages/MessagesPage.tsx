@@ -16,24 +16,19 @@ function MessagesPage() {
     document.title = import.meta.env.VITE_APP_TITLE + " - Home";
   }, []);
   return (
-    <Stack sx={{ minHeight: "100vh", maxHeight: "100vh" }}>
+    <Stack sx={{ minHeight: "100vh", maxHeight: "100vh", color: 'inherit' }}>
       <Navbar toggleDrawer={toggleDrawer} />
       <Stack direction={"row"} flexGrow={1} sx={{ height: "100%" }}>
         <MobileSwitch
           mobile={
-            <SwipeableDrawer
-              anchor="left"
-              open={opened}
-              onClose={() => toggleDrawer(false)}
-              onOpen={() => toggleDrawer(true)}
-              PaperProps={{
-                sx: {
-                  bgcolor: "background.paper", // Ensure consistency
-                  width: "80vw", // Optional: Adjust the drawer width
-                  // Any additional styling
-                },
-              }}
-            >
+            <SwipeableDrawer anchor="left" open={opened} onClose={() => toggleDrawer(false)} onOpen={() => toggleDrawer(true)}
+            PaperProps={{
+              sx: {
+                bgcolor: 'background.paper', // Ensure consistency
+                width: '80vw', // Optional: Adjust the drawer width
+                // Any additional styling
+              },
+            }}>
               <FriendsPanel />
             </SwipeableDrawer>
           }
