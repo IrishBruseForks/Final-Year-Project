@@ -1,5 +1,6 @@
 import ReplyIcon from "@mui/icons-material/Reply"; // For reply action
 import { Avatar, Box, IconButton, ListItemButton, Tooltip, Typography, useMediaQuery } from "@mui/material";
+import { format } from "date-fns";
 import { useState } from "react";
 import { ChannelResponse, PostMessageResponse } from "../../Types/ServerTypes";
 
@@ -47,6 +48,7 @@ function Message({ message, channel, onReply }: MessageProps) {
         alignItems: "flex-start",
         mb: 1,
         borderRadius: 1,
+        position: "relative", // Ensure the container is positioned relatively
       }}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -59,10 +61,22 @@ function Message({ message, channel, onReply }: MessageProps) {
           <Typography variant="body1">{message.content}</Typography>
         </Box>
       </Box>
+      <Box
+        sx={{
+          position: "absolute", // Position the timestamp absolutely
+          top: 0, // Align to the top of the container
+          right: 0, // Align to the right of the container
+          padding: 1, // Add some padding for spacing
+        }}
+      >
+        <Typography variant="body2" color="text.secondary">
+          {format(new Date(message.sentOn), "PPpp")}
+        </Typography>
+      </Box>
       <Box sx={{ display: "flex", justifyContent: "flex-end", width: "100%" }}>
         {showActions && (
           <Tooltip title="Reply" placement="top">
-            <IconButton onClick={handleReplyClick}>
+            <IconButton onClick={handleReplyClick} size="small">
               <ReplyIcon />
             </IconButton>
           </Tooltip>
