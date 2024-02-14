@@ -62,7 +62,7 @@ function Message({ message, channel, onReply }: MessageProps) {
           <Typography variant="body1">{message.content}</Typography>
         </Box>
       </Box>
-      <LazyImage src={message.image} placeholder={<div />} sx={{ pl: 6 }} />
+      <LazyImage src={message.image} placeholder={<div />} sx={{ pl: 6, maxWidth: "100%" }} />
       <Box
         sx={{
           position: "absolute", // Position the timestamp absolutely
