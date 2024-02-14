@@ -82,23 +82,28 @@ function MessageView() {
   // Modified mobileLayout with Chips wrapped in a Box for individual sizing
   const mobileLayout = (
     <Stack direction="column" spacing={1}>
-      {smartReplies.map((reply, index) => (
-        <Box key={index} sx={{ display: "flex", justifyContent: "center" }}>
-          {" "}
-          {/* Container to control sizing */}
-          <Chip
-            label={reply}
-            onClick={() => handleSmartReply(reply)}
-            variant="outlined"
-            sx={{
-              maxWidth: 300, // Set a specific maxWidth for each Chip
-              overflow: "hidden",
-              whiteSpace: "nowrap",
-              textOverflow: "ellipsis",
-            }}
-          />
-        </Box>
-      ))}
+      {smartReplies.map((reply, index) => {
+        // Calculate the width based on the maximum length of text
+        const maxWidth = Math.max(...smartReplies.map(reply => reply.length)) * 10; // Adjust multiplier as per your requirement
+  
+        return (
+          <Box key={index} sx={{ display: "flex", justifyContent: "center" }}>
+            {" "}
+            {/* Container to control sizing */}
+            <Chip
+              label={reply}
+              onClick={() => handleSmartReply(reply)}
+              variant="outlined"
+              sx={{
+                width: 350, // Set a specific width for each Chip
+                overflow: "hidden",
+                whiteSpace: "nowrap",
+                textOverflow: "ellipsis",
+              }}
+            />
+          </Box>
+        );
+      })}
     </Stack>
   );
 
