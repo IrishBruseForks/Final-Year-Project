@@ -1,6 +1,7 @@
 import axios, { AxiosError, AxiosRequestConfig } from "axios";
 import { enqueueSnackbar } from "notistack";
 import { QueryKey, UseQueryOptions, UseQueryResult, useQuery } from "react-query";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../Auth/useAuth";
 import { OAuthResponse } from "../Types/ServerTypes";
 
@@ -11,6 +12,7 @@ export function useApi<TQueryFnData = unknown, TError = unknown, TData = TQueryF
   options?: Omit<UseQueryOptions<TQueryFnData, TError, TData, TQueryKey>, "queryKey" | "queryFn">
 ): UseQueryResult<TData, TError> {
   const { user } = useAuth();
+  let navigate = useNavigate();
 
   return useQuery<TQueryFnData, TError, TData, TQueryKey>(
     queryKey,
@@ -22,6 +24,12 @@ export function useApi<TQueryFnData = unknown, TError = unknown, TData = TQueryF
         return (await axios.get(import.meta.env.VITE_API_URL + url, getApiConfig(user))).data as TQueryFnData;
       } catch (error) {
         if (error instanceof AxiosError && error.isAxiosError) {
+          // redirect on unauthorrized error
+          if (error.response?.status === 401) {
+            navigate("/login");
+            return Promise.reject("Unauthorized");
+          }
+
           enqueueSnackbar(errorMessage + " - " + error.message, { variant: "error" });
         } else {
           enqueueSnackbar(error as any, { variant: "error" });
