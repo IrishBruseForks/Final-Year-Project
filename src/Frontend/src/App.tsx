@@ -126,7 +126,7 @@ function App() {
           <SnackbarProvider maxSnack={3}>
             <ThemeProvider theme={theme}>
               <CssBaseline />
-              <Box sx={{}}>
+              <Box>
                 <RouterProvider router={router} />
               </Box>
             </ThemeProvider>

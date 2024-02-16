@@ -12,7 +12,6 @@ export interface PostChannelBody {
   users: string[];
 }
 export interface OAuthResponse {
-  username: any;
   token: string;
   id: string;
   profilePicture: string;
@@ -39,15 +38,12 @@ export interface User {
 export interface PostMessageBody {
   channelId: string;
   content: string;
-  replyToId?: string;
   image?: string;
 }
 export interface PostMessageResponse {
-  username: string;
   channelId: string;
   sentBy: string;
   sentOn: string;
   content: string;
-  replyToId?: string;
   image?: string;
 }

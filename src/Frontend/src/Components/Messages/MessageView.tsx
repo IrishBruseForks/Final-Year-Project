@@ -69,12 +69,14 @@ function MessageView() {
       // Create a message object and send it
       if (messageText === "" || !uuid || !user) return; // Check for empty message, missing uuid, or user
 
+      const newMessage: PostMessageBody = { content: messageText, channelId: uuid };
+
       let fileBase64: string | undefined;
       if (file) {
         fileBase64 = (await toBase64(file))?.split(",")[1];
+        newMessage.image = fileBase64;
       }
 
-      const newMessage: PostMessageBody = { content: messageText, channelId: uuid, image: fileBase64 };
       mutate(newMessage);
     } catch (error) {
       console.log("Error sending Message:", error);

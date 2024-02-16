@@ -41,7 +41,7 @@ type User struct {
 type PostMessageBody struct {
 	ChannelId string  `json:"channelId" validate:"required"`
 	Content   string  `json:"content" validate:"required"`
-	Image     *string `json:"image" validate:"required"`
+	Image     *string `json:"image"`
 }
 
 type PostMessageResponse struct {
