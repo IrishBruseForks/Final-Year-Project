@@ -1,9 +1,9 @@
 -- SQL dump generated using DBML (dbml-lang.org)
 -- Database: MySQL
--- Generated at: 2024-02-14T02:07:42.330Z
+-- Generated at: 2024-02-19T03:54:21.547Z
 
 CREATE TABLE `Users` (
-  `id` char(32) PRIMARY KEY,
+  `id` varchar(32) PRIMARY KEY,
   `username` text,
   `picture` text,
   `isBot` boolean
@@ -25,7 +25,7 @@ CREATE TABLE `Messages` (
 );
 
 CREATE TABLE `Users_Channels` (
-  `Users_id` char(32),
+  `Users_id` varchar(32),
   `Channels_id` char(36),
   PRIMARY KEY (`Users_id`, `Channels_id`)
 );

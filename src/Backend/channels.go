@@ -80,7 +80,6 @@ func getChannels(c echo.Context) error {
 		DESC LIMIT 1
 	)
 	WHERE uc.Users_id = ?
-
 	`, jwt.Subject)
 
 	if err != nil {
@@ -114,19 +113,19 @@ func postChannels(c echo.Context) error {
 	jwt := getJwt(c)
 	var err error
 
-	newChannelRequest := new(PostChannelBody)
-	if err = c.Bind(&newChannelRequest); err != nil {
+	body := new(PostChannelBody)
+	if err = c.Bind(&body); err != nil {
 		log.Error(err)
 		return echo.ErrInternalServerError
 	}
 
-	if err = c.Validate(newChannelRequest); err != nil {
+	if err = c.Validate(body); err != nil {
 		log.Error(err)
 		return c.JSON(http.StatusBadRequest, NewValidatorError(err))
 	}
 
 	// Add the user who created the group to the group
-	newChannelRequest.Users = append(newChannelRequest.Users, jwt.Subject)
+	body.Users = append(body.Users, jwt.Subject)
 
 	id, err := uuid.NewRandom()
 	if err != nil {
@@ -139,7 +138,7 @@ func postChannels(c echo.Context) error {
 	VALUES (?,?,?);
 	`
 
-	_, err = db.Exec(createChannelQuery, id.String(), newChannelRequest.Name, newChannelRequest.Picture)
+	_, err = db.Exec(createChannelQuery, id.String(), body.Name, body.Picture)
 	if err != nil {
 		log.Error(err)
 		return echo.ErrInternalServerError
@@ -150,9 +149,9 @@ func postChannels(c echo.Context) error {
 	VALUES (?,?);
 	`
 
-	for _, user := range newChannelRequest.Users {
+	for _, user := range body.Users {
 		_, err = db.Exec(addUserToChannelQuery, user, id.String())
-
+		log.Debug(user, " ", id)
 		if err != nil {
 			log.Error(err)
 			return echo.ErrInternalServerError

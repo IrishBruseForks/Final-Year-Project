@@ -50,14 +50,14 @@ func getMessages(c echo.Context) error {
 func postMessages(c echo.Context) error {
 	jwt := getJwt(c)
 
-	msgRequest := new(PostMessageBody)
+	body := new(PostMessageBody)
 
-	if err := c.Bind(&msgRequest); err != nil {
+	if err := c.Bind(&body); err != nil {
 		log.Error(err)
 		return echo.ErrInternalServerError
 	}
 
-	if err := c.Validate(msgRequest); err != nil {
+	if err := c.Validate(body); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
 
@@ -69,37 +69,14 @@ func postMessages(c echo.Context) error {
 
 	var imageUrl string = ""
 
-	if msgRequest.Image != nil {
-		resp, err := http.PostForm("https://api.imgbb.com/1/upload?expiration=15552000&key="+os.Getenv("IMGBB_SECRET"), map[string][]string{
-			"image": {*msgRequest.Image}, // lets assume its this file
-		})
-
+	if body.Image != nil {
+		// lets assume its this file
+		url, err := UploadImage(body.Image)
 		if err != nil {
 			log.Error(err)
 			return echo.ErrInternalServerError
 		}
-
-		b, err := io.ReadAll(resp.Body)
-		if err != nil {
-			log.Error(err)
-			return echo.ErrInternalServerError
-		}
-
-		var imgbb *ImgBB
-
-		log.Error(string(b))
-
-		err = json.Unmarshal(b, &imgbb)
-
-		if err != nil {
-			log.Error(err)
-			return echo.ErrInternalServerError
-		}
-
-		log.Error(imgbb.Status)
-		log.Error(imgbb.Success)
-		log.Error(imgbb.Data.URL)
-		imageUrl = imgbb.Data.URL
+		imageUrl = url
 	}
 
 	query := `
@@ -109,13 +86,40 @@ func postMessages(c echo.Context) error {
 		(?,?,?,NOW(),?,?);
 	`
 
-	_, err = db.Exec(query, uuid, msgRequest.ChannelId, jwt.Subject, msgRequest.Content, imageUrl)
+	_, err = db.Exec(query, uuid, body.ChannelId, jwt.Subject, body.Content, imageUrl)
 	if err != nil {
 		log.Error(err)
 		return echo.ErrInternalServerError
 	}
 
 	return c.String(http.StatusOK, uuid.String())
+}
+
+func UploadImage(img *string) (string, error) {
+	resp, err := http.PostForm("https://api.imgbb.com/1/upload?expiration=1000000&key="+os.Getenv("IMGBB_SECRET"), map[string][]string{
+		"image": {*img},
+	})
+
+	if err != nil {
+		log.Error(err)
+		return "", echo.ErrInternalServerError
+	}
+
+	b, err := io.ReadAll(resp.Body)
+	if err != nil {
+		log.Error(err)
+		return "", echo.ErrInternalServerError
+	}
+
+	var imgbb *ImgBB
+
+	err = json.Unmarshal(b, &imgbb)
+	if err != nil {
+		log.Error(err)
+		return "", echo.ErrInternalServerError
+	}
+
+	return imgbb.Data.Image.URL, err
 }
 
 type ImgBB struct {

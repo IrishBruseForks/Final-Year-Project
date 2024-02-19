@@ -70,10 +70,9 @@ func addRoutes(e *echo.Echo) {
 	// Non-Auth Apis
 	e.GET("/", getRoot)
 	e.GET("/status", getStatus)
-	e.POST("/auth/google", postAuthGoogle)
+	e.POST("/auth/google", postLogin)
 
-	// Validate login
-	e.GET("/login", getLogin)
+	e.POST("/signup", postSignup)
 
 	// Channel Endpoints
 	e.GET("/channels", getChannels)
@@ -143,15 +142,21 @@ func initOauth() {
 }
 
 func initDatabase() {
+	var err error
+
 	sqlUrl, found := os.LookupEnv("SqlUrl")
 	if !found {
 		panic("SqlUrl missing in .env")
 	}
 
-	var err error
 	db, err = sql.Open("mysql", sqlUrl)
 	if err != nil {
-		panic(err)
+		log.Error(err)
+	}
+
+	err = db.Ping()
+	if err != nil {
+		log.Error(err)
 	}
 
 	db.Exec("SET NAMES 'utf8mb4' COLLATE 'utf8mb4_0900_ai_ci';")

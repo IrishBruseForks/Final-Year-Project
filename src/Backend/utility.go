@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/base64"
 	"fmt"
+	"net/http"
 	"os"
 	"strconv"
 
@@ -10,6 +11,7 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/gommon/log"
 )
 
 func loadEnv() {
@@ -27,7 +29,6 @@ func loadEnv() {
 }
 
 type GoogleJwt struct {
-	Subject              string `json:"sub"`
 	Name                 string `json:"name"`
 	Picture              string `json:"picture"`
 	jwt.RegisteredClaims `tstype:",extends"`
@@ -50,6 +51,20 @@ func getJwtSecretBytes() []byte {
 func getJwt(c echo.Context) *AuthJwt {
 	user := c.Get("user").(*jwt.Token)
 	return user.Claims.(*AuthJwt)
+}
+
+func getBody[T any](c echo.Context) (*T, error) {
+	body := new(T)
+	if err := c.Bind(body); err != nil {
+		log.Error(err)
+		return nil, echo.ErrInternalServerError
+	}
+
+	if err := c.Validate(body); err != nil {
+		return nil, echo.NewHTTPError(http.StatusBadRequest, err)
+	}
+
+	return body, nil
 }
 
 type Error struct {

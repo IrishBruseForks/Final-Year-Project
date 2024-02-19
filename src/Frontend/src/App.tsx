@@ -1,12 +1,12 @@
-import { Box, CssBaseline, ThemeProvider, createTheme } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import { Box, CssBaseline, IconButton, ThemeProvider, createTheme } from "@mui/material";
 import {} from "@mui/material/colors";
-import { SnackbarProvider } from "notistack";
+import { SnackbarKey, SnackbarProvider, useSnackbar } from "notistack";
 import React, { createContext } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { RouterProvider } from "react-router-dom";
 import { AuthProvider } from "./Auth/AuthProvider";
 import { router } from "./router";
-
 export const ErrorContext = createContext<Error | null>(null);
 
 function App() {
@@ -119,11 +119,21 @@ function App() {
     },
   });
 
+  function SnackbarCloseButton({ snackbarKey }: { snackbarKey: SnackbarKey }) {
+    const { closeSnackbar } = useSnackbar();
+
+    return (
+      <IconButton onClick={() => closeSnackbar(snackbarKey)}>
+        <CloseIcon />
+      </IconButton>
+    );
+  }
+
   return (
     <AuthProvider clientId={import.meta.env.VITE_GOOGLE_APP_ID}>
       <React.StrictMode>
         <QueryClientProvider client={queryClient}>
-          <SnackbarProvider maxSnack={3}>
+          <SnackbarProvider maxSnack={3} action={(snackbarKey) => <SnackbarCloseButton snackbarKey={snackbarKey} />}>
             <ThemeProvider theme={theme}>
               <CssBaseline />
               <Box>

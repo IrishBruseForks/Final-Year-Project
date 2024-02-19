@@ -7,5 +7,11 @@ export function GuardedRoute(args: { component: JSX.Element }) {
     // user is not authenticated
     return <Navigate to="/login" />;
   }
+
+  if (user.signup) {
+    // user was signing up
+    return <Navigate to="/signup" />;
+  }
+
   return args.component;
 }

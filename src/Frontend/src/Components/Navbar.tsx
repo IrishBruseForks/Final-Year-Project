@@ -1,21 +1,20 @@
 import { Menu as MenuIcon } from "@mui/icons-material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { AppBar, IconButton, Menu, MenuItem, Toolbar, Typography, useMediaQuery } from "@mui/material";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useAuth } from "../Auth/useAuth";
+import Constants from "../Utility/Constants";
+import { useLocalStorage } from "../Utility/useLocalstorage";
 import LazyImage from "./LazyImage";
 
 function Navbar({ toggleDrawer }: { toggleDrawer: (open: boolean) => void }) {
-  const { user, logout } = useAuth();
+  const { logout } = useAuth();
+  const { value: profilePicture } = useLocalStorage<string>(Constants.ProfilePictureKey, "");
+
   const isMobile = useMediaQuery("(max-width:899px)");
   const [opened, setOpened] = useState<boolean>(false);
-  const [profilePicture, setProfilePicture] = useState<string>();
 
   const anchorRef = useRef<HTMLButtonElement>(null);
-
-  useEffect(() => {
-    setProfilePicture(user?.profilePicture);
-  }, [user?.profilePicture]);
 
   return (
     <>

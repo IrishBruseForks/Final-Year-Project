@@ -87,13 +87,11 @@ export const CreateChannelModal: React.FC<CreateChannelModalProps> = ({ open, ha
     // Extract the user IDs from the selected usernames
     const userIds = selectedUserID;
 
-    const finalChannelPicture = channelPicture;
-
     // Create the channel data object
     const channelData: PostChannelBody = {
       name: finalChannelName,
       users: userIds, // Use user IDs here
-      picture: finalChannelPicture,
+      picture: channelPicture,
     };
 
     if (!user) return;
@@ -137,7 +135,7 @@ export const CreateChannelModal: React.FC<CreateChannelModalProps> = ({ open, ha
         />
 
         {/* Add User selection with checkboxes */}
-        <FormControl fullWidth margin="dense" error={selectError}>
+        <FormControl fullWidth margin="dense" error={selectError} sx={{ width: "70%" }}>
           <InputLabel id="multiple-checkbox-label">Add Users</InputLabel>
           <Select
             labelId="multiple-checkbox-label"

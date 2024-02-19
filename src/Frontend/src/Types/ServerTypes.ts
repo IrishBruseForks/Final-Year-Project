@@ -6,15 +6,19 @@
 export interface OAuth {
   code: string;
 }
+export interface PostSignupBody {
+  username: string;
+}
 export interface PostChannelBody {
   name: string;
-  picture: string;
   users: string[];
+  picture: string;
 }
 export interface OAuthResponse {
+  signup: boolean;
   token: string;
   id: string;
-  profilePicture: string;
+  profilePicture?: string;
 }
 export interface ChannelsResponse {
   id: string;

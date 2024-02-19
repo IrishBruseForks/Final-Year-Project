@@ -4,7 +4,7 @@ Project chatalyst {
 }
 
 Table Users {
-    id char(32) [pk]
+    id varchar(32) [pk]
     username text
     picture text
     isBot boolean

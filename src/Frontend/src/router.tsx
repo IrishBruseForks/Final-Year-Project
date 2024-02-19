@@ -11,6 +11,11 @@ export const router = createBrowserRouter([
     errorElement: <ErrorPage />,
   },
   {
+    path: "/signup",
+    element: <LoginPage signup={true} />,
+    errorElement: <ErrorPage />,
+  },
+  {
     path: "/",
     element: <GuardedRoute component={<MessagesPage />} />,
     errorElement: <ErrorPage />,

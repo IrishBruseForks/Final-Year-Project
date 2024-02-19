@@ -4,16 +4,21 @@ type OAuth struct {
 	Code string `json:"code" validate:"required"`
 }
 
+type PostSignupBody struct {
+	Username string `json:"username"`
+}
+
 type PostChannelBody struct {
 	Name    string   `json:"name" validate:"required"`
-	Picture string   `json:"picture" validate:"required"`
 	Users   []string `json:"users" validate:"required"`
+	Picture string   `json:"picture"`
 }
 
 type OAuthResponse struct {
-	Token          string `json:"token"`
-	Id             string `json:"id"`
-	ProfilePicture string `json:"profilePicture"`
+	Signup         bool    `json:"signup"`
+	Token          string  `json:"token"`
+	Id             string  `json:"id"`
+	ProfilePicture *string `json:"profilePicture"`
 }
 
 type ChannelsResponse struct {
