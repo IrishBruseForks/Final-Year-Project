@@ -1,5 +1,5 @@
 import { GroupsRounded } from "@mui/icons-material";
-import { Box, Divider, ListItemButton, Typography } from "@mui/material";
+import { Box, ListItemButton, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import LazyImage from "./LazyImage";
 
@@ -16,7 +16,7 @@ function ChannelItem({ id, username, lastMessage, profilePic }: Props) {
   return (
     <>
       <ListItemButton
-        sx={{ width: "100%", bgcolor: 'background.paper' }}
+        sx={{ width: "100%", bgcolor: "background.paper" }}
         onClick={() => {
           navigate("/" + id);
         }}
@@ -36,7 +36,6 @@ function ChannelItem({ id, username, lastMessage, profilePic }: Props) {
           </Typography>
         </Box>
       </ListItemButton>
-      <Divider />
     </>
   );
 }

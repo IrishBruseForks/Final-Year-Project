@@ -41,6 +41,7 @@ const FriendsPanel: React.FC = () => {
   return (
     <Stack
       sx={{
+        p: 1,
         bgcolor: "background.paper", // Use a theme color or specific hex color
         minHeight: "0vh", // Adjust based on your layout needs
         // Other styling as needed
@@ -48,7 +49,6 @@ const FriendsPanel: React.FC = () => {
     >
       <Box
         sx={{
-          p: 1,
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
@@ -98,7 +98,6 @@ const FriendsPanel: React.FC = () => {
       <Divider />
       <List
         sx={{
-          pl: 1,
           flex: "1 1 auto",
           overflowY: "auto",
           width: "100%",
