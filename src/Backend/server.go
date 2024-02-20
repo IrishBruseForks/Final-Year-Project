@@ -20,7 +20,7 @@ var InfoLog *log.Logger
 
 var config *oauth2.Config
 var db *sql.DB
-var useSSL bool = false
+var useSSL bool = true
 
 type CustomValidator struct {
 	validator *validator.Validate
@@ -78,16 +78,19 @@ func addRoutes(e *echo.Echo) {
 	e.GET("/channels", getChannels)
 	e.POST("/channels", postChannels)
 	e.PUT("/channels", putChannels)
+	e.DELETE("/channels", deleteChannels)
+	e.GET("/channel", getChannel)
 
 	e.GET("/replies", getReplies)
-	e.GET("/channel", getChannel)
 
 	// Messages Endpoints
 	e.GET("/messages", getMessages)
 	e.POST("/messages", postMessages)
 
 	// Friends Endpoints
+	e.GET("/friend", getFriend)
 	e.GET("/friends", getFriends)
+	e.POST("/friends", postFriends)
 }
 
 func addMiddleware(e *echo.Echo) {

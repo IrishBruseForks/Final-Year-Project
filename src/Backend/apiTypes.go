@@ -4,14 +4,18 @@ type OAuth struct {
 	Code string `json:"code" validate:"required"`
 }
 
-type PostSignupBody struct {
-	Username string `json:"username"`
+type UsernameBody struct {
+	Username string `json:"username" validate:"required"`
 }
 
 type PostChannelBody struct {
 	Name    string   `json:"name" validate:"required"`
 	Users   []string `json:"users" validate:"required"`
 	Picture string   `json:"picture"`
+}
+
+type DeleteChannelBody struct {
+	ChannelId string `json:"channelId" validate:"required"`
 }
 
 type OAuthResponse struct {
@@ -40,7 +44,6 @@ type User struct {
 	Id       string `json:"id" validate:"required"`
 	Username string `json:"username" validate:"required"`
 	Picture  string `json:"picture" validate:"required"`
-	IsBot    *bool  `json:"isBot"`
 }
 
 type PostMessageBody struct {
@@ -50,9 +53,9 @@ type PostMessageBody struct {
 }
 
 type PostMessageResponse struct {
-	ChannelId string  `json:"channelId"`
-	SentBy    string  `json:"sentBy"`
-	SentOn    string  `json:"sentOn"`
-	Content   string  `json:"content"`
-	Image     *string `json:"image"`
+	Id      string  `json:"id"`
+	SentBy  string  `json:"sentBy"`
+	SentOn  string  `json:"sentOn"`
+	Content string  `json:"content"`
+	Image   *string `json:"image"`
 }

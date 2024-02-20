@@ -33,3 +33,4 @@ dist-ssr
 *.db
 *.blend1
 *.pem
+src/Backend/sql/reset.bat

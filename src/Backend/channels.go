@@ -27,7 +27,7 @@ func getChannel(c echo.Context) error {
 
 	for rows.Next() {
 		var user User
-		err := rows.Scan(&user.Id, &user.Username, &user.Picture, &user.IsBot)
+		err := rows.Scan(&user.Id, &user.Username, &user.Picture)
 		if err != nil {
 			log.Error(err)
 			return echo.ErrInternalServerError
@@ -67,7 +67,7 @@ func getChannel(c echo.Context) error {
 }
 
 func getChannels(c echo.Context) error {
-	jwt := getJwt(c)
+	user := getUser(c)
 
 	// TODO return only chats the user is in
 	rows, err := db.Query(`
@@ -80,7 +80,7 @@ func getChannels(c echo.Context) error {
 		DESC LIMIT 1
 	)
 	WHERE uc.Users_id = ?
-	`, jwt.Subject)
+	`, user)
 
 	if err != nil {
 		log.Error(err)
@@ -110,22 +110,15 @@ func getChannels(c echo.Context) error {
 }
 
 func postChannels(c echo.Context) error {
-	jwt := getJwt(c)
-	var err error
-
-	body := new(PostChannelBody)
-	if err = c.Bind(&body); err != nil {
+	body, err := getBody[PostChannelBody](c)
+	if err != nil {
 		log.Error(err)
-		return echo.ErrInternalServerError
+		return err
 	}
-
-	if err = c.Validate(body); err != nil {
-		log.Error(err)
-		return c.JSON(http.StatusBadRequest, NewValidatorError(err))
-	}
+	user := getUser(c)
 
 	// Add the user who created the group to the group
-	body.Users = append(body.Users, jwt.Subject)
+	body.Users = append(body.Users, user)
 
 	id, err := uuid.NewRandom()
 	if err != nil {
@@ -151,7 +144,7 @@ func postChannels(c echo.Context) error {
 
 	for _, user := range body.Users {
 		_, err = db.Exec(addUserToChannelQuery, user, id.String())
-		log.Debug(user, " ", id)
+
 		if err != nil {
 			log.Error(err)
 			return echo.ErrInternalServerError
@@ -163,4 +156,24 @@ func postChannels(c echo.Context) error {
 
 func putChannels(c echo.Context) error {
 	return c.String(http.StatusOK, "putChannels")
+}
+
+func deleteChannels(c echo.Context) error {
+	body, err := getBody[DeleteChannelBody](c)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	user := getUser(c)
+
+	query := `DELETE FROM Users_Channels WHERE Users_id=? AND Channels_id=?`
+
+	_, err = db.Exec(query, user, body.ChannelId)
+
+	if err != nil {
+		log.Error(err)
+		return echo.ErrInternalServerError
+	}
+
+	return c.NoContent(http.StatusOK)
 }

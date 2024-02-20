@@ -28,15 +28,10 @@ type AuthJwt struct {
 }
 
 func postLogin(c echo.Context) error {
-	body := new(OAuth)
-	if err := c.Bind(body); err != nil {
+	body, err := getBody[OAuth](c)
+	if err != nil {
 		log.Error(err)
-		return echo.ErrInternalServerError
-	}
-
-	if err := c.Validate(body); err != nil {
-		log.Error(err)
-		return echo.NewHTTPError(http.StatusBadRequest, err)
+		return err
 	}
 
 	googleJwt, err := exchangeTokenWithGoogle(body)
@@ -136,9 +131,10 @@ func exchangeTokenWithGoogle(u *OAuth) (*GoogleJwt, error) {
 }
 
 func postSignup(c echo.Context) error {
-	jwt := getJwt(c)
+	user := c.Get("user").(*jwt.Token)
+	jwt := user.Claims.(*AuthJwt)
 
-	body, err := getBody[PostSignupBody](c)
+	body, err := getBody[UsernameBody](c)
 	if err != nil {
 		log.Error(err)
 		return err
@@ -150,8 +146,8 @@ func postSignup(c echo.Context) error {
 		return echo.ErrInternalServerError
 	}
 
-	query := `UPDATE Users SET username=? WHERE id=?`
-	_, err = db.Exec(query, body.Username, jwt.Subject)
+	query := `UPDATE Users SET username=?,picture=? WHERE id=?`
+	_, err = db.Exec(query, body.Username, url, jwt.Subject)
 	if err != nil {
 		log.Error(err)
 		return echo.ErrInternalServerError

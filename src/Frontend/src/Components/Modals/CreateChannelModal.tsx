@@ -16,14 +16,13 @@ import {
   SelectChangeEvent,
   TextField,
 } from "@mui/material";
-import axios from "axios";
 import React, { useState } from "react";
 import { useQueryClient } from "react-query";
-import { useAuth } from "../Auth/useAuth";
-import { PostChannelBody, User } from "../Types/ServerTypes";
-import Urls from "../Utility/Urls";
-import { getApiConfig, useApi } from "../Utility/useApi";
-import LazyImage from "./LazyImage";
+import { useAuth } from "../../Auth/useAuth";
+import { PostChannelBody, User } from "../../Types/ServerTypes";
+import Api from "../../Utility/Api";
+import Urls from "../../Utility/Urls";
+import LazyImage from "../LazyImage";
 
 // Constants for styling the Select component
 const ITEM_HEIGHT = 48;
@@ -41,11 +40,11 @@ const MenuProps = {
 type CreateChannelModalProps = {
   open: boolean;
   handleClose: () => void;
-  defaultChannelName: string;
+  users: User[];
 };
 
 // Create the CreateChannelModal component
-export const CreateChannelModal: React.FC<CreateChannelModalProps> = ({ open, handleClose }) => {
+export const CreateChannelModal: React.FC<CreateChannelModalProps> = ({ open, handleClose, users }) => {
   const { user } = useAuth();
 
   // State variables to manage form input and errors
@@ -57,8 +56,6 @@ export const CreateChannelModal: React.FC<CreateChannelModalProps> = ({ open, ha
 
   // Query client for fetching data
   const queryClient = useQueryClient();
-
-  const { data: users } = useApi<User[]>("getFriends", Urls.Friends, "Error getting friends list");
 
   // Handle changes in the selected users
   const handleUserChange = (event: SelectChangeEvent<string[]>) => {
@@ -98,7 +95,7 @@ export const CreateChannelModal: React.FC<CreateChannelModalProps> = ({ open, ha
 
     try {
       // Send a POST request to create the channel
-      await axios.post(import.meta.env.VITE_API_URL + Urls.Channels, channelData, getApiConfig(user));
+      await Api.Post(Urls.Channels, channelData);
       // Invalidate the queries to refresh the channel list
       queryClient.invalidateQueries("getChannels");
       // Close the modal

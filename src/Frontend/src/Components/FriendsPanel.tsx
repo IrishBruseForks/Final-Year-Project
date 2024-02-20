@@ -4,12 +4,12 @@ import SearchIcon from "@mui/icons-material/Search";
 import { Box, Divider, IconButton, InputAdornment, LinearProgress, List, Stack, TextField, Typography } from "@mui/material";
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { ChannelsResponse } from "../Types/ServerTypes";
+import { ChannelsResponse, User } from "../Types/ServerTypes";
 import Urls from "../Utility/Urls";
-import { useRefetchApi } from "../Utility/useApi";
-import { AddFriendModal } from "./AddFriendModal";
+import { useApi, useRefetchApi } from "../Utility/useApi";
 import ChannelItem from "./ChannelItem";
-import { CreateChannelModal } from "./CreateChannelModal";
+import { AddFriendModal } from "./Modals/AddFriendModal";
+import { CreateChannelModal } from "./Modals/CreateChannelModal";
 
 const FriendsPanel: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -18,6 +18,8 @@ const FriendsPanel: React.FC = () => {
 
   // Fetch all channels
   const { data, isLoading, isError } = useRefetchApi<ChannelsResponse[]>("getChannels", Urls.Channels, "Fetching channels", { refetchInterval: 2000 });
+
+  const { data: users } = useApi<User[]>("getFriends", Urls.Friends, "Error getting friends list");
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const searchData = useMemo<ChannelsResponse[] | undefined>(() => data && filterChannels(data), [searchTerm, data]);
@@ -41,10 +43,13 @@ const FriendsPanel: React.FC = () => {
   return (
     <Stack
       sx={{
-        p: 1,
+        p: 1.5,
+        mt: 2,
+        mb: 2,
         bgcolor: "background.paper", // Use a theme color or specific hex color
         minHeight: "0vh", // Adjust based on your layout needs
-        // Other styling as needed
+        borderTopRightRadius: 10,
+        borderBottomRightRadius: 10,
       }}
     >
       <Box
@@ -56,9 +61,10 @@ const FriendsPanel: React.FC = () => {
           backgroundColor: "transparent",
         }}
       >
-        <Box sx={{ borderBottom: 1, display: "flex", alignItems: "center" }}>
+        <Box sx={{ display: "flex", alignItems: "center", height: 50 }}>
           <Typography variant="h5">Channels</Typography>
         </Box>
+        <Divider />
         <Stack direction={"row"}>
           <TextField
             size="small"
@@ -95,7 +101,6 @@ const FriendsPanel: React.FC = () => {
           </Stack>
         </Stack>
       </Box>
-      <Divider />
       <List
         sx={{
           flex: "1 1 auto",
@@ -116,7 +121,7 @@ const FriendsPanel: React.FC = () => {
           </Typography>
         )}
       </List>
-      <CreateChannelModal open={isChannelModalOpen} handleClose={() => setIsChannelModalOpen(false)} defaultChannelName={""} />
+      <CreateChannelModal users={users ?? []} open={isChannelModalOpen} handleClose={() => setIsChannelModalOpen(false)} />
       <AddFriendModal open={isAddFriendModalOpen} handleClose={() => setIsAddFriendModalOpen(false)} />
     </Stack>
   );

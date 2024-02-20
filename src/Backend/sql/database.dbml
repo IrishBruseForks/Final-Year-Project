@@ -7,8 +7,9 @@ Table Users {
     id varchar(32) [pk]
     username text
     picture text
-    isBot boolean
 }
+
+Ref Users_Channels: Users.id <> Channels.id
 
 Table Channels {
     id char(36) [pk]
@@ -16,15 +17,18 @@ Table Channels {
     picture text
 }
 
+Ref: Messages.channelId > Channels.id
+
 Table Messages {
     id char(36) [pk]
+    image text [null]
     channelId char(36)
     sentBy char(32)
     sentOn timestamp
     content text
-    image varchar(255)
 }
 
-// Relations
-Ref Users_Channels: Users.id <> Channels.id
-Ref: Messages.channelId > Channels.id
+Table Friends {
+    user varchar(32) [pk, ref: > Users.id]
+    friend varchar(32) [pk, ref: > Users.id]
+}

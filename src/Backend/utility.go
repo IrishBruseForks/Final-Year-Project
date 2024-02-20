@@ -48,9 +48,9 @@ func getJwtSecretBytes() []byte {
 	return secretBytes
 }
 
-func getJwt(c echo.Context) *AuthJwt {
-	user := c.Get("user").(*jwt.Token)
-	return user.Claims.(*AuthJwt)
+func getUser(c echo.Context) (user string) {
+	jwt := c.Get("user").(*jwt.Token)
+	return jwt.Claims.(*AuthJwt).Subject
 }
 
 func getBody[T any](c echo.Context) (*T, error) {

@@ -6,13 +6,16 @@
 export interface OAuth {
   code: string;
 }
-export interface PostSignupBody {
+export interface UsernameBody {
   username: string;
 }
 export interface PostChannelBody {
   name: string;
   users: string[];
   picture: string;
+}
+export interface DeleteChannelBody {
+  channelId: string;
 }
 export interface OAuthResponse {
   signup: boolean;
@@ -37,7 +40,6 @@ export interface User {
   id: string;
   username: string;
   picture: string;
-  isBot?: boolean;
 }
 export interface PostMessageBody {
   channelId: string;
@@ -45,7 +47,7 @@ export interface PostMessageBody {
   image?: string;
 }
 export interface PostMessageResponse {
-  channelId: string;
+  id: string;
   sentBy: string;
   sentOn: string;
   content: string;

@@ -1,12 +1,11 @@
 -- SQL dump generated using DBML (dbml-lang.org)
 -- Database: MySQL
--- Generated at: 2024-02-19T03:54:21.547Z
+-- Generated at: 2024-02-20T02:45:33.304Z
 
 CREATE TABLE `Users` (
   `id` varchar(32) PRIMARY KEY,
   `username` text,
-  `picture` text,
-  `isBot` boolean
+  `picture` text
 );
 
 CREATE TABLE `Channels` (
@@ -17,11 +16,17 @@ CREATE TABLE `Channels` (
 
 CREATE TABLE `Messages` (
   `id` char(36) PRIMARY KEY,
+  `image` text,
   `channelId` char(36),
   `sentBy` char(32),
   `sentOn` timestamp,
-  `content` text,
-  `image` varchar(255)
+  `content` text
+);
+
+CREATE TABLE `Friends` (
+  `user` varchar(32),
+  `friend` varchar(32),
+  PRIMARY KEY (`user`, `friend`)
 );
 
 CREATE TABLE `Users_Channels` (
@@ -36,3 +41,7 @@ ALTER TABLE `Users_Channels` ADD FOREIGN KEY (`Channels_id`) REFERENCES `Channel
 
 
 ALTER TABLE `Messages` ADD FOREIGN KEY (`channelId`) REFERENCES `Channels` (`id`);
+
+ALTER TABLE `Friends` ADD FOREIGN KEY (`user`) REFERENCES `Users` (`id`);
+
+ALTER TABLE `Friends` ADD FOREIGN KEY (`friend`) REFERENCES `Users` (`id`);

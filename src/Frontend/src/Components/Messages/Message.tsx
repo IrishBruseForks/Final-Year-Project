@@ -1,5 +1,4 @@
-import ReplyIcon from "@mui/icons-material/Reply"; // For reply action
-import { Avatar, Box, IconButton, ListItemButton, Tooltip, Typography, useMediaQuery } from "@mui/material";
+import { Avatar, Box, ListItemButton, Typography, useMediaQuery } from "@mui/material";
 import { format } from "date-fns";
 import { useState } from "react";
 import { ChannelResponse, PostMessageResponse } from "../../Types/ServerTypes";
@@ -8,11 +7,10 @@ import LazyImage from "../LazyImage";
 interface MessageProps {
   message: PostMessageResponse;
   channel?: ChannelResponse;
-  onReply?: (messageId: string, username: string) => void;
 }
 
 // Assuming onReply is passed as a prop for initiating a reply
-function Message({ message, channel, onReply }: MessageProps) {
+function Message({ message, channel }: MessageProps) {
   const isMobile = useMediaQuery("(max-width:600px)");
   const [showActions, setShowActions] = useState(false);
 
@@ -29,13 +27,6 @@ function Message({ message, channel, onReply }: MessageProps) {
   const handleMouseLeave = () => {
     if (!isMobile) {
       setShowActions(false);
-    }
-  };
-
-  const handleReplyClick = () => {
-    if (onReply && channel) {
-      const username = channel.users.find((c) => c.id === message.sentBy)?.username || "";
-      onReply(message.channelId, username);
     }
   };
 
@@ -75,15 +66,15 @@ function Message({ message, channel, onReply }: MessageProps) {
           {format(new Date(message.sentOn), "PPpp")}
         </Typography>
       </Box>
-      <Box sx={{ display: "flex", justifyContent: "flex-end", width: "100%" }}>
+      {/* <Box sx={{ display: "flex", justifyContent: "flex-end", width: "100%" }}>
         {showActions && (
           <Tooltip title="Reply" placement="top">
-            <IconButton onClick={handleReplyClick} size="small">
+            <IconButton size="small">
               <ReplyIcon />
             </IconButton>
           </Tooltip>
         )}
-      </Box>
+      </Box> */}
     </ListItemButton>
   );
 }

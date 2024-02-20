@@ -1,16 +1,17 @@
+import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import GroupsIcon from "@mui/icons-material/Groups"; // Import the icon for group chat
 import SendIcon from "@mui/icons-material/Send";
 import UploadIcon from "@mui/icons-material/Upload";
-import { Box, Button, Chip, Grid, IconButton, InputAdornment, List, Stack, TextField, Typography, useMediaQuery } from "@mui/material";
+import { Box, Button, Chip, Divider, Grid, IconButton, InputAdornment, List, Menu, MenuItem, Stack, TextField, Typography, useMediaQuery } from "@mui/material";
 import axios from "axios"; // Import axios for making HTTP requests
 import { enqueueSnackbar } from "notistack"; // Import enqueueSnackbar for showing snackbars (notifications)
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useMutation, useQueryClient } from "react-query"; // Import from react-query for server state management
 import { useParams } from "react-router-dom"; // Import useParams hook for getting URL parameters
 import { useAuth } from "../../Auth/useAuth"; // Custom hook for authentication
 import { ChannelResponse, PostMessageBody, PostMessageResponse } from "../../Types/ServerTypes"; // Import type definitions
 import Urls from "../../Utility/Urls"; // Utility for managing URLs
-import { getApiConfig, useRefetchApi } from "../../Utility/useApi"; // API config and custom hook for API calls
+import { getApiAuthConfig, useRefetchApi } from "../../Utility/useApi"; // API config and custom hook for API calls
 import LazyImage from "../LazyImage"; // Component for lazy-loading images
 import Message from "./Message"; // Import the Message component for displaying individual messages
 
@@ -37,7 +38,7 @@ function MessageView() {
   const { mutate } = useMutation({
     mutationFn: async (newMessage: PostMessageBody) => {
       // Function to call the API and send the new message
-      await axios.post(import.meta.env.VITE_API_URL + Urls.Messages, newMessage, getApiConfig(user!));
+      await axios.post(import.meta.env.VITE_API_URL + Urls.Messages, newMessage, getApiAuthConfig(user!));
     },
     // Callback function after mutation is settled to refresh messages
     onSettled: async () => {
@@ -134,19 +135,49 @@ function MessageView() {
     </Grid>
   );
 
+  const anchorRef = useRef<HTMLButtonElement>(null);
+  const [opened, setOpened] = useState<boolean>(false);
+
   // Render the component UI
   return (
     <Stack flexBasis={0} flexGrow={1} p={1.5} sx={{ m: { xs: 1, md: 2 } }} borderRadius={1} bgcolor="background.paper">
       {/* Channel Header */}
-      <Box sx={{ borderBottom: 1, display: "flex", alignItems: "center" }}>
+      <Box sx={{ display: "flex", alignItems: "center", height: 50 }}>
         <Typography sx={{ textAlign: "justify" }} variant="h5">
-          <IconButton>
+          <IconButton ref={anchorRef} onClick={() => setOpened(!opened)} sx={{ mr: 1 }}>
             {/* Lazy load the channel picture */}
             <LazyImage src={channel?.picture} title="Profile Picture" sx={{ height: 32, width: 32, borderRadius: "50%" }} placeholder={<GroupsIcon />} />
           </IconButton>
           {channel?.name} {/* Display the channel name */}
+          <Menu
+            id="menu-appbar"
+            anchorEl={anchorRef.current}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "right",
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+            open={opened}
+            onClose={() => {
+              setOpened(false);
+            }}
+          >
+            <MenuItem
+              color="error.main"
+              onClick={() => {
+                console.log("test");
+              }}
+            >
+              Leave Channel&nbsp; <ExitToAppIcon />
+            </MenuItem>
+          </Menu>
         </Typography>
       </Box>
+      <Divider />
       {/* Messages List */}
       <List
         sx={{
@@ -160,7 +191,7 @@ function MessageView() {
       >
         {/* Map over the fetched messages and display them */}
         {messages?.map((message) => (
-          <Message key={message.sentOn} message={message} channel={channel} />
+          <Message key={message.id} message={message} channel={channel} />
         ))}
       </List>
       {/* Smart Replies Section */}

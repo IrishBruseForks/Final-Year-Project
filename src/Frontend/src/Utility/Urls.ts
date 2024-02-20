@@ -1,10 +1,10 @@
-export default class Urls {
-  static Status = "status";
-  static Channels = "channels";
-  static Channel = "channel";
-  static Messages = "messages";
-  static Friends = "friends";
-  static Users = "users";
-  static Login = "auth/google";
-  static Signup = "signup";
-}
+export default {
+  Status: "status",
+  Channels: "channels",
+  Channel: "channel",
+  Messages: "messages",
+  Friends: "friends",
+  Users: "users",
+  Login: "auth/google",
+  Signup: "signup",
+} as const;

@@ -56,6 +56,39 @@ function App() {
           },
         },
       },
+      MuiPaper: {
+        styleOverrides: {
+          root: {
+            backgroundColor: "#454d57",
+            backgroundImage: "none",
+          },
+        },
+      },
+      MuiDivider: {
+        styleOverrides: {
+          root: {
+            borderColor: "#61656b",
+          },
+        },
+      },
+      MuiAlert: {
+        styleOverrides: {
+          root: {
+            backgroundColor: "#454d57",
+            color: "#ffffff",
+            border: "none",
+            "&.MuiAlert-icon": {
+              color: "#ffffff",
+            },
+            "&.MuiAlert-message": {
+              color: "#ffffff",
+            },
+            "&.MuiAlert-action": {
+              color: "#ffffff",
+            },
+          },
+        },
+      },
       MuiCssBaseline: {
         styleOverrides: {
           body: {
@@ -95,7 +128,7 @@ function App() {
       },
       MuiDrawer: {
         styleOverrides: {
-          paper: { backgroundColor: "#272727", backgroundImage: "linear-gradient(rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.0))" },
+          paper: { backgroundColor: "#454d57", backgroundImage: "none" },
         },
       },
     },
@@ -124,7 +157,7 @@ function App() {
 
     return (
       <IconButton onClick={() => closeSnackbar(snackbarKey)}>
-        <CloseIcon />
+        <CloseIcon color="action" />
       </IconButton>
     );
   }

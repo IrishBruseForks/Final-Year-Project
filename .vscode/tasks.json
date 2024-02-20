@@ -50,5 +50,12 @@
       },
       "problemMatcher": "$tsc"
     },
+    {
+      "label": "Reset DB",
+      "type": "shell",
+      "command": "cmd /c call reset.bat",
+      "options": { "cwd": "${workspaceFolder}/src/Backend/sql/" },
+      "problemMatcher": [ ]
+    }
   ]
 }

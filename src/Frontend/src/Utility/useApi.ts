@@ -18,10 +18,11 @@ export function useApi<TQueryFnData = unknown, TError = unknown, TData = TQueryF
     queryKey,
     async (): Promise<TQueryFnData> => {
       if (!user) {
-        return Promise.reject("Error getting user");
+        navigate("/login");
+        return Promise.reject("Unauthorized");
       }
       try {
-        return (await axios.get(import.meta.env.VITE_API_URL + url, getApiConfig(user))).data as TQueryFnData;
+        return (await axios.get(import.meta.env.VITE_API_URL + url, getApiAuthConfig(user))).data as TQueryFnData;
       } catch (error) {
         if (error instanceof AxiosError && error.isAxiosError) {
           // redirect on unauthorrized error
@@ -62,7 +63,7 @@ export function useRefetchApi<TQueryFnData = unknown, TError = unknown, TData = 
   });
 }
 
-export function getApiConfig(user: OAuthResponse): AxiosRequestConfig {
+export function getApiAuthConfig(user: OAuthResponse): AxiosRequestConfig {
   return {
     headers: {
       Authorization: "Bearer " + user.token,

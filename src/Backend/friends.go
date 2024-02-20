@@ -9,9 +9,9 @@ import (
 )
 
 func getFriends(c echo.Context) error {
-	jwt := getJwt(c)
+	user := getUser(c)
 
-	rows, err := db.Query("Select id,username,picture FROM Users;")
+	rows, err := db.Query("Select id,username,picture FROM Users JOIN Friends ON Friends.friend=id WHERE Friends.user=?", user)
 
 	if err != nil {
 		log.Error(err)
@@ -29,7 +29,7 @@ func getFriends(c echo.Context) error {
 			return echo.ErrInternalServerError
 		}
 
-		if channel.Id != jwt.Subject {
+		if channel.Id != user {
 			Friends = append(Friends, channel)
 		}
 	}
@@ -40,4 +40,53 @@ func getFriends(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, Friends)
+}
+
+func postFriends(c echo.Context) error {
+	body, err := getBody[UsernameBody](c)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	user := getUser(c)
+
+	// get the id of the user
+	id, err := getFriendsId(body)
+	if err != nil {
+		log.Error(err)
+		return echo.ErrInternalServerError
+	}
+
+	// add the user to the friend list
+	_, err = db.Exec("INSERT INTO Friends (user,friend) VALUES (?,?);", user, *id)
+	if err != nil {
+		log.Error(err)
+		return echo.ErrInternalServerError
+	}
+
+	return c.NoContent(http.StatusOK)
+}
+
+func getFriendsId(body *UsernameBody) (*string, error) {
+	row := db.QueryRow("SELECT id FROM Users WHERE username = ?;", body.Username)
+
+	var id *string = nil
+	err := row.Scan(&id)
+	return id, err
+}
+
+func getFriend(c echo.Context) error {
+	body, err := getBody[UsernameBody](c)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	_, err = getFriendsId(body)
+	if err != nil {
+		log.Error(err)
+		return echo.ErrInternalServerError
+	}
+
+	return c.NoContent(http.StatusOK)
 }

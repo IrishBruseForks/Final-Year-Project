@@ -1,4 +1,4 @@
-export default class Constants {
-  static UserKey = "user";
-  static ProfilePictureKey = "profilePicture";
-}
+export default {
+  UserKey: "user",
+  ProfilePictureKey: "profilePicture",
+} as const;

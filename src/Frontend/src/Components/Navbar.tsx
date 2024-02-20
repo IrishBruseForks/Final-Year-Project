@@ -17,61 +17,59 @@ function Navbar({ toggleDrawer }: { toggleDrawer: (open: boolean) => void }) {
   const anchorRef = useRef<HTMLButtonElement>(null);
 
   return (
-    <>
-      <AppBar position="relative">
-        <Toolbar>
-          {isMobile && (
-            <IconButton
-              onClick={() => {
-                toggleDrawer(true);
-              }}
-              size="large"
-              edge="start"
-              color="inherit"
-              aria-label="menu"
-              sx={{ mr: 2 }}
-            >
-              <MenuIcon />
-            </IconButton>
-          )}
-          <LazyImage src="./Icon_Big.png" sx={{ height: "3rem" }}></LazyImage>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Chatalyst
-          </Typography>
+    <AppBar position="relative">
+      <Toolbar>
+        {isMobile && (
           <IconButton
-            onClick={() => setOpened(true)}
+            onClick={() => {
+              toggleDrawer(true);
+            }}
             size="large"
-            aria-label="account of current user"
-            aria-controls="menu-appbar"
-            aria-haspopup="true"
+            edge="start"
             color="inherit"
-            ref={anchorRef}
+            aria-label="menu"
+            sx={{ mr: 2 }}
           >
-            <LazyImage src={profilePicture} placeholder={<AccountCircleIcon />} title="Profile Picture" sx={{ height: 32, width: 32 }} />
+            <MenuIcon />
           </IconButton>
-          <Menu
-            id="menu-appbar"
-            anchorEl={anchorRef.current}
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "right",
-            }}
-            keepMounted
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
-            open={opened}
-            onClose={() => {
-              setOpened(false);
-            }}
-          >
-            <MenuItem>Profile</MenuItem>
-            <MenuItem onClick={logout}>Logout</MenuItem>
-          </Menu>
-        </Toolbar>
-      </AppBar>
-    </>
+        )}
+        <LazyImage src="./Icon_Big.png" sx={{ height: "3rem", pr: 3 }}></LazyImage>
+        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          Chatalyst
+        </Typography>
+        <IconButton
+          onClick={() => setOpened(true)}
+          size="large"
+          aria-label="account of current user"
+          aria-controls="menu-appbar"
+          aria-haspopup="true"
+          color="inherit"
+          ref={anchorRef}
+        >
+          <LazyImage src={profilePicture} placeholder={<AccountCircleIcon />} title="Profile Picture" sx={{ height: 32, width: 32 }} />
+        </IconButton>
+        <Menu
+          id="menu-appbar"
+          anchorEl={anchorRef.current}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "right",
+          }}
+          keepMounted
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "right",
+          }}
+          open={opened}
+          onClose={() => {
+            setOpened(false);
+          }}
+        >
+          <MenuItem>Profile</MenuItem>
+          <MenuItem onClick={logout}>Logout</MenuItem>
+        </Menu>
+      </Toolbar>
+    </AppBar>
   );
 }
 

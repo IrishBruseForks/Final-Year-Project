@@ -3,7 +3,7 @@ import { enqueueSnackbar } from "notistack";
 import { OAuth, OAuthResponse } from "../Types/ServerTypes";
 import Constants from "../Utility/Constants";
 import Urls from "../Utility/Urls";
-import { getApiConfig } from "../Utility/useApi";
+import { getApiAuthConfig } from "../Utility/useApi";
 import { useLocalStorage } from "../Utility/useLocalstorage";
 
 export function useAuth() {
@@ -19,7 +19,7 @@ export function useAuth() {
     },
     async signup(username: string): Promise<void> {
       try {
-        let resp = await axios.post<OAuthResponse>(import.meta.env.VITE_API_URL + Urls.Signup, { username: username }, getApiConfig(user!));
+        let resp = await axios.post<OAuthResponse>(import.meta.env.VITE_API_URL + Urls.Signup, { username: username }, getApiAuthConfig(user!));
         setProfilePicture(resp.data.profilePicture!);
         setValue({ ...resp.data, token: user.token });
       } catch (error) {

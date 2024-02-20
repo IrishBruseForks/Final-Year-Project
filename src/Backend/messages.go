@@ -18,7 +18,7 @@ func getMessages(c echo.Context) error {
 
 	query := `
 	SELECT
-		channelId,sentBy,sentOn,content,image
+		id,sentBy,sentOn,content,image
 	FROM
 		Messages
 	WHERE
@@ -36,7 +36,7 @@ func getMessages(c echo.Context) error {
 
 	for rows.Next() {
 		var msg PostMessageResponse
-		err := rows.Scan(&msg.ChannelId, &msg.SentBy, &msg.SentOn, &msg.Content, &msg.Image)
+		err := rows.Scan(&msg.Id, &msg.SentBy, &msg.SentOn, &msg.Content, &msg.Image)
 		if err != nil {
 			log.Error(err)
 			return echo.ErrInternalServerError
@@ -48,18 +48,12 @@ func getMessages(c echo.Context) error {
 }
 
 func postMessages(c echo.Context) error {
-	jwt := getJwt(c)
-
-	body := new(PostMessageBody)
-
-	if err := c.Bind(&body); err != nil {
+	body, err := getBody[PostMessageBody](c)
+	if err != nil {
 		log.Error(err)
-		return echo.ErrInternalServerError
+		return err
 	}
-
-	if err := c.Validate(body); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err)
-	}
+	user := getUser(c)
 
 	uuid, err := uuid.NewRandom()
 	if err != nil {
@@ -86,7 +80,7 @@ func postMessages(c echo.Context) error {
 		(?,?,?,NOW(),?,?);
 	`
 
-	_, err = db.Exec(query, uuid, body.ChannelId, jwt.Subject, body.Content, imageUrl)
+	_, err = db.Exec(query, uuid, body.ChannelId, user, body.Content, imageUrl)
 	if err != nil {
 		log.Error(err)
 		return echo.ErrInternalServerError
