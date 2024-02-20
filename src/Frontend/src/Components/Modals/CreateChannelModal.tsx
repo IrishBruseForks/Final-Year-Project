@@ -62,6 +62,16 @@ export const CreateChannelModal: React.FC<CreateChannelModalProps> = ({ open, ha
     setSelectedUserID(event.target.value as string[]);
   };
 
+  function close() {
+    setTimeout(() => {
+      setChannelName("");
+      setChannelPicture("");
+      setSelectedUserID([]);
+      setSelectError(false);
+    }, 100);
+    handleClose();
+  }
+
   // Handle form submission
   const handleSubmit = async () => {
     if (users === undefined) {
@@ -99,14 +109,14 @@ export const CreateChannelModal: React.FC<CreateChannelModalProps> = ({ open, ha
       // Invalidate the queries to refresh the channel list
       queryClient.invalidateQueries("getChannels");
       // Close the modal
-      handleClose();
+      close();
     } catch (error) {
       console.error("Error creating channel: ", error);
     }
   };
 
   return (
-    <Dialog open={open} onClose={handleClose}>
+    <Dialog open={open} onClose={close}>
       <DialogTitle>Create a New Channel</DialogTitle>
       <DialogContent>
         {/* Channel Name input */}
@@ -163,7 +173,7 @@ export const CreateChannelModal: React.FC<CreateChannelModalProps> = ({ open, ha
 
       <DialogActions>
         {/* Cancel button */}
-        <Button onClick={handleClose}>Cancel</Button>
+        <Button onClick={close}>Cancel</Button>
         {/* Create button */}
         <Button onClick={handleSubmit} color="primary" variant="contained">
           Create

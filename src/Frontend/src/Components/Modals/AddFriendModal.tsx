@@ -40,7 +40,9 @@ export const AddFriendModal: React.FC<AddFriendModalProps> = ({ open, handleClos
   }
 
   const close = () => {
-    setUsername(null);
+    setTimeout(() => {
+      setUsername(null);
+    }, 150);
     handleClose();
   };
 
