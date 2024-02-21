@@ -48,7 +48,7 @@ go run .
 
 ## LLM
 
-To run the llm for inteligent smart replies you will need to install https://github.com/oobabooga/text-generation-webui  
+To run the llm for intelligent smart replies you will need to install https://github.com/oobabooga/text-generation-webui  
 The instructions are in the repo.
 
 The model we are using for development is this one
