@@ -18,38 +18,36 @@ Do not reply with anything other than the 3 choices.
 """
 
 chat = """
-Conor: Did you hear about the crash?
-Ethan: No what happened? Just got off work so I didn't have my phone.
-Ryan: Same here. Lads in College said something about an accident alright.
-Conor: Not good. Is there much traffic cause of it?
+Ryan: Hello
+Ethan: Hi
+Ryan: How are you?
+Ethan: I'm doing well
+Ryan: What are you doing today?
 """
 
-responseSeed = "Sure here are the 3 replies:\n\n1."
+responseSeed = "Sure here are the 3 replies only:\n\n1."
 
 prompt = (
     f"### Instruction:{instruction}\n### Input:{chat}\n### Response:\n{responseSeed}"
 )
 
+seed = random.randrange(500)
 
+print("seed: " + str(seed))
 print(prompt, end="")
+
 
 data = {
     "prompt": prompt,
     "max_tokens": 150,
     "temperature": 1,
     "top_p": 0.9,
-    "seed": random.randrange(500),
-    "stream": True,
+    "seed": 178,
+    "stream": False,
 }
 
-stream_response = requests.post(
-    url, headers=headers, json=data, verify=False, stream=True
-)
-client = sseclient.SSEClient(stream_response)
+stream_response = requests.post(url, headers=headers, json=data)
 
-# print(data)
+print(json.loads(stream_response.text)["choices"][0]["text"])
 
-for event in client.events():
-    payload = json.loads(event.data)
-    chunk = payload["choices"][0]["text"]
-    print(chunk, end="")
+print(data)
