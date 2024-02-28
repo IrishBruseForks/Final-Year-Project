@@ -1,4 +1,5 @@
 import AddIcon from "@mui/icons-material/Add";
+import ContactsIcon from "@mui/icons-material/Contacts";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import SearchIcon from "@mui/icons-material/Search";
 import { Box, Divider, IconButton, InputAdornment, LinearProgress, List, Stack, TextField, Typography } from "@mui/material";
@@ -10,6 +11,7 @@ import { useApi, useRefetchApi } from "../Utility/useApi";
 import ChannelItem from "./ChannelItem";
 import { AddFriendModal } from "./Modals/AddFriendModal";
 import { CreateChannelModal } from "./Modals/CreateChannelModal";
+import ContactsModal from './Modals/ContactsModal';
 
 const FriendsPanel: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -26,6 +28,7 @@ const FriendsPanel: React.FC = () => {
 
   const [isChannelModalOpen, setIsChannelModalOpen] = useState<boolean>(false);
   const [isAddFriendModalOpen, setIsAddFriendModalOpen] = useState<boolean>(false);
+  const [isContactsModalOpen, setIsContactsModalOpen] = useState<boolean>(false);
 
   function filterChannels(value: ChannelsResponse[]): ChannelsResponse[] {
     return value?.filter((channel) => channel.name.toLowerCase().includes(searchTerm.toLowerCase()));
@@ -84,6 +87,13 @@ const FriendsPanel: React.FC = () => {
             }}
           />
           <Stack direction={"row"} sx={{ height: "min-content", pt: 1, pl: 1 }}>
+          <IconButton
+                onClick={() => {
+                  setIsContactsModalOpen(true);
+                }}
+              >
+                <ContactsIcon />
+              </IconButton>
             <IconButton
               onClick={() => {
                 setIsAddFriendModalOpen(true);
@@ -123,6 +133,7 @@ const FriendsPanel: React.FC = () => {
       </List>
       <CreateChannelModal users={users ?? []} open={isChannelModalOpen} handleClose={() => setIsChannelModalOpen(false)} />
       <AddFriendModal open={isAddFriendModalOpen} handleClose={() => setIsAddFriendModalOpen(false)} />
+      <ContactsModal users={users ?? []} open={isContactsModalOpen} onClose={() => setIsContactsModalOpen(false)} />
     </Stack>
   );
 };
