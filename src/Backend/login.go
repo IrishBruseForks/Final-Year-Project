@@ -46,12 +46,13 @@ func postLogin(c echo.Context) error {
 		return echo.ErrInternalServerError
 	}
 
-	row := db.QueryRow(`SELECT id,username FROM Users WHERE id = ?`, googleJwt.Subject)
+	row := db.QueryRow(`SELECT id,username,picture FROM Users WHERE id = ?`, googleJwt.Subject)
 
 	var id *string = nil
 	var username *string = nil
+	var profilePicture *string = nil
 
-	err = row.Scan(&id, &username)
+	err = row.Scan(&id, &username, &profilePicture)
 
 	if err != nil {
 		query := `INSERT INTO Users (id,picture) VALUES (?,?)`
@@ -74,16 +75,18 @@ func postLogin(c echo.Context) error {
 		// The user previously tried signing up but canceled or an error occured
 		// they are in the db but have not picked a username
 		return c.JSON(http.StatusOK, OAuthResponse{
-			Signup: true,
-			Token:  tokenString,
-			Id:     googleJwt.Subject,
+			Signup:         true,
+			Token:          tokenString,
+			Id:             googleJwt.Subject,
+			ProfilePicture: profilePicture,
 		})
 	}
 
 	return c.JSON(http.StatusOK, OAuthResponse{
-		Signup: false,
-		Token:  tokenString,
-		Id:     googleJwt.Subject,
+		Signup:         false,
+		Token:          tokenString,
+		Id:             googleJwt.Subject,
+		ProfilePicture: profilePicture,
 	})
 }
 

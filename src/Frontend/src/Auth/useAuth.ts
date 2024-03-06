@@ -14,6 +14,7 @@ export function useAuth() {
     user,
     async login(token: OAuth): Promise<OAuthResponse> {
       const resp = await axios.post<OAuthResponse>(import.meta.env.VITE_API_URL + Urls.Login, { code: token.code });
+      setProfilePicture(resp.data.profilePicture!);
       setValue(resp.data as OAuthResponse);
       return resp.data;
     },
