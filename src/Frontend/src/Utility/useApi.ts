@@ -11,7 +11,7 @@ export function useApi<TQueryFnData = unknown, TError = unknown, TData = TQueryF
   errorMessage: string,
   options?: Omit<UseQueryOptions<TQueryFnData, TError, TData, TQueryKey>, "queryKey" | "queryFn">
 ): UseQueryResult<TData, TError> {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   let navigate = useNavigate();
 
   return useQuery<TQueryFnData, TError, TData, TQueryKey>(
@@ -28,6 +28,7 @@ export function useApi<TQueryFnData = unknown, TError = unknown, TData = TQueryF
           // redirect on unauthorrized error
           if (error.response?.status === 401) {
             navigate("/login");
+            logout();
             return Promise.reject("Unauthorized");
           }
 
