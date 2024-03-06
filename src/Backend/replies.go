@@ -24,9 +24,9 @@ Do not reply with anything other than the 3 choices.
 %s
 
 ### Response:
-Sure here are the 3 replies:
+Sure here are the 3 replies only:
 
-1. `
+1.`
 
 func getReplies(c echo.Context) error {
 	// jwt := c.Get("user").(*jwt.Token)
@@ -39,7 +39,6 @@ func getReplies(c echo.Context) error {
 		"Ryan: How are you?",
 		"Ethan: I'm doing well",
 		"Ryan: What are you doing today?",
-		"Ethan: ",
 	}
 
 	seed := rand.Intn(512)
@@ -51,7 +50,7 @@ func getReplies(c echo.Context) error {
 		Prompt:      fmt.Sprintf(prompt, username, chat),
 		MaxTokens:   150,
 		Temperature: 1,
-		TopP:        0.9,
+		TopP:        0.8,
 		Seed:        seed,
 		Stream:      false,
 	}

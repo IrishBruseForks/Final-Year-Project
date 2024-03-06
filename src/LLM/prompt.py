@@ -9,27 +9,27 @@ headers = {"Content-Type": "application/json"}
 
 name = "Ethan"
 
-instruction = f"""
-You are an AI assistant that provides civil suggestions for replies to text messages between real humans.
-Do not reply with code, emojis, quotes, colons, or other special characters.
-Input is the conversation with their names for reference.
-Reply as if you were {name}.
-Do not reply with anything other than the 3 choices.
-"""
-
-chat = """
-Ryan: Hello
+chat = """Ryan: Hello
 Ethan: Hi
 Ryan: How are you?
 Ethan: I'm doing well
 Ryan: What are you doing today?
 """
 
-responseSeed = "Sure here are the 3 replies only:\n\n1."
 
-prompt = (
-    f"### Instruction:{instruction}\n### Input:{chat}\n### Response:\n{responseSeed}"
-)
+prompt = f"""### Instruction:
+You are an AI assistant that provides civil suggestions for replies to text messages between real humans.
+Do not reply with code, emojis, quotes, colons, or other special characters.
+The Input section is the conversation with their names for reference use this as reference in your reply.
+Reply as if you were {name}.
+Do not reply with anything other than the 3 choices.
+
+### Input:
+{chat}
+### Response:
+Sure here are the 3 replies only:
+
+1."""
 
 seed = random.randrange(500)
 
@@ -41,8 +41,8 @@ data = {
     "prompt": prompt,
     "max_tokens": 150,
     "temperature": 1,
-    "top_p": 0.9,
-    "seed": 178,
+    "top_p": 0.95,
+    "seed": seed,
     "stream": False,
 }
 
