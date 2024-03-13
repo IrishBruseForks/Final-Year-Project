@@ -1,6 +1,6 @@
 import { GroupsRounded } from "@mui/icons-material";
 import { Box, ListItemButton, Typography } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import LazyImage from "./LazyImage";
 
 type Props = {
@@ -12,11 +12,13 @@ type Props = {
 
 function ChannelItem({ id, username, lastMessage, profilePic }: Props) {
   const navigate = useNavigate();
+  var { uuid } = useParams<{ uuid: string }>();
 
   return (
     <>
       <ListItemButton
         sx={{ width: "100%", bgcolor: "background.paper" }}
+        selected={id === uuid}
         onClick={() => {
           navigate("/" + id);
         }}

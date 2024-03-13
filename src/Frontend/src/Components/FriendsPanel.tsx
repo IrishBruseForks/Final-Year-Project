@@ -10,8 +10,8 @@ import Urls from "../Utility/Urls";
 import { useApi, useRefetchApi } from "../Utility/useApi";
 import ChannelItem from "./ChannelItem";
 import { AddFriendModal } from "./Modals/AddFriendModal";
+import ContactsModal from "./Modals/ContactsModal";
 import { CreateChannelModal } from "./Modals/CreateChannelModal";
-import ContactsModal from './Modals/ContactsModal';
 
 const FriendsPanel: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -46,7 +46,6 @@ const FriendsPanel: React.FC = () => {
   return (
     <Stack
       sx={{
-        p: 1.5,
         mt: 2,
         mb: 2,
         bgcolor: "background.paper", // Use a theme color or specific hex color
@@ -57,6 +56,7 @@ const FriendsPanel: React.FC = () => {
     >
       <Box
         sx={{
+          m: 1,
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
@@ -87,13 +87,13 @@ const FriendsPanel: React.FC = () => {
             }}
           />
           <Stack direction={"row"} sx={{ height: "min-content", pt: 1, pl: 1 }}>
-          <IconButton
-                onClick={() => {
-                  setIsContactsModalOpen(true);
-                }}
-              >
-                <ContactsIcon />
-              </IconButton>
+            <IconButton
+              onClick={() => {
+                setIsContactsModalOpen(true);
+              }}
+            >
+              <ContactsIcon />
+            </IconButton>
             <IconButton
               onClick={() => {
                 setIsAddFriendModalOpen(true);
