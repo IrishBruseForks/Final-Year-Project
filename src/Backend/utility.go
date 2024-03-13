@@ -5,25 +5,12 @@ import (
 	"fmt"
 	"net/http"
 	"os"
-	"strconv"
 
 	"github.com/go-playground/validator"
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
 )
-
-func loadEnv() {
-	_ = godotenv.Load()
-
-	sslString, found := os.LookupEnv("SSL")
-	val, err := strconv.ParseBool(sslString)
-
-	if found && err == nil {
-		useSSL = val
-	}
-}
 
 type GoogleJwt struct {
 	Name                 string `json:"name"`
@@ -32,12 +19,12 @@ type GoogleJwt struct {
 }
 
 func getJwtSecretBytes() []byte {
-	jwtSecret, found := os.LookupEnv("JwtSecret")
+	secret, found := os.LookupEnv("JWT_SECRET")
 	if !found {
-		panic(".env missing JwtSecret")
+		panic("JWT_SECRET missing in env var")
 	}
 
-	secretBytes, err := base64.StdEncoding.DecodeString(jwtSecret)
+	secretBytes, err := base64.StdEncoding.DecodeString(secret)
 	if err != nil {
 		panic(err)
 	}

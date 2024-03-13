@@ -8,6 +8,7 @@ import (
 	"github.com/go-playground/validator"
 	_ "github.com/go-sql-driver/mysql"
 	jwt "github.com/golang-jwt/jwt/v5"
+	"github.com/joho/godotenv"
 	echojwt "github.com/labstack/echo-jwt/v4"
 	echo "github.com/labstack/echo/v4"
 	middleware "github.com/labstack/echo/v4/middleware"
@@ -20,7 +21,6 @@ var InfoLog *log.Logger
 
 var config *oauth2.Config
 var db *sql.DB
-var useSSL bool = true
 
 type CustomValidator struct {
 	validator *validator.Validate
@@ -33,7 +33,7 @@ func main() {
 	log.SetHeader("${short_file}:${line}")
 	log.EnableColor()
 	log.SetLevel(log.DEBUG)
-	loadEnv()
+	_ = godotenv.Load()
 
 	defer db.Close()
 	initDatabase()
@@ -43,18 +43,13 @@ func main() {
 	addMiddleware(e)
 	addRoutes(e)
 
-	host, found := os.LookupEnv("Host")
+	port, found := os.LookupEnv("PORT")
 	if !found {
-		panic("Host missing in .env")
+		panic("PORT missing in env variables")
 	}
 
-	if useSSL {
-		e.Logger.Fatal(e.StartTLS(host, "./certs/certificate.crt", "./certs/private.key"))
-		e.Close()
-	} else {
-		e.Logger.Fatal(e.Start(host))
-		e.Close()
-	}
+	e.Logger.Fatal(e.Start(":" + port))
+	e.Close()
 }
 
 func (cv *CustomValidator) Validate(i interface{}) error {
@@ -99,10 +94,6 @@ func addMiddleware(e *echo.Echo) {
 		Skipper: Skipper,
 	}))
 
-	if useSSL {
-		e.Use(middleware.HTTPSRedirect())
-	}
-
 	e.Use(middleware.Recover())
 	e.Use(middleware.CORS())
 
@@ -122,19 +113,19 @@ func addMiddleware(e *echo.Echo) {
 }
 
 func initOauth() {
-	clientID, found := os.LookupEnv("ClientID")
+	id, found := os.LookupEnv("GOOGLE_ID")
 	if !found {
-		panic("ClientID missing in .env")
+		panic("GOOGLE_ID missing in env variables")
 	}
 
-	clientSecret, found := os.LookupEnv("ClientSecret")
+	secret, found := os.LookupEnv("GOOGLE_SECRET")
 	if !found {
-		panic("ClientSecret missing in .env")
+		panic("GOOGLE_SECRET missing in env variables")
 	}
 
 	config = &oauth2.Config{
-		ClientID:     clientID,
-		ClientSecret: clientSecret,
+		ClientID:     id,
+		ClientSecret: secret,
 		Scopes: []string{
 			"https://www.googleapis.com/auth/userinfo.email",
 			"https://www.googleapis.com/auth/userinfo.profile",
@@ -147,12 +138,12 @@ func initOauth() {
 func initDatabase() {
 	var err error
 
-	sqlUrl, found := os.LookupEnv("SqlUrl")
+	url, found := os.LookupEnv("SQL_URL")
 	if !found {
-		panic("SqlUrl missing in .env")
+		panic("SQL_URL missing in env variables")
 	}
 
-	db, err = sql.Open("mysql", sqlUrl)
+	db, err = sql.Open("mysql", url)
 	if err != nil {
 		log.Error(err)
 	}
