@@ -15,10 +15,7 @@ import (
 )
 
 func loadEnv() {
-	err := godotenv.Load()
-	if err != nil {
-		panic(err)
-	}
+	_ = godotenv.Load()
 
 	sslString, found := os.LookupEnv("SSL")
 	val, err := strconv.ParseBool(sslString)
