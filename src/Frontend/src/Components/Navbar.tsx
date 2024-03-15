@@ -1,6 +1,5 @@
 import { Menu as MenuIcon } from "@mui/icons-material";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import { AppBar, IconButton, Menu, MenuItem, Toolbar, Typography, useMediaQuery } from "@mui/material";
+import { AppBar, Avatar, IconButton, Menu, MenuItem, Toolbar, Typography, useMediaQuery } from "@mui/material";
 import { useRef, useState } from "react";
 import { useAuth } from "../Auth/useAuth";
 import Constants from "../Utility/Constants";
@@ -46,7 +45,7 @@ function Navbar({ toggleDrawer }: { toggleDrawer: (open: boolean) => void }) {
           color="inherit"
           ref={anchorRef}
         >
-          <LazyImage src={profilePicture} placeholder={<AccountCircleIcon />} title="Profile Picture" sx={{ height: 32, width: 32 }} />
+          <Avatar src={profilePicture} title="Profile Picture" sx={{ bgcolor: "background.default", borderRadius: "50%", height: 32, width: 32 }} />
         </IconButton>
         <Menu
           id="menu-appbar"

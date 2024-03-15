@@ -1,6 +1,6 @@
 -- SQL dump generated using DBML (dbml-lang.org)
 -- Database: MySQL
--- Generated at: 2024-02-20T02:45:33.304Z
+-- Generated at: 2024-03-14T21:11:03.222Z
 
 CREATE TABLE `Users` (
   `id` varchar(32) PRIMARY KEY,

@@ -1,4 +1,5 @@
-import { AccountCircle } from "@mui/icons-material";
+import { AccountCircle, GroupsRounded } from "@mui/icons-material";
+import UploadIcon from "@mui/icons-material/Upload";
 import {
   Button,
   Checkbox,
@@ -22,6 +23,7 @@ import { useAuth } from "../../Auth/useAuth";
 import { PostChannelBody, User } from "../../Types/ServerTypes";
 import Api from "../../Utility/Api";
 import Urls from "../../Utility/Urls";
+import ImageUpload from "../ImageUpload";
 import LazyImage from "../LazyImage";
 
 // Constants for styling the Select component
@@ -49,7 +51,7 @@ export const CreateChannelModal: React.FC<CreateChannelModalProps> = ({ open, ha
 
   // State variables to manage form input and errors
   const [channelName, setChannelName] = useState<string>("");
-  const [channelPicture, setChannelPicture] = useState<string>("");
+  const [channelPicture, setChannelPicture] = useState<string | undefined>();
   const [selectedUserID, setSelectedUserID] = useState<string[]>([]);
 
   const [selectError, setSelectError] = useState<boolean>(false); // State to track the select error
@@ -130,19 +132,8 @@ export const CreateChannelModal: React.FC<CreateChannelModalProps> = ({ open, ha
           onChange={(e) => setChannelName(e.target.value)}
         />
 
-        {/* Channel Picture URL input */}
-        <TextField
-          margin="dense"
-          label="Channel Picture URL"
-          fullWidth
-          variant="outlined"
-          value={channelPicture}
-          onChange={(e) => setChannelPicture(e.target.value)}
-          placeholder="Enter a picture URL or leave blank for default"
-        />
-
         {/* Add User selection with checkboxes */}
-        <FormControl fullWidth margin="dense" error={selectError} sx={{ width: "70%" }}>
+        <FormControl fullWidth margin="dense" error={selectError}>
           <InputLabel id="multiple-checkbox-label">Add Users</InputLabel>
           <Select
             labelId="multiple-checkbox-label"
@@ -168,6 +159,23 @@ export const CreateChannelModal: React.FC<CreateChannelModalProps> = ({ open, ha
             ))}
           </Select>
           {selectError && <FormHelperText>Please select at least one user.</FormHelperText>}
+        </FormControl>
+
+        {/* Channel Picture URL input */}
+        <FormControl fullWidth error={selectError} sx={{ mt: 1, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+          <Button fullWidth id="file-upload" variant="outlined" component="label" sx={{ borderRadius: 1, mr: 2, p: 2 }}>
+            <UploadIcon />
+            <ImageUpload
+              onChange={(image) => {
+                setChannelPicture(image);
+              }}
+            />
+          </Button>
+          <LazyImage
+            src={"data:image/png;base64, " + channelPicture}
+            sx={{ height: 58, width: 58, backgroundColor: "background.paper", borderRadius: 1, p: 1, mr: 2 }}
+            placeholder={<GroupsRounded />}
+          />
         </FormControl>
       </DialogContent>
 

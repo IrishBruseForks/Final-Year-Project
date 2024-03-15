@@ -11,7 +11,7 @@ import (
 func getFriends(c echo.Context) error {
 	user := getUser(c)
 
-	rows, err := db.Query("Select id,username,picture FROM Users JOIN Friends ON Friends.friend=id WHERE Friends.user=?", user)
+	rows, err := db.Query("SELECT id,username,picture FROM Users JOIN Friends ON Friends.friend=id WHERE Friends.user=?", user)
 
 	if err != nil {
 		log.Error(err)
@@ -53,22 +53,24 @@ func postFriends(c echo.Context) error {
 	// get the id of the user
 	id, err := getFriendsId(body)
 	if err != nil {
-		log.Error(err)
-		return echo.ErrInternalServerError
+		return echo.NewHTTPError(http.StatusInternalServerError, "User Not Found")
+	}
+
+	if *id == user {
+		return echo.NewHTTPError(http.StatusInternalServerError, "Cannot add yourself as a friend")
 	}
 
 	// add the user to the friend list
 	_, err = db.Exec("INSERT INTO Friends (user,friend) VALUES (?,?);", user, *id)
 	if err != nil {
-		log.Error(err)
-		return echo.ErrInternalServerError
+		return echo.NewHTTPError(http.StatusInternalServerError, "Friend Already Added")
 	}
 
 	return c.NoContent(http.StatusOK)
 }
 
 func getFriendsId(body *UsernameBody) (*string, error) {
-	row := db.QueryRow("SELECT id FROM Users WHERE username = ?;", body.Username)
+	row := db.QueryRow("SELECT id FROM Users WHERE username=?;", body.Username)
 
 	var id *string = nil
 	err := row.Scan(&id)

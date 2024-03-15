@@ -29,6 +29,8 @@ Table Messages {
 }
 
 Table Friends {
-    user varchar(32) [pk, ref: > Users.id]
-    friend varchar(32) [pk, ref: > Users.id]
+    user varchar(32) [pk]
+    friend varchar(32) [pk]
 }
+Ref: Friends.user > Users.id [delete: cascade]
+Ref: Friends.friend > Users.id [delete: cascade]

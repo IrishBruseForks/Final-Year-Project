@@ -5,11 +5,11 @@ import Urls from "./Urls";
 
 type URL = (typeof Urls)[keyof typeof Urls];
 
-async function Post<D = any, T = any>(url: URL, data: D): Promise<T> {
+async function Post<D = any, T = unknown>(url: URL, data: D): Promise<T> {
   return (await axios.post<T>(import.meta.env.VITE_API_URL + url, data, config())).data;
 }
 
-async function Delete<T = any>(url: URL): Promise<T> {
+async function Delete<T = unknown>(url: URL): Promise<T> {
   return (await axios.delete<T>(import.meta.env.VITE_API_URL + url, config())).data;
 }
 

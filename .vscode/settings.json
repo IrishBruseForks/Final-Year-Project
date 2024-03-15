@@ -20,11 +20,6 @@
     "autoClearConsole": false,
     "commands": [
       {
-        "cmd": "dbml2sql ${workspaceRoot}/src/Backend/sql/database.dbml --mysql -o ${workspaceRoot}/src/Backend/sql/database.sql",
-        "isAsync": true,
-        "match": "database\\.dbml"
-      },
-      {
         "cmd": "cd ${workspaceRoot}/src/Backend/ & tygo generate",
         "isAsync": true,
         "match": "apiTypes\\.go"

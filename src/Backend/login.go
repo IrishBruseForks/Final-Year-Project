@@ -143,7 +143,7 @@ func postSignup(c echo.Context) error {
 		return err
 	}
 
-	url, err := UploadImage(&jwt.Picture)
+	url, err := UploadImage(jwt.Picture)
 	if err != nil {
 		log.Error(err)
 		return echo.ErrInternalServerError

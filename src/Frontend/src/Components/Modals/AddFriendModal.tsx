@@ -1,7 +1,7 @@
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle, InputAdornment, TextField } from "@mui/material";
-import { enqueueSnackbar } from "notistack";
+import { AxiosError } from "axios";
 import React, { useMemo, useState } from "react";
 import { useQueryClient } from "react-query";
 import { UsernameBody } from "../../Types/ServerTypes";
@@ -22,6 +22,7 @@ interface AddFriendModalProps {
 
 export const AddFriendModal: React.FC<AddFriendModalProps> = ({ open, handleClose }) => {
   const [username, setUsername] = useState<string | null>(null);
+  const [networkError, setNetworkError] = useState<string | null>(null);
   const queryClient = useQueryClient();
   async function handleSubmit() {
     if (!username) {
@@ -32,10 +33,12 @@ export const AddFriendModal: React.FC<AddFriendModalProps> = ({ open, handleClos
       await Api.Post<UsernameBody>(Urls.Friends, { username: username });
       handleClose();
       setUsername(null);
-      console.log(queryClient.getQueryCache().getAll());
-      queryClient.invalidateQueries(["getFriends"]);
+      queryClient.invalidateQueries("getFriends");
     } catch (error) {
-      enqueueSnackbar("Error adding friend: " + error, { variant: "error" });
+      if (error instanceof AxiosError) {
+        let networkError = error.response?.data.message;
+        setNetworkError(networkError);
+      }
     }
   }
 
@@ -63,10 +66,8 @@ export const AddFriendModal: React.FC<AddFriendModalProps> = ({ open, handleClos
       return "Username contains invalid character.";
     }
 
-    // TODO: check if username is in db
-
-    return null;
-  }, [username]);
+    return networkError;
+  }, [username, networkError]);
 
   return (
     <Dialog open={open} onClose={close}>
@@ -74,7 +75,12 @@ export const AddFriendModal: React.FC<AddFriendModalProps> = ({ open, handleClos
 
       <DialogContent>
         <TextField
-          onChange={(e) => setUsername(e.target.value)}
+          onChange={(e) => {
+            if (username) {
+              setNetworkError(null);
+            }
+            setUsername(e.target.value);
+          }}
           error={validateUsername != null}
           InputProps={{
             startAdornment: <InputAdornment position="start">@</InputAdornment>,

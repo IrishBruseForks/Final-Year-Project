@@ -1,6 +1,5 @@
-import { Avatar, Box, ListItemButton, Typography, useMediaQuery } from "@mui/material";
+import { Avatar, Box, ListItemButton, Typography } from "@mui/material";
 import { format } from "date-fns";
-import { useState } from "react";
 import { ChannelResponse, PostMessageResponse } from "../../Types/ServerTypes";
 import LazyImage from "../LazyImage";
 
@@ -11,24 +10,9 @@ interface MessageProps {
 
 // Assuming onReply is passed as a prop for initiating a reply
 function Message({ message, channel }: MessageProps) {
-  const isMobile = useMediaQuery("(max-width:600px)");
-  const [showActions, setShowActions] = useState(false);
-
   function getProfilePictureUrl(message: PostMessageResponse) {
     return channel?.users?.find((c) => c.id === message.sentBy)?.picture || "";
   }
-
-  const handleMouseEnter = () => {
-    if (!isMobile) {
-      setShowActions(true);
-    }
-  };
-
-  const handleMouseLeave = () => {
-    if (!isMobile) {
-      setShowActions(false);
-    }
-  };
 
   return (
     <ListItemButton
@@ -42,9 +26,6 @@ function Message({ message, channel }: MessageProps) {
         borderRadius: 1,
         position: "relative", // Ensure the container is positioned relatively
       }}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      onClick={() => isMobile && setShowActions(!showActions)}
     >
       <Box sx={{ display: "flex", alignItems: "center", width: "100%" }}>
         <Avatar src={getProfilePictureUrl(message)} sx={{ mr: 1 }} />
@@ -66,15 +47,6 @@ function Message({ message, channel }: MessageProps) {
           {format(new Date(message.sentOn), "PPpp")}
         </Typography>
       </Box>
-      {/* <Box sx={{ display: "flex", justifyContent: "flex-end", width: "100%" }}>
-        {showActions && (
-          <Tooltip title="Reply" placement="top">
-            <IconButton size="small">
-              <ReplyIcon />
-            </IconButton>
-          </Tooltip>
-        )}
-      </Box> */}
     </ListItemButton>
   );
 }

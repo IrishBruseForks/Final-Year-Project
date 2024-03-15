@@ -1,8 +1,24 @@
-import ExitToAppIcon from "@mui/icons-material/ExitToApp";
-import GroupsIcon from "@mui/icons-material/Groups"; // Import the icon for group chat
+import DeleteIcon from "@mui/icons-material/Delete";
 import SendIcon from "@mui/icons-material/Send";
 import UploadIcon from "@mui/icons-material/Upload";
-import { Box, Button, Chip, Divider, Grid, IconButton, InputAdornment, List, Menu, MenuItem, Stack, TextField, Typography, useMediaQuery } from "@mui/material";
+import {
+  Avatar,
+  AvatarGroup,
+  Box,
+  Button,
+  Chip,
+  Divider,
+  Grid,
+  IconButton,
+  InputAdornment,
+  List,
+  ListItem,
+  ListItemAvatar,
+  Menu,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 import axios from "axios"; // Import axios for making HTTP requests
 import { enqueueSnackbar } from "notistack"; // Import enqueueSnackbar for showing snackbars (notifications)
 import { useRef, useState } from "react";
@@ -12,14 +28,10 @@ import { useAuth } from "../../Auth/useAuth"; // Custom hook for authentication
 import { ChannelResponse, PostMessageBody, PostMessageResponse } from "../../Types/ServerTypes"; // Import type definitions
 import Urls from "../../Utility/Urls"; // Utility for managing URLs
 import { getApiAuthConfig, useRefetchApi } from "../../Utility/useApi"; // API config and custom hook for API calls
+import ImageUpload from "../ImageUpload";
 import LazyImage from "../LazyImage"; // Component for lazy-loading images
+import MobileSwitch from "../MobileSwitch";
 import Message from "./Message"; // Import the Message component for displaying individual messages
-
-// Define the MobileSwitch component for responsive layout
-function MobileSwitch({ mobile, desktop }: { mobile: JSX.Element; desktop: JSX.Element }) {
-  const isMobile = !useMediaQuery("(min-width:900px)");
-  return isMobile ? mobile : desktop;
-}
 
 // Define the MessageView component
 function MessageView() {
@@ -29,8 +41,6 @@ function MessageView() {
   const { data: messages } = useRefetchApi<PostMessageResponse[]>(getMessageKey, Urls.Messages + "?id=" + uuid, "Fetching messages", { refetchInterval: 2000 });
   const queryClient = useQueryClient(); // Access the QueryClient to manage queries and cache
   const { user } = useAuth(); // Use the custom useAuth hook to access the user's authentication status
-
-  const [file, setFile] = useState<File | undefined>(); // State for the file upload
 
   // Fetch channel data using a custom hook
   const { data: channel } = useRefetchApi<ChannelResponse>(["getChannel", uuid], Urls.Channel + "?id=" + uuid, "Fetching channels");
@@ -47,6 +57,10 @@ function MessageView() {
     },
   });
 
+  const anchorRef = useRef<HTMLButtonElement>(null);
+  const [opened, setOpened] = useState<boolean>(false);
+  const [image, setImage] = useState<string | undefined>(); // State for the file upload
+
   const [messageText, setMessageText] = useState(""); // State for the message input text for smart replies
 
   // Static smart replies for demonstration
@@ -56,14 +70,6 @@ function MessageView() {
     "Sed do eiusmod tempor incididunt ut labore",
   ]); // Static smart replies for demonstration
 
-  const toBase64 = (file: File): Promise<string | undefined> =>
-    new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result?.toString());
-      reader.onerror = reject;
-    });
-
   // Function to handle sending a message
   const sendMessage = async () => {
     try {
@@ -71,12 +77,6 @@ function MessageView() {
       if (messageText === "" || !uuid || !user) return; // Check for empty message, missing uuid, or user
 
       const newMessage: PostMessageBody = { content: messageText, channelId: uuid };
-
-      let fileBase64: string | undefined;
-      if (file) {
-        fileBase64 = (await toBase64(file))?.split(",")[1];
-        newMessage.image = fileBase64;
-      }
 
       mutate(newMessage);
     } catch (error) {
@@ -135,45 +135,48 @@ function MessageView() {
     </Grid>
   );
 
-  const anchorRef = useRef<HTMLButtonElement>(null);
-  const [opened, setOpened] = useState<boolean>(false);
-
   // Render the component UI
   return (
     <Stack flexBasis={0} flexGrow={1} p={1.5} sx={{ m: { xs: 1, md: 2 } }} borderRadius={1} bgcolor="background.paper">
       {/* Channel Header */}
-      <Box sx={{ display: "flex", alignItems: "center", height: 50 }}>
+      <Box sx={{ display: "flex", alignItems: "center", height: 50, mb: 1 }}>
         <Typography sx={{ textAlign: "justify" }} variant="h5">
-          <IconButton ref={anchorRef} onClick={() => setOpened(!opened)} sx={{ mr: 1 }}>
+          <Button ref={anchorRef} onClick={() => setOpened(!opened)} sx={{ mr: 1 }}>
             {/* Lazy load the channel picture */}
-            <LazyImage src={channel?.picture} title="Profile Picture" sx={{ height: 32, width: 32, borderRadius: "50%" }} placeholder={<GroupsIcon />} />
-          </IconButton>
+            <AvatarGroup contextMenu="" max={3}>
+              {channel?.users?.map((user) => {
+                return <Avatar key={user.id} alt={user.username} src={user.picture} sx={{ bgcolor: "background.paper" }} />;
+              })}
+            </AvatarGroup>
+          </Button>
           {channel?.name} {/* Display the channel name */}
           <Menu
             id="menu-appbar"
             anchorEl={anchorRef.current}
             anchorOrigin={{
               vertical: "bottom",
-              horizontal: "right",
+              horizontal: "left",
             }}
             keepMounted
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
             open={opened}
             onClose={() => {
               setOpened(false);
             }}
           >
-            <MenuItem
-              color="error.main"
-              onClick={() => {
-                console.log("test");
-              }}
-            >
-              Leave Channel&nbsp; <ExitToAppIcon />
-            </MenuItem>
+            <ListItem>
+              <Typography>Users</Typography>
+            </ListItem>
+            <Divider />
+            {channel?.users?.map((user) => {
+              return (
+                <ListItem>
+                  <ListItemAvatar>
+                    <Avatar key={user.id} alt={user.username} src={user.picture} />
+                  </ListItemAvatar>
+                  <Typography>{user.username}</Typography>
+                </ListItem>
+              );
+            })}
           </Menu>
         </Typography>
       </Box>
@@ -194,21 +197,35 @@ function MessageView() {
           <Message key={message.id} message={message} channel={channel} />
         ))}
       </List>
+      {image && (
+        <Box sx={{ mb: 2, position: "relative", maxWidth: "100px" }}>
+          <LazyImage
+            src={image}
+            sx={{
+              width: 100,
+              borderRadius: 2,
+              borderColor: "#616161",
+              borderWidth: 1,
+              borderStyle: "solid",
+              overflow: "hidden",
+            }}
+          />
+          <IconButton color="error" onClick={() => setImage(undefined)} sx={{ backgroundColor: "#00000022", position: "absolute", top: -15, right: -15 }}>
+            <DeleteIcon />
+          </IconButton>
+        </Box>
+      )}
       {/* Smart Replies Section */}
       {/* Use MobileSwitch to choose between mobile and desktop layouts */}
       <MobileSwitch mobile={mobileLayout} desktop={desktopLayout} />
       {/* Message Input Section */}
       <Stack direction={"row"} display={"flex"} alignItems={"center"} justifyContent={"center"} gap={1}>
         {/* Upload Button */}
-        <Button component="label" sx={{ width: "1px" }}>
+        <Button component="label" sx={{ minWidth: "10px", p: 1.5 }}>
           <UploadIcon />
-          <input
-            hidden
-            type="file"
-            accept="image/*"
-            onChange={(e) => {
-              setFile(e.target.files?.item(0) ?? undefined);
-              e.target.value = null as any;
+          <ImageUpload
+            onChange={(image) => {
+              setImage("data:image/png;base64, " + image);
             }}
           />
         </Button>

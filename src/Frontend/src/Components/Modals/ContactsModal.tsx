@@ -1,9 +1,8 @@
-import React from 'react';
-import { useQuery } from 'react-query';
-import { Dialog, DialogTitle, List, ListItem, ListItemAvatar, Avatar, ListItemText, CircularProgress, DialogContent } from '@mui/material';
-import Api from '../../Utility/Api'; // Adjust the import path as necessary
-import { User } from '../../Types/ServerTypes'; // Adjust the import path as necessary
-import Urls from '../../Utility/Urls';
+import { Avatar, CircularProgress, Dialog, DialogContent, DialogTitle, List, ListItem, ListItemAvatar, ListItemText } from "@mui/material";
+import React from "react";
+import { User } from "../../Types/ServerTypes"; // Adjust the import path as necessary
+import Urls from "../../Utility/Urls";
+import { useApi } from "../../Utility/useApi";
 
 interface ContactsModalProps {
   open: boolean;
@@ -12,22 +11,18 @@ interface ContactsModalProps {
 }
 
 const ContactsModal: React.FC<ContactsModalProps> = ({ open, onClose }) => {
-  const fetchUsers = async (): Promise<User[]> => Api.Post<User[]>(Urls.Users, []);
-
-  const { data: users, isLoading, isError } = useQuery<User[]>('users', fetchUsers, {
-    enabled: open, // Fetch users only when the modal is open
-  });
+  const { data: users, isLoading } = useApi<User[]>("getFriends", Urls.Friends, "Error getting friends list");
 
   return (
     <Dialog onClose={onClose} open={open} fullWidth maxWidth="sm">
-      <DialogTitle>Contacts</DialogTitle>
+      <DialogTitle>Friends</DialogTitle>
       <DialogContent>
         {isLoading ? (
           <CircularProgress />
         ) : (
           <List>
             {users?.map((user) => (
-              <ListItem key={user.id} button>
+              <ListItem key={user.id}>
                 <ListItemAvatar>
                   <Avatar alt={user.username} src={user.picture} />
                 </ListItemAvatar>

@@ -65,7 +65,7 @@ func postMessages(c echo.Context) error {
 
 	if body.Image != nil {
 		// lets assume its this file
-		url, err := UploadImage(body.Image)
+		url, err := UploadImage(*body.Image)
 		if err != nil {
 			log.Error(err)
 			return echo.ErrInternalServerError
@@ -89,9 +89,9 @@ func postMessages(c echo.Context) error {
 	return c.String(http.StatusOK, uuid.String())
 }
 
-func UploadImage(img *string) (string, error) {
+func UploadImage(img string) (string, error) {
 	resp, err := http.PostForm("https://api.imgbb.com/1/upload?expiration=1000000&key="+os.Getenv("IMGBB_SECRET"), map[string][]string{
-		"image": {*img},
+		"image": {img},
 	})
 
 	if err != nil {

@@ -126,27 +126,30 @@ func postChannels(c echo.Context) error {
 		return echo.ErrInternalServerError
 	}
 
-	createChannelQuery := `
-	INSERT INTO Channels (id,name,picture)
-	VALUES (?,?,?);
-	`
+	createChannelQuery := `INSERT INTO Channels (id,name,picture) VALUES (?,?,?);`
 
-	_, err = db.Exec(createChannelQuery, id.String(), body.Name, body.Picture)
+	log.Error(*body.Picture)
+
+	img, err := UploadImage(*body.Picture)
+	if err != nil {
+		log.Error(err)
+	}
+
+	log.Error(img)
+
+	_, err = db.Exec(createChannelQuery, id.String(), body.Name, img)
 	if err != nil {
 		log.Error(err)
 		return echo.ErrInternalServerError
 	}
 
-	addUserToChannelQuery := `
-	INSERT INTO Users_Channels (Users_id, Channels_id)
-	VALUES (?,?);
-	`
+	addUserToChannelQuery := `INSERT INTO Users_Channels (Users_id,Channels_id) VALUES (?,?);`
 
 	for _, user := range body.Users {
 		_, err = db.Exec(addUserToChannelQuery, user, id.String())
 
 		if err != nil {
-			log.Error(err)
+			log.Error(err, user, id.String())
 			return echo.ErrInternalServerError
 		}
 	}
@@ -166,7 +169,7 @@ func deleteChannels(c echo.Context) error {
 	}
 	user := getUser(c)
 
-	query := `DELETE FROM Users_Channels WHERE Users_id=? AND Channels_id=?`
+	query := `DELETE FROM Users_Channels WHERE Users_id=? AND Channels_id=?;`
 
 	_, err = db.Exec(query, user, body.ChannelId)
 

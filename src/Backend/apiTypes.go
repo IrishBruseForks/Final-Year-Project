@@ -11,7 +11,7 @@ type UsernameBody struct {
 type PostChannelBody struct {
 	Name    string   `json:"name" validate:"required"`
 	Users   []string `json:"users" validate:"required"`
-	Picture string   `json:"picture"`
+	Picture *string  `json:"picture"`
 }
 
 type DeleteChannelBody struct {

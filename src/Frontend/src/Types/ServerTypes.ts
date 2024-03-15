@@ -12,7 +12,7 @@ export interface UsernameBody {
 export interface PostChannelBody {
   name: string;
   users: string[];
-  picture: string;
+  picture?: string;
 }
 export interface DeleteChannelBody {
   channelId: string;

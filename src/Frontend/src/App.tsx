@@ -1,5 +1,5 @@
 import CloseIcon from "@mui/icons-material/Close";
-import { Box, CssBaseline, IconButton, ThemeProvider, createTheme } from "@mui/material";
+import { CssBaseline, IconButton, ThemeProvider, createTheme } from "@mui/material";
 import {} from "@mui/material/colors";
 import { SnackbarKey, SnackbarProvider, useSnackbar } from "notistack";
 import React, { createContext } from "react";
@@ -10,16 +10,10 @@ import { router } from "./router";
 export const ErrorContext = createContext<Error | null>(null);
 
 function App() {
-  // For debugging the theme to disable set to null
-  const themeOverride = null;
-
-  const darkThemeMq = window.matchMedia("(prefers-color-scheme: dark)");
-  const [mode, setMode] = React.useState<"light" | "dark">(themeOverride !== null ? themeOverride : darkThemeMq.matches ? "dark" : "light");
-
   // https://mui.com/material-ui/customization/default-theme/
   const theme = createTheme({
     palette: {
-      mode: mode,
+      mode: "dark",
       primary: {
         main: "#47b25c",
         contrastText: "rgba(255, 255, 255, 0.87)",
@@ -134,14 +128,6 @@ function App() {
     },
   });
 
-  darkThemeMq.addEventListener("change", (e) => {
-    if (e.matches) {
-      setMode("dark");
-    } else {
-      setMode("light");
-    }
-  });
-
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
@@ -169,9 +155,7 @@ function App() {
           <SnackbarProvider maxSnack={3} action={(snackbarKey) => <SnackbarCloseButton snackbarKey={snackbarKey} />}>
             <ThemeProvider theme={theme}>
               <CssBaseline />
-              <Box>
-                <RouterProvider router={router} />
-              </Box>
+              <RouterProvider router={router} />
             </ThemeProvider>
           </SnackbarProvider>
         </QueryClientProvider>
