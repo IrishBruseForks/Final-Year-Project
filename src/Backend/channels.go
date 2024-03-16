@@ -126,12 +126,11 @@ func postChannels(c echo.Context) error {
 		return echo.ErrInternalServerError
 	}
 
-	createChannelQuery := `INSERT INTO Channels (id,name,picture) VALUES (?,?,?);`
-
 	var img string = ""
 
 	if body.Picture != nil {
 		uploadedImage, err := UploadImage(*body.Picture)
+
 		if err != nil {
 			log.Error(err)
 		} else {
@@ -139,6 +138,7 @@ func postChannels(c echo.Context) error {
 		}
 	}
 
+	createChannelQuery := `INSERT INTO Channels (id,name,picture) VALUES (?,?,?);`
 	_, err = db.Exec(createChannelQuery, id.String(), body.Name, img)
 	if err != nil {
 		log.Error(err)

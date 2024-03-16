@@ -75,7 +75,7 @@ function MessageView() {
   const sendMessage = async () => {
     try {
       // Create a message object and send it
-      if (!uuid || !user) return; // Check for empty message, missing uuid, or user
+      if (!uuid || !user || (!image && messageText == "")) return; // Check for empty message, missing uuid, or user
 
       const newMessage: PostMessageBody = { content: messageText, channelId: uuid, image: image };
 
