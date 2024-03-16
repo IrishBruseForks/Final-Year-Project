@@ -33,6 +33,14 @@ function ChannelItem({ id, username, lastMessage, profilePic }: Props) {
     );
   };
 
+  const lastMessagePreview = () => {
+    if (!lastMessage || lastMessage === "") {
+      return "No message";
+    }
+
+    return lastMessage;
+  };
+
   return (
     <>
       <ListItemButton
@@ -58,7 +66,7 @@ function ChannelItem({ id, username, lastMessage, profilePic }: Props) {
             {username}
           </Typography>
           <Typography noWrap color={"text.secondary"} sx={{ maxWidth: "200px" }}>
-            {lastMessage ?? ""}
+            {lastMessagePreview()}
           </Typography>
         </Box>
 

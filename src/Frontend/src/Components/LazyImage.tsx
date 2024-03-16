@@ -7,9 +7,10 @@ interface ImageProps {
   src?: string;
   placeholder?: JSX.Element;
   sx?: SxProps<Theme>;
+  onClick?: React.MouseEventHandler<HTMLImageElement>;
 }
 
-export default function LazyImage({ title, src, sx, placeholder = <BrokenImageIcon /> }: ImageProps) {
+export default function LazyImage({ title, src, sx, onClick, placeholder = <BrokenImageIcon /> }: ImageProps) {
   const imgElement = useRef<HTMLImageElement>(null);
 
   const [loaded, setLoaded] = useState(false);
@@ -27,7 +28,18 @@ export default function LazyImage({ title, src, sx, placeholder = <BrokenImageIc
   return (
     <>
       {!loaded && cloneElement(placeholder, { sx: sx })}
-      {<Box component="img" ref={imgElement} src={src} title={title} loading="lazy" onLoad={onloaded} sx={{ opacity: 0, position: "absolute", ...sx }} />}
+      {
+        <Box
+          component="img"
+          ref={imgElement}
+          src={src}
+          title={title}
+          loading="lazy"
+          onClick={onClick}
+          onLoad={onloaded}
+          sx={{ opacity: 0, position: "absolute", ...sx }}
+        />
+      }
     </>
   );
 }

@@ -53,6 +53,7 @@ function MessageView() {
     // Callback function after mutation is settled to refresh messages
     onSettled: async () => {
       setMessageText("");
+      setImage(undefined);
       return await queryClient.invalidateQueries({ queryKey: getMessageKey });
     },
   });
@@ -74,9 +75,9 @@ function MessageView() {
   const sendMessage = async () => {
     try {
       // Create a message object and send it
-      if (messageText === "" || !uuid || !user) return; // Check for empty message, missing uuid, or user
+      if (!uuid || !user) return; // Check for empty message, missing uuid, or user
 
-      const newMessage: PostMessageBody = { content: messageText, channelId: uuid };
+      const newMessage: PostMessageBody = { content: messageText, channelId: uuid, image: image };
 
       mutate(newMessage);
     } catch (error) {
@@ -141,14 +142,16 @@ function MessageView() {
       {/* Channel Header */}
       <Box sx={{ display: "flex", alignItems: "center", height: 50, mb: 1 }}>
         <Typography sx={{ textAlign: "justify" }} variant="h5">
-          <Button ref={anchorRef} onClick={() => setOpened(!opened)} sx={{ mr: 1 }}>
-            {/* Lazy load the channel picture */}
-            <AvatarGroup contextMenu="" max={3}>
-              {channel?.users?.map((user) => {
-                return <Avatar key={user.id} alt={user.username} src={user.picture} sx={{ bgcolor: "background.paper" }} />;
-              })}
-            </AvatarGroup>
-          </Button>
+          {channel?.users && (
+            <Button ref={anchorRef} onClick={() => setOpened(!opened)} sx={{ mr: 1 }}>
+              {/* Lazy load the channel picture */}
+              <AvatarGroup contextMenu="" max={3}>
+                {channel?.users?.map((user) => {
+                  return <Avatar key={user.id} alt={user.username} src={user.picture} sx={{ bgcolor: "background.paper" }} />;
+                })}
+              </AvatarGroup>
+            </Button>
+          )}
           {channel?.name} {/* Display the channel name */}
           <Menu
             id="menu-appbar"
@@ -200,10 +203,10 @@ function MessageView() {
       {image && (
         <Box sx={{ mb: 2, position: "relative", maxWidth: "100px" }}>
           <LazyImage
-            src={image}
+            src={"data:image/png;base64, " + image}
             sx={{
               width: 100,
-              borderRadius: 2,
+              borderRadius: 1,
               borderColor: "#616161",
               borderWidth: 1,
               borderStyle: "solid",
@@ -224,8 +227,8 @@ function MessageView() {
         <Button component="label" sx={{ minWidth: "10px", p: 1.5 }}>
           <UploadIcon />
           <ImageUpload
-            onChange={(image) => {
-              setImage("data:image/png;base64, " + image);
+            onChange={(img) => {
+              setImage(img);
             }}
           />
         </Button>

@@ -34,7 +34,16 @@ function Message({ message, channel }: MessageProps) {
           <Typography variant="body1">{message.content}</Typography>
         </Box>
       </Box>
-      <LazyImage src={message.image} placeholder={<div />} sx={{ pl: 6, maxWidth: "100%" }} />
+      <Box sx={{ ml: 6 }}>
+        <LazyImage
+          src={message.image}
+          placeholder={<div />}
+          sx={{ maxHeight: "20rem", maxWidth: "100%", cursor: "zoom-in" }}
+          onClick={() => {
+            window.open(message.image);
+          }}
+        />
+      </Box>
       <Box
         sx={{
           position: "absolute", // Position the timestamp absolutely

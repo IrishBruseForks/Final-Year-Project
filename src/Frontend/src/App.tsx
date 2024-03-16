@@ -53,7 +53,7 @@ function App() {
       MuiPaper: {
         styleOverrides: {
           root: {
-            backgroundColor: "#454d57",
+            backgroundColor: "#464e5a",
             backgroundImage: "none",
           },
         },

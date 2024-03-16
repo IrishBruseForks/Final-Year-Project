@@ -22,6 +22,8 @@ function ImageUpload({ onChange }: { onChange: (image: string) => void }) {
           let image = await toBase64(file);
           if (image) {
             onChange(image);
+            e.target.files = null;
+            e.target.value = null as any;
           }
         }
       }}
