@@ -1,6 +1,5 @@
 import axios from "axios";
 import { OAuthResponse } from "../Types/ServerTypes";
-import Constants from "./Constants";
 import Urls from "./Urls";
 
 type URL = (typeof Urls)[keyof typeof Urls];
@@ -14,7 +13,7 @@ async function Delete<T = unknown>(url: URL): Promise<T> {
 }
 
 function config() {
-  let json = localStorage.getItem(Constants.UserKey);
+  let json = localStorage.getItem("user");
   if (!json) {
     return {};
   }

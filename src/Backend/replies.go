@@ -65,8 +65,7 @@ func getReplies(c echo.Context) error {
 
 	resp, err := http.Post(os.Getenv("AI_URL"), "application/json", bytes.NewBuffer(data))
 	if err != nil {
-		log.Error(err)
-		return echo.ErrInternalServerError
+		return c.JSON(http.StatusOK, []string{})
 	}
 
 	var res OpenAI

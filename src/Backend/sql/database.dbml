@@ -6,7 +6,7 @@ Project chatalyst {
 Table Users {
     id varchar(32) [pk]
     username text
-    picture text
+    picture text [not null]
 }
 
 Ref Users_Channels: Users.id <> Channels.id

@@ -8,17 +8,14 @@ export const router = createBrowserRouter([
   {
     path: "/login",
     element: <LoginPage />,
-    errorElement: <ErrorPage />,
   },
   {
     path: "/signup",
     element: <LoginPage signup={true} />,
-    errorElement: <ErrorPage />,
   },
   {
     path: "/",
     element: <GuardedRoute component={<MessagesPage />} />,
-    errorElement: <ErrorPage />,
     children: [
       {
         path: "/:uuid",
@@ -29,6 +26,5 @@ export const router = createBrowserRouter([
   {
     path: "*",
     element: <ErrorPage />,
-    errorElement: <ErrorPage />,
   },
 ]);

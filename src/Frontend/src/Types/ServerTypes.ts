@@ -41,6 +41,10 @@ export interface User {
   username: string;
   picture: string;
 }
+export interface Profile extends User {
+  friends: number /* int */;
+  channels: number /* int */;
+}
 export interface PostMessageBody {
   channelId: string;
   content: string;

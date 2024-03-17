@@ -3,7 +3,7 @@ import ContactsIcon from "@mui/icons-material/Contacts";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import SearchIcon from "@mui/icons-material/Search";
 import { Box, Divider, IconButton, InputAdornment, LinearProgress, List, Stack, TextField, Typography } from "@mui/material";
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ChannelsResponse, User } from "../Types/ServerTypes";
 import Urls from "../Utility/Urls";
@@ -13,7 +13,7 @@ import { AddFriendModal } from "./Modals/AddFriendModal";
 import ContactsModal from "./Modals/ContactsModal";
 import { CreateChannelModal } from "./Modals/CreateChannelModal";
 
-const FriendsPanel: React.FC = () => {
+const FriendsPanel = ({ close }: { close?: () => void }) => {
   const [searchTerm, setSearchTerm] = useState<string>("");
 
   const navigate = useNavigate();
@@ -112,6 +112,7 @@ const FriendsPanel: React.FC = () => {
         </Stack>
       </Box>
       <List
+        onClickCapture={close}
         sx={{
           flex: "1 1 auto",
           overflowY: "auto",

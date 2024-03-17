@@ -1,11 +1,11 @@
 -- SQL dump generated using DBML (dbml-lang.org)
 -- Database: MySQL
--- Generated at: 2024-03-14T21:11:03.222Z
+-- Generated at: 2024-03-17T19:23:15.894Z
 
 CREATE TABLE `Users` (
   `id` varchar(32) PRIMARY KEY,
   `username` text,
-  `picture` text
+  `picture` text NOT NULL
 );
 
 CREATE TABLE `Channels` (
@@ -42,6 +42,6 @@ ALTER TABLE `Users_Channels` ADD FOREIGN KEY (`Channels_id`) REFERENCES `Channel
 
 ALTER TABLE `Messages` ADD FOREIGN KEY (`channelId`) REFERENCES `Channels` (`id`);
 
-ALTER TABLE `Friends` ADD FOREIGN KEY (`user`) REFERENCES `Users` (`id`);
+ALTER TABLE `Friends` ADD FOREIGN KEY (`user`) REFERENCES `Users` (`id`) ON DELETE CASCADE;
 
-ALTER TABLE `Friends` ADD FOREIGN KEY (`friend`) REFERENCES `Users` (`id`);
+ALTER TABLE `Friends` ADD FOREIGN KEY (`friend`) REFERENCES `Users` (`id`) ON DELETE CASCADE;

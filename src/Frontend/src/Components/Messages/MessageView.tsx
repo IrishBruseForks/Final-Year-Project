@@ -21,7 +21,7 @@ import {
 } from "@mui/material";
 import axios from "axios"; // Import axios for making HTTP requests
 import { enqueueSnackbar } from "notistack"; // Import enqueueSnackbar for showing snackbars (notifications)
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useMutation, useQueryClient } from "react-query"; // Import from react-query for server state management
 import { useParams } from "react-router-dom"; // Import useParams hook for getting URL parameters
 import { useAuth } from "../../Auth/useAuth"; // Custom hook for authentication
@@ -38,7 +38,23 @@ function MessageView() {
   const { uuid } = useParams<{ uuid: string }>(); // Get the 'uuid' from the URL parameters
   const getMessageKey = ["getMessages", uuid]; // Define a key for caching messages
   // Fetch messages using a custom hook and refetch them every 5000ms
-  const { data: messages } = useRefetchApi<PostMessageResponse[]>(getMessageKey, Urls.Messages + "?id=" + uuid, "Fetching messages", { refetchInterval: 2000 });
+  const { data: messages } = useRefetchApi<PostMessageResponse[]>(getMessageKey, Urls.Messages + "?id=" + uuid, "Fetching messages", {
+    refetchInterval: 2_000,
+  });
+
+  const { data: smartReplies } = useRefetchApi<string[]>(["getReplies"], Urls.Replies, "Fetching replies", {
+    refetchInterval: 30_000,
+  });
+
+  const replies = useMemo(() => {
+    console.log(smartReplies);
+
+    if (smartReplies) {
+      return smartReplies;
+    }
+    return [];
+  }, [smartReplies]);
+
   const queryClient = useQueryClient(); // Access the QueryClient to manage queries and cache
   const { user } = useAuth(); // Use the custom useAuth hook to access the user's authentication status
 
@@ -64,13 +80,6 @@ function MessageView() {
 
   const [messageText, setMessageText] = useState(""); // State for the message input text for smart replies
 
-  // Static smart replies for demonstration
-  const [smartReplies] = useState([
-    "Lorem ipsum dolor sit amet Sed do eiusmod tempor incididunt ut labore Sed do eiusmod tempor incididunt ut labore",
-    "Consectetur adipiscing elit",
-    "Sed do eiusmod tempor incididunt ut labore",
-  ]); // Static smart replies for demonstration
-
   // Function to handle sending a message
   const sendMessage = async () => {
     try {
@@ -94,7 +103,7 @@ function MessageView() {
   // Modified mobileLayout with Chips wrapped in a Box for individual sizing
   const mobileLayout = (
     <Stack direction="column" spacing={1}>
-      {smartReplies.map((reply, index) => (
+      {replies.map((reply, index) => (
         <Box key={index} sx={{ display: "flex", justifyContent: "center" }}>
           {/* Container to control sizing */}
           <Chip
@@ -117,7 +126,7 @@ function MessageView() {
   const desktopLayout = (
     <Grid container spacing={2} justifyContent="center" sx={{ mb: 2 }}>
       {/* Adjust spacing as needed */}
-      {smartReplies.map((reply, index) => (
+      {replies.map((reply, index) => (
         <Grid item xs={4} key={index}>
           {/* xs=4 for 3 items per row, adjust as necessary */}
           <Chip

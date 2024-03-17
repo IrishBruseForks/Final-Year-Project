@@ -46,6 +46,12 @@ type User struct {
 	Picture  string `json:"picture" validate:"required"`
 }
 
+type Profile struct {
+	User     `tstype:",extends"`
+	Friends  int `json:"friends"`
+	Channels int `json:"channels"`
+}
+
 type PostMessageBody struct {
 	ChannelId string  `json:"channelId" validate:"required"`
 	Content   string  `json:"content"`

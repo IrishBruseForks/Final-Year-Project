@@ -7,4 +7,6 @@ export default {
   Users: "users",
   Login: "auth/google",
   Signup: "signup",
+  Profile: "profile",
+  Replies: "replies",
 } as const;

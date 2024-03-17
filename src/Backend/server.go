@@ -68,6 +68,7 @@ func addRoutes(e *echo.Echo) {
 	e.POST("/auth/google", postLogin)
 
 	e.POST("/signup", postSignup)
+	e.GET("/profile", getProfile)
 
 	// Channel Endpoints
 	e.GET("/channels", getChannels)

@@ -65,6 +65,13 @@ function App() {
           },
         },
       },
+      MuiDialog: {
+        styleOverrides: {
+          paper: {
+            overflowY: "visible",
+          },
+        },
+      },
       MuiAlert: {
         styleOverrides: {
           root: {

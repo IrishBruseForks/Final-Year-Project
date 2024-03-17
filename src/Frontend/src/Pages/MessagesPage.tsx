@@ -34,7 +34,7 @@ function MessagesPage() {
                 },
               }}
             >
-              <FriendsPanel />
+              <FriendsPanel close={() => toggleDrawer(false)} />
             </SwipeableDrawer>
           }
           desktop={<FriendsPanel />}

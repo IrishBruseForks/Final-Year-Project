@@ -4,10 +4,11 @@ import { QueryKey, UseQueryOptions, UseQueryResult, useQuery } from "react-query
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../Auth/useAuth";
 import { OAuthResponse } from "../Types/ServerTypes";
+import Urls from "./Urls";
 
 export function useApi<TQueryFnData = unknown, TError = unknown, TData = TQueryFnData, TQueryKey extends QueryKey = QueryKey>(
   queryKey: TQueryKey,
-  url: string,
+  url: (typeof Urls)[keyof typeof Urls],
   errorMessage: string,
   options?: Omit<UseQueryOptions<TQueryFnData, TError, TData, TQueryKey>, "queryKey" | "queryFn">
 ): UseQueryResult<TData, TError> {
@@ -50,7 +51,7 @@ export function useRefetchApi<TQueryFnData = unknown, TError = unknown, TData = 
   errorMessage: string,
   options?: Omit<UseQueryOptions<TQueryFnData, TError, TData, TQueryKey>, "queryKey" | "queryFn">
 ): UseQueryResult<TData, TError> {
-  return useApi(queryKey, url, errorMessage, {
+  return useApi(queryKey, url as any, errorMessage, {
     ...options,
     refetchInterval(data, query) {
       if (typeof options?.refetchInterval !== "number") return false;
