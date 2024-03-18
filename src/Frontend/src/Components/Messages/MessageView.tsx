@@ -100,6 +100,16 @@ function MessageView() {
     setMessageText(reply);
   };
 
+  // Detele mutation using React Query
+  const deleteMessageMutation = useMutation(
+    (messageId: string) => axios.delete(`${import.meta.env.VITE_API_URL}/messages/${messageId}`, getApiAuthConfig(user!)),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(getMessageKey); // Refresh the messages after a successful delete
+      },
+    }
+  );
+
   // Modified mobileLayout with Chips wrapped in a Box for individual sizing
   const mobileLayout = (
     <Stack direction="column" spacing={1}>
@@ -206,7 +216,7 @@ function MessageView() {
       >
         {/* Map over the fetched messages and display them */}
         {messages?.map((message) => (
-          <Message key={message.id} message={message} channel={channel} />
+          <Message key={message.id} message={message} channel={channel} onDelete={(messageId) => deleteMessageMutation.mutate(messageId)} />
         ))}
       </List>
       {image && (

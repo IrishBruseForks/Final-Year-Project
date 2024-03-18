@@ -1,19 +1,27 @@
-import { Avatar, Box, ListItemButton, Typography } from "@mui/material";
+import { Avatar, Box, IconButton, ListItemButton, Typography } from "@mui/material";
+import DeleteIcon from '@mui/icons-material/Delete';
 import { format } from "date-fns";
-import { ChannelResponse, PostMessageResponse } from "../../Types/ServerTypes";
+import { ChannelResponse, OAuthResponse, PostMessageResponse } from "../../Types/ServerTypes";
 import LazyImage from "../LazyImage";
 
 interface MessageProps {
   message: PostMessageResponse;
   channel?: ChannelResponse;
+  onDelete?: (messageId: string) => void;
 }
 
 // Assuming onReply is passed as a prop for initiating a reply
-function Message({ message, channel }: MessageProps) {
+function Message({ message, channel, onDelete }: MessageProps) {
   function getProfilePictureUrl(message: PostMessageResponse) {
     return channel?.users?.find((c) => c.id === message.sentBy)?.picture || "";
   }
 
+   // Retrieve current user from localStorage
+   const currentUserJson = localStorage.getItem("user");
+   const currentUser = currentUserJson ? JSON.parse(currentUserJson) as OAuthResponse : null;
+
+   // Determine if the current user is the sender of the message
+  const userCanDeleteMessage = currentUser?.id === message.sentBy;
   return (
     <ListItemButton
       sx={{
@@ -56,6 +64,11 @@ function Message({ message, channel }: MessageProps) {
           {format(new Date(message.sentOn), "PPpp")}
         </Typography>
       </Box>
+      {onDelete && userCanDeleteMessage && (
+        <IconButton aria-label="delete" size="small" onClick={() => onDelete(message.id)} sx={{ position: "absolute", bottom: "5px", right: "5px" }}>
+          <DeleteIcon fontSize="inherit" />
+        </IconButton>
+      )}
     </ListItemButton>
   );
 }
