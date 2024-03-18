@@ -33,7 +33,7 @@ function Message({ message, channel, onDelete }: MessageProps) {
     const links = linkify.find(message.content);
 
     let content = message.content;
-
+    setVideos([]);
     for (var i = links.length; i >= 0; i--) {
       const link = links[i];
       if (link) {
@@ -83,6 +83,7 @@ function Message({ message, channel, onDelete }: MessageProps) {
         {videos.length > 0 &&
           videos.map((video) => (
             <iframe
+              frameBorder={0}
               src={"https://www.youtube.com/embed/" + video}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowFullScreen
