@@ -12,6 +12,10 @@ async function Delete<T = unknown>(url: URL): Promise<T> {
   return (await axios.delete<T>(import.meta.env.VITE_API_URL + url, config())).data;
 }
 
+async function Get<T = unknown>(url: URL): Promise<T> {
+  return (await axios.get<T>(import.meta.env.VITE_API_URL + url, config())).data;
+}
+
 function config() {
   let json = localStorage.getItem("user");
   if (!json) {
@@ -27,4 +31,4 @@ function config() {
   };
 }
 
-export default { Post, Delete };
+export default { Post, Delete, Get };

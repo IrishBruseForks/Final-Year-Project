@@ -33,11 +33,10 @@ type ChannelsResponse struct {
 }
 
 type ChannelResponse struct {
-	Id          string `json:"id"`
-	Name        string `json:"name"`
-	Picture     string `json:"picture"`
-	LastMessage *int64 `json:"lastMessage"`
-	Users       []User `json:"users"`
+	Id      string `json:"id"`
+	Name    string `json:"name"`
+	Picture string `json:"picture"`
+	Users   []User `json:"users"`
 }
 
 type User struct {

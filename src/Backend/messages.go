@@ -2,19 +2,33 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/labstack/gommon/log"
+	"github.com/microcosm-cc/bluemonday"
 
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 )
 
+var htmlSanitizer = bluemonday.StripTagsPolicy()
+
 func getMessages(c echo.Context) error {
+	user := getUser(c)
+
 	var channelId string
 	echo.QueryParamsBinder(c).MustString("id", &channelId)
+
+	var userId string
+	err := db.QueryRow("SELECT `Users_id` FROM `Users_Channels` u WHERE u.Channels_id=? AND u.Users_id=? LIMIT 1", channelId, user).Scan(&userId)
+
+	if err != nil || user != userId {
+		return echo.ErrForbidden
+	}
 
 	query := `
 	SELECT
@@ -54,6 +68,14 @@ func postMessages(c echo.Context) error {
 		return err
 	}
 	user := getUser(c)
+
+	body.Content = strings.TrimSpace(htmlSanitizer.Sanitize(body.Content))
+
+	fmt.Println(body.Content)
+
+	if len(body.Content) == 0 {
+		return echo.ErrBadRequest
+	}
 
 	uuid, err := uuid.NewRandom()
 	if err != nil {

@@ -1,15 +1,13 @@
 import axios, { AxiosError, AxiosRequestConfig } from "axios";
-import { enqueueSnackbar } from "notistack";
 import { QueryKey, UseQueryOptions, UseQueryResult, useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../Auth/useAuth";
 import { OAuthResponse } from "../Types/ServerTypes";
 import Urls from "./Urls";
 
-export function useApi<TQueryFnData = unknown, TError = unknown, TData = TQueryFnData, TQueryKey extends QueryKey = QueryKey>(
+export function useApi<TQueryFnData = unknown, TError = AxiosError, TData = TQueryFnData, TQueryKey extends QueryKey = QueryKey>(
   queryKey: TQueryKey,
   url: (typeof Urls)[keyof typeof Urls],
-  errorMessage: string,
   options?: Omit<UseQueryOptions<TQueryFnData, TError, TData, TQueryKey>, "queryKey" | "queryFn">
 ): UseQueryResult<TData, TError> {
   const { user, logout } = useAuth();
@@ -25,18 +23,16 @@ export function useApi<TQueryFnData = unknown, TError = unknown, TData = TQueryF
       try {
         return (await axios.get(import.meta.env.VITE_API_URL + url, getApiAuthConfig(user))).data as TQueryFnData;
       } catch (error) {
-        if (error instanceof AxiosError && error.isAxiosError) {
+        if (error instanceof AxiosError) {
           // redirect on unauthorrized error
           if (error.response?.status === 401) {
             navigate("/login");
             logout();
             return Promise.reject("Unauthorized");
           }
-
-          enqueueSnackbar(errorMessage + " - " + error.message, { variant: "error" });
-        } else {
-          enqueueSnackbar(error as any, { variant: "error" });
         }
+
+        console.log(error);
 
         throw error;
       }
@@ -45,13 +41,12 @@ export function useApi<TQueryFnData = unknown, TError = unknown, TData = TQueryF
   );
 }
 
-export function useRefetchApi<TQueryFnData = unknown, TError = unknown, TData = TQueryFnData, TQueryKey extends QueryKey = QueryKey>(
+export function useRefetchApi<TQueryFnData = unknown, TError = AxiosError, TData = TQueryFnData, TQueryKey extends QueryKey = QueryKey>(
   queryKey: TQueryKey,
   url: string,
-  errorMessage: string,
   options?: Omit<UseQueryOptions<TQueryFnData, TError, TData, TQueryKey>, "queryKey" | "queryFn">
 ): UseQueryResult<TData, TError> {
-  return useApi(queryKey, url as any, errorMessage, {
+  return useApi(queryKey, url as any, {
     ...options,
     refetchInterval(data, query) {
       if (typeof options?.refetchInterval !== "number") return false;

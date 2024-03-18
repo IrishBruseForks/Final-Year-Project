@@ -85,7 +85,7 @@ export const AddFriendModal: React.FC<AddFriendModalProps> = ({ open, handleClos
           InputProps={{
             startAdornment: <InputAdornment position="start">@</InputAdornment>,
           }}
-          label="Friends username"
+          label="Friend"
           margin="dense"
           fullWidth
           variant="outlined"

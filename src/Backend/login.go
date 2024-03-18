@@ -22,7 +22,11 @@ func getStatus(c echo.Context) error {
 }
 
 type AuthJwt struct {
-	Name                 string `json:"name"`
+	Username             string `json:"username"`
+	jwt.RegisteredClaims `tstype:",extends"`
+}
+
+type SignupJwt struct {
 	Picture              string `json:"picture"`
 	jwt.RegisteredClaims `tstype:",extends"`
 }
@@ -40,28 +44,38 @@ func postLogin(c echo.Context) error {
 		return echo.ErrInternalServerError
 	}
 
-	tokenString, err := createApiJwt(googleJwt)
-	if err != nil {
-		log.Error(err)
-		return echo.ErrInternalServerError
-	}
-
-	row := db.QueryRow(`SELECT id,username,picture FROM Users WHERE id = ?`, googleJwt.Subject)
-
 	var id *string = nil
 	var username *string = nil
 	var profilePicture *string = nil
 
-	err = row.Scan(&id, &username, &profilePicture)
+	err = db.QueryRow(`SELECT id,username,picture FROM Users WHERE id = ?`, googleJwt.Subject).Scan(&id, &username, &profilePicture)
 
-	if err != nil {
-		query := `INSERT INTO Users (id,picture) VALUES (?,?)`
+	if err != nil || username == nil {
 
-		_, err = db.Exec(query, googleJwt.Subject, googleJwt.Picture)
+		if profilePicture == nil {
+
+			query := `INSERT INTO Users (id,picture) VALUES (?,?)`
+
+			url, err := UploadImage(googleJwt.Picture)
+			if err != nil {
+				log.Error(err)
+				return echo.ErrInternalServerError
+			}
+
+			_, err = db.Exec(query, googleJwt.Subject, url)
+			if err != nil {
+				log.Error(err)
+				return echo.ErrInternalServerError
+			}
+		}
+
+		tokenString, err := createSignupJwt(googleJwt)
 		if err != nil {
 			log.Error(err)
 			return echo.ErrInternalServerError
 		}
+
+		log.Error(tokenString)
 
 		// The user does not exsit we need them to signup with a username
 		return c.JSON(http.StatusOK, OAuthResponse{
@@ -71,15 +85,10 @@ func postLogin(c echo.Context) error {
 		})
 	}
 
-	if username == nil {
-		// The user previously tried signing up but canceled or an error occured
-		// they are in the db but have not picked a username
-		return c.JSON(http.StatusOK, OAuthResponse{
-			Signup:         true,
-			Token:          tokenString,
-			Id:             googleJwt.Subject,
-			ProfilePicture: profilePicture,
-		})
+	tokenString, err := createApiJwt(googleJwt.Subject, *username)
+	if err != nil {
+		log.Error(err)
+		return echo.ErrInternalServerError
 	}
 
 	return c.JSON(http.StatusOK, OAuthResponse{
@@ -90,52 +99,9 @@ func postLogin(c echo.Context) error {
 	})
 }
 
-func createApiJwt(idTokenResp *GoogleJwt) (string, error) {
-	claims := &AuthJwt{
-		idTokenResp.Name,
-		idTokenResp.Picture,
-		jwt.RegisteredClaims{
-			Subject:   idTokenResp.Subject,
-			Issuer:    "chatalyst",
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 24 * 7)),
-			IssuedAt:  jwt.NewNumericDate(time.Now()),
-		},
-	}
-
-	jsonToken := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-
-	tokenString, err := jsonToken.SignedString(getJwtSecretBytes())
-	return tokenString, err
-}
-
-func exchangeTokenWithGoogle(u *OAuth) (*GoogleJwt, error) {
-	tok, err := config.Exchange(context.Background(), u.Code)
-	if err != nil {
-		return nil, err
-	}
-
-	client := config.Client(context.Background(), tok)
-	idToken := tok.Extra("id_token").(string)
-
-	resp, err := client.Get("https://oauth2.googleapis.com/tokeninfo?id_token=" + idToken)
-	if err != nil {
-		return nil, err
-	}
-
-	bytes, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	idTokenResp := new(GoogleJwt)
-	json.Unmarshal(bytes, idTokenResp)
-
-	return idTokenResp, nil
-}
-
 func postSignup(c echo.Context) error {
 	user := c.Get("user").(*jwt.Token)
-	jwt := user.Claims.(*AuthJwt)
+	jwt := user.Claims.(*SignupJwt)
 
 	body, err := getBody[UsernameBody](c)
 	if err != nil {
@@ -143,23 +109,23 @@ func postSignup(c echo.Context) error {
 		return err
 	}
 
-	url, err := UploadImage(jwt.Picture)
+	query := `UPDATE Users SET username=? WHERE id=?`
+	_, err = db.Exec(query, body.Username, jwt.Subject)
 	if err != nil {
 		log.Error(err)
 		return echo.ErrInternalServerError
 	}
 
-	query := `UPDATE Users SET username=?,picture=? WHERE id=?`
-	_, err = db.Exec(query, body.Username, url, jwt.Subject)
+	tokenString, err := createApiJwt(jwt.Subject, body.Username)
 	if err != nil {
 		log.Error(err)
 		return echo.ErrInternalServerError
 	}
 
 	return c.JSON(http.StatusOK, OAuthResponse{
-		Id:             jwt.ID,
-		Signup:         false,
-		ProfilePicture: &url,
+		Id:     jwt.ID,
+		Signup: false,
+		Token:  tokenString,
 	})
 }
 
@@ -200,4 +166,63 @@ func getProfile(c echo.Context) error {
 		Friends:  friends,
 		Channels: channels,
 	})
+}
+
+func createApiJwt(id string, username string) (string, error) {
+	claims := &AuthJwt{
+		username,
+		jwt.RegisteredClaims{
+			Subject:   id,
+			Issuer:    "chatalyst",
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 24 * 7)),
+			IssuedAt:  jwt.NewNumericDate(time.Now()),
+		},
+	}
+
+	jsonToken := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+
+	tokenString, err := jsonToken.SignedString(getJwtSecretBytes())
+	return tokenString, err
+}
+
+func createSignupJwt(idTokenResp *GoogleJwt) (string, error) {
+	claims := &SignupJwt{
+		idTokenResp.Picture,
+		jwt.RegisteredClaims{
+			Subject:   idTokenResp.Subject,
+			Issuer:    "chatalyst",
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour)),
+			IssuedAt:  jwt.NewNumericDate(time.Now()),
+		},
+	}
+
+	jsonToken := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+
+	tokenString, err := jsonToken.SignedString(getJwtSecretBytes())
+	return tokenString, err
+}
+
+func exchangeTokenWithGoogle(u *OAuth) (*GoogleJwt, error) {
+	tok, err := config.Exchange(context.Background(), u.Code)
+	if err != nil {
+		return nil, err
+	}
+
+	client := config.Client(context.Background(), tok)
+	idToken := tok.Extra("id_token").(string)
+
+	resp, err := client.Get("https://oauth2.googleapis.com/tokeninfo?id_token=" + idToken)
+	if err != nil {
+		return nil, err
+	}
+
+	bytes, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	idTokenResp := new(GoogleJwt)
+	json.Unmarshal(bytes, idTokenResp)
+
+	return idTokenResp, nil
 }

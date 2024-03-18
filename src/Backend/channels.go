@@ -37,6 +37,11 @@ func getChannel(c echo.Context) error {
 	}
 	var channel ChannelResponse
 
+	if len(users) == 0 {
+		log.Error(err)
+		return echo.ErrForbidden
+	}
+
 	channel.Users = users
 
 	rows, err = db.Query(`

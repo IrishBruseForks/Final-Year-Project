@@ -1,6 +1,9 @@
-import { Avatar, Box, IconButton, ListItemButton, Typography } from "@mui/material";
-import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteIcon from "@mui/icons-material/Delete";
+import { Avatar, Box, IconButton, ListItemButton, Stack, Typography } from "@mui/material";
 import { format } from "date-fns";
+import * as linkify from "linkifyjs";
+import { useMemo, useState } from "react";
+import * as sanitizeHtml from "sanitize-html";
 import { ChannelResponse, OAuthResponse, PostMessageResponse } from "../../Types/ServerTypes";
 import LazyImage from "../LazyImage";
 
@@ -10,18 +13,44 @@ interface MessageProps {
   onDelete?: (messageId: string) => void;
 }
 
+const contentStyle = { a: { color: "primary.main" }, "a:visited": { color: "primary.dark" } };
+
 // Assuming onReply is passed as a prop for initiating a reply
 function Message({ message, channel, onDelete }: MessageProps) {
   function getProfilePictureUrl(message: PostMessageResponse) {
     return channel?.users?.find((c) => c.id === message.sentBy)?.picture || "";
   }
 
-   // Retrieve current user from localStorage
-   const currentUserJson = localStorage.getItem("user");
-   const currentUser = currentUserJson ? JSON.parse(currentUserJson) as OAuthResponse : null;
+  // Retrieve current user from localStorage
+  const currentUserJson = localStorage.getItem("user");
+  const currentUser = currentUserJson ? (JSON.parse(currentUserJson) as OAuthResponse) : null;
 
-   // Determine if the current user is the sender of the message
+  // Determine if the current user is the sender of the message
   const userCanDeleteMessage = currentUser?.id === message.sentBy;
+  const [videos, setVideos] = useState<string[]>([]);
+
+  const content = useMemo(() => {
+    const links = linkify.find(message.content);
+
+    let content = message.content;
+
+    for (var i = links.length; i >= 0; i--) {
+      const link = links[i];
+      if (link) {
+        const { href, type } = link;
+        if (type === "url") {
+          if (href.startsWith("https://www.youtube.com/watch?v=")) {
+            setVideos((videos) => [...videos, href.replace("https://www.youtube.com/watch?v=", "")]);
+          }
+          content = content.replace(href, `<a href="${href}" target="_blank">${href}</a>`);
+        }
+      }
+    }
+    console.log(content);
+
+    return sanitizeHtml(content, { allowedTags: ["a"], allowedAttributes: { a: ["href"] } });
+  }, [message.content]);
+
   return (
     <ListItemButton
       sx={{
@@ -39,10 +68,10 @@ function Message({ message, channel, onDelete }: MessageProps) {
         <Avatar src={getProfilePictureUrl(message)} sx={{ mr: 1 }} />
         <Box flexGrow={1}>
           <Typography variant="body2">{channel?.users?.find((c) => c.id === message.sentBy)?.username}</Typography>
-          <Typography variant="body1">{message.content}</Typography>
+          <Typography variant="body1" sx={contentStyle} dangerouslySetInnerHTML={{ __html: content }}></Typography>
         </Box>
       </Box>
-      <Box sx={{ ml: 6 }}>
+      <Stack spacing={2} direction={"column"} sx={{ ml: 6 }}>
         <LazyImage
           src={message.image}
           placeholder={<div />}
@@ -51,7 +80,15 @@ function Message({ message, channel, onDelete }: MessageProps) {
             window.open(message.image);
           }}
         />
-      </Box>
+        {videos.length > 0 &&
+          videos.map((video) => (
+            <iframe
+              src={"https://www.youtube.com/embed/" + video}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+            ></iframe>
+          ))}
+      </Stack>
       <Box
         sx={{
           position: "absolute", // Position the timestamp absolutely

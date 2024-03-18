@@ -13,7 +13,7 @@ interface ProfileModalProps {
 function ProfileModal({ open, onClose }: ProfileModalProps) {
   const { user } = useAuth();
 
-  const { data: whoami } = useApi<Profile>("profile", Urls.Profile, "Failed to get whoami", {
+  const { data: whoami } = useApi<Profile>("profile", Urls.Profile, {
     refetchOnMount: "always",
   });
 

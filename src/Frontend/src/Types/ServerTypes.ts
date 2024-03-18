@@ -33,7 +33,6 @@ export interface ChannelResponse {
   id: string;
   name: string;
   picture: string;
-  lastMessage?: number /* int64 */;
   users: User[];
 }
 export interface User {

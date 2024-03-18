@@ -104,6 +104,10 @@ func addMiddleware(e *echo.Echo) {
 	jwtMiddleware := echojwt.WithConfig(echojwt.Config{
 		SigningKey: secret,
 		NewClaimsFunc: func(c echo.Context) jwt.Claims {
+			if c.Path() == "/signup" {
+				return new(SignupJwt)
+			}
+
 			return new(AuthJwt)
 		},
 		Skipper: func(c echo.Context) bool {

@@ -12,13 +12,13 @@ export function useAuth() {
     user,
     async login(token: OAuth): Promise<OAuthResponse> {
       const resp = await axios.post<OAuthResponse>(import.meta.env.VITE_API_URL + Urls.Login, { code: token.code });
-      setValue(resp.data as OAuthResponse);
+      setValue(resp.data);
       return resp.data;
     },
     async signup(username: string): Promise<void> {
       try {
         let resp = await axios.post<OAuthResponse>(import.meta.env.VITE_API_URL + Urls.Signup, { username: username }, getApiAuthConfig(user!));
-        setValue({ ...resp.data, token: user.token });
+        setValue(resp.data);
       } catch (error) {
         enqueueSnackbar("Failed to signup: " + error, { variant: "error" });
       }

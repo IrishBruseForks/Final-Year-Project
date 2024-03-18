@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"io"
 	"math/rand"
 	"net/http"
 	"os"
@@ -13,49 +14,41 @@ import (
 	"github.com/labstack/gommon/log"
 )
 
-const prompt = `### Instruction:
-You are an AI assistant that provides civil suggestions for replies to text messages between real humans.
+const prompt = `You are an AI assistant that provides civil suggestions for replies to text messages between real humans.
 Do not reply with code, emojis, quotes, colons, or other special characters.
-Input is the conversation with their names for reference.
+Below is the conversation with their names for reference.
 Reply as if you were %s.
-Do not reply with anything other than the 3 choices.
-
-### Input:
-%s
-
-### Response:
-Sure here are the 3 replies only:
-
-1.`
+Do not reply with anything other than 3 choices prefixed with numbers.`
 
 func getReplies(c echo.Context) error {
-	// jwt := c.Get("user").(*jwt.Token)
-	// username := jwt.Claims.(*AuthJwt).Name
-
-	username := "Ethan"
 	messages := []string{
 		"Ryan: Hello",
-		"Ethan: Hi",
+		"IrishBruse: Hi",
 		"Ryan: How are you?",
-		"Ethan: I'm doing well",
+		"IrishBruse: I'm doing well",
 		"Ryan: What are you doing today?",
 	}
 
 	seed := rand.Intn(512)
 
-	log.Debug("seed:", seed)
-
-	chat := strings.Join(messages, "\n")
 	reply := Reply{
-		Prompt:      fmt.Sprintf(prompt, username, chat),
+		Messages: []Message{
+			{
+				Role:    "system",
+				Content: fmt.Sprintf(prompt, "IrishBruse"),
+			},
+			{
+				Role:    "user",
+				Content: strings.Join(messages, "\n"),
+			},
+		},
+		Model:       "gpt-3.5-turbo",
 		MaxTokens:   150,
 		Temperature: 1,
-		TopP:        0.8,
+		TopP:        0.9,
 		Seed:        seed,
 		Stream:      false,
 	}
-
-	fmt.Print(reply.Prompt)
 
 	data, err := json.Marshal(reply)
 	if err != nil {
@@ -63,13 +56,34 @@ func getReplies(c echo.Context) error {
 		return echo.ErrInternalServerError
 	}
 
-	resp, err := http.Post(os.Getenv("AI_URL"), "application/json", bytes.NewBuffer(data))
+	url := os.Getenv("AI_URL")
+	token := os.Getenv("AI_TOKEN")
+
+	req, err := http.NewRequest(http.MethodPost, url, bytes.NewBuffer(data))
+	if err != nil {
+		log.Error(err)
+		return echo.ErrInternalServerError
+	}
+
+	req.Header.Add("Content-Type", "application/json")
+	req.Header.Set("Authorization", "Bearer "+token)
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
 	if err != nil {
 		return c.JSON(http.StatusOK, []string{})
 	}
 
-	var res OpenAI
+	if resp.StatusCode != http.StatusOK {
+		// read all body
+		body, _ := io.ReadAll(resp.Body)
+		log.Error(string(body))
+		fmt.Println(resp.StatusCode)
 
+		return c.JSON(http.StatusOK, []string{"a", "Generate Lorem Ipsum placeholder text. Select the number of characters, words", "c"})
+	}
+
+	var res OpenAI
 	err = json.NewDecoder(resp.Body).Decode(&res)
 
 	if err != nil {
@@ -77,22 +91,29 @@ func getReplies(c echo.Context) error {
 		return echo.ErrInternalServerError
 	}
 
-	choices := res.Choices[0].Text
+	message := res.Choices[0].Message.Content
 
-	fmt.Println(choices)
+	choices := strings.Split(message, "\n")
+	for i := 0; i < 3; i++ {
+		choices[i] = strings.TrimPrefix(choices[i], fmt.Sprintf("%d. ", i+1))
+	}
 
-	return c.JSON(http.StatusOK, []string{
-		choices,
-	})
+	return c.JSON(http.StatusOK, choices)
 }
 
 type Reply struct {
-	Prompt      string  `json:"prompt"`
-	MaxTokens   int     `json:"max_tokens"`
-	Temperature float32 `json:"temperature"`
-	TopP        float32 `json:"top_p"`
-	Seed        int     `json:"seed"`
-	Stream      bool    `json:"stream"`
+	Messages    []Message `json:"messages"`
+	Model       string    `json:"model"`
+	MaxTokens   int       `json:"max_tokens"`
+	Temperature float32   `json:"temperature"`
+	TopP        float32   `json:"top_p"`
+	Seed        int       `json:"seed"`
+	Stream      bool      `json:"stream"`
+}
+
+type Message struct {
+	Role    string `json:"role"`
+	Content string `json:"content"`
 }
 
 type OpenAI struct {
@@ -104,7 +125,8 @@ type OpenAI struct {
 }
 
 type Choice struct {
-	Index        int64  `json:"index"`
-	FinishReason string `json:"finish_reason"`
-	Text         string `json:"text"`
+	Index        int64   `json:"index"`
+	FinishReason string  `json:"finish_reason"`
+	Text         string  `json:"text"`
+	Message      Message `json:"message"`
 }

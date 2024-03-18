@@ -8,7 +8,6 @@ import {
   Button,
   Chip,
   Divider,
-  Grid,
   IconButton,
   InputAdornment,
   List,
@@ -17,20 +16,20 @@ import {
   Menu,
   Stack,
   TextField,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import axios from "axios"; // Import axios for making HTTP requests
 import { enqueueSnackbar } from "notistack"; // Import enqueueSnackbar for showing snackbars (notifications)
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useMutation, useQueryClient } from "react-query"; // Import from react-query for server state management
-import { useParams } from "react-router-dom"; // Import useParams hook for getting URL parameters
+import { useNavigate, useParams } from "react-router-dom"; // Import useParams hook for getting URL parameters
 import { useAuth } from "../../Auth/useAuth"; // Custom hook for authentication
 import { ChannelResponse, PostMessageBody, PostMessageResponse } from "../../Types/ServerTypes"; // Import type definitions
 import Urls from "../../Utility/Urls"; // Utility for managing URLs
-import { getApiAuthConfig, useRefetchApi } from "../../Utility/useApi"; // API config and custom hook for API calls
+import { getApiAuthConfig, useApi, useRefetchApi } from "../../Utility/useApi"; // API config and custom hook for API calls
 import ImageUpload from "../ImageUpload";
 import LazyImage from "../LazyImage"; // Component for lazy-loading images
-import MobileSwitch from "../MobileSwitch";
 import Message from "./Message"; // Import the Message component for displaying individual messages
 
 // Define the MessageView component
@@ -38,28 +37,34 @@ function MessageView() {
   const { uuid } = useParams<{ uuid: string }>(); // Get the 'uuid' from the URL parameters
   const getMessageKey = ["getMessages", uuid]; // Define a key for caching messages
   // Fetch messages using a custom hook and refetch them every 5000ms
-  const { data: messages } = useRefetchApi<PostMessageResponse[]>(getMessageKey, Urls.Messages + "?id=" + uuid, "Fetching messages", {
+  const { data: messages } = useRefetchApi<PostMessageResponse[]>(getMessageKey, Urls.Messages + "?id=" + uuid, {
     refetchInterval: 2_000,
   });
 
-  const { data: smartReplies } = useRefetchApi<string[]>(["getReplies"], Urls.Replies, "Fetching replies", {
-    refetchInterval: 30_000,
-  });
+  const queryClient = useQueryClient(); // Access the QueryClient to manage queries and cache
+  const { data: smartReplies } = useApi<string[]>(["getReplies", uuid], Urls.Replies, { refetchInterval: false });
+
+  useEffect(() => {
+    const id = setTimeout(() => {
+      queryClient.invalidateQueries({ queryKey: ["getReplies", uuid] });
+    }, 30_000);
+
+    return () => clearTimeout(id);
+  }, [messages]);
 
   const replies = useMemo(() => {
-    console.log(smartReplies);
-
     if (smartReplies) {
       return smartReplies;
     }
     return [];
   }, [smartReplies]);
 
-  const queryClient = useQueryClient(); // Access the QueryClient to manage queries and cache
+  const navigate = useNavigate();
+
   const { user } = useAuth(); // Use the custom useAuth hook to access the user's authentication status
 
   // Fetch channel data using a custom hook
-  const { data: channel } = useRefetchApi<ChannelResponse>(["getChannel", uuid], Urls.Channel + "?id=" + uuid, "Fetching channels");
+  const { data: channel, error } = useRefetchApi<ChannelResponse>(["getChannel", uuid], Urls.Channel + "?id=" + uuid, { retry: false });
 
   const { mutate } = useMutation({
     mutationFn: async (newMessage: PostMessageBody) => {
@@ -80,6 +85,12 @@ function MessageView() {
 
   const [messageText, setMessageText] = useState(""); // State for the message input text for smart replies
 
+  useEffect(() => {
+    if (error?.response?.status == 403) {
+      navigate("/");
+    }
+  }, [error]);
+
   // Function to handle sending a message
   const sendMessage = async () => {
     try {
@@ -99,7 +110,6 @@ function MessageView() {
   const handleSmartReply = (reply: string) => {
     setMessageText(reply);
   };
-
   // Detele mutation using React Query
   const deleteMessageMutation = useMutation(
     (messageId: string) => axios.delete(`${import.meta.env.VITE_API_URL}/messages/${messageId}`, getApiAuthConfig(user!)),
@@ -109,56 +119,9 @@ function MessageView() {
       },
     }
   );
-
-  // Modified mobileLayout with Chips wrapped in a Box for individual sizing
-  const mobileLayout = (
-    <Stack direction="column" spacing={1}>
-      {replies.map((reply, index) => (
-        <Box key={index} sx={{ display: "flex", justifyContent: "center" }}>
-          {/* Container to control sizing */}
-          <Chip
-            label={reply}
-            onClick={() => handleSmartReply(reply)}
-            variant="outlined"
-            sx={{
-              maxWidth: 300, // Set a specific maxWidth for each Chip
-              overflow: "hidden",
-              whiteSpace: "nowrap",
-              textOverflow: "ellipsis",
-            }}
-          />
-        </Box>
-      ))}
-    </Stack>
-  );
-
-  // Adjusted desktopLayout using Grid for equal sizing and spacing of Chips
-  const desktopLayout = (
-    <Grid container spacing={2} justifyContent="center" sx={{ mb: 2 }}>
-      {/* Adjust spacing as needed */}
-      {replies.map((reply, index) => (
-        <Grid item xs={4} key={index}>
-          {/* xs=4 for 3 items per row, adjust as necessary */}
-          <Chip
-            label={reply}
-            onClick={() => handleSmartReply(reply)}
-            variant="outlined"
-            sx={{
-              width: "100%", // Ensure the Chip fills its container
-              overflow: "hidden",
-              whiteSpace: "nowrap",
-              textOverflow: "ellipsis",
-            }}
-          />
-        </Grid>
-      ))}
-    </Grid>
-  );
-
   // Render the component UI
   return (
     <Stack flexBasis={0} flexGrow={1} p={1.5} sx={{ m: { xs: 1, md: 2 } }} borderRadius={1} bgcolor="background.paper">
-      {/* Channel Header */}
       <Box sx={{ display: "flex", alignItems: "center", height: 50, mb: 1 }}>
         <Typography sx={{ textAlign: "justify" }} variant="h5">
           {channel?.users && (
@@ -203,6 +166,7 @@ function MessageView() {
         </Typography>
       </Box>
       <Divider />
+
       {/* Messages List */}
       <List
         sx={{
@@ -239,11 +203,30 @@ function MessageView() {
       )}
       {/* Smart Replies Section */}
       {/* Use MobileSwitch to choose between mobile and desktop layouts */}
-      <MobileSwitch mobile={mobileLayout} desktop={desktopLayout} />
+      <Stack sx={{ flexDirection: { md: "row", xs: "column" }, justifyContent: "center" }}>
+        {/* Container to control sizing */}
+        {replies.map((reply) => (
+          <Tooltip title={reply}>
+            <Chip
+              label={reply}
+              onClick={() => handleSmartReply(reply)}
+              variant="outlined"
+              sx={{
+                maxWidth: "100%",
+                mx: 2,
+                my: { xs: 1 },
+                overflow: "hidden",
+                whiteSpace: "nowrap",
+                textOverflow: "ellipsis",
+              }}
+            />
+          </Tooltip>
+        ))}
+      </Stack>
       {/* Message Input Section */}
       <Stack direction={"row"} display={"flex"} alignItems={"center"} justifyContent={"center"} gap={1}>
         {/* Upload Button */}
-        <Button component="label" sx={{ minWidth: "10px", p: 1.5 }}>
+        <Button component="label" sx={{ minWidth: "10px", p: 1.5 }} disabled={channel === undefined}>
           <UploadIcon />
           <ImageUpload
             onChange={(img) => {
@@ -253,6 +236,7 @@ function MessageView() {
         </Button>
         {/* Text Field for typing the message */}
         <TextField
+          disabled={channel === undefined}
           size="medium"
           autoFocus
           margin="dense"
@@ -274,7 +258,7 @@ function MessageView() {
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
-                <Button variant="contained" endIcon={<SendIcon />} onClick={sendMessage}>
+                <Button variant="contained" endIcon={<SendIcon />} onClick={sendMessage} disabled={channel === undefined}>
                   <b>Send</b> {/* Send Button */}
                 </Button>
               </InputAdornment>
