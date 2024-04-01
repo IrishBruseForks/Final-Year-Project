@@ -2,11 +2,15 @@ import { Menu as MenuIcon } from "@mui/icons-material";
 import { AppBar, Avatar, IconButton, Menu, MenuItem, Toolbar, Typography, useMediaQuery } from "@mui/material";
 import { useRef, useState } from "react";
 import { useAuth } from "../Auth/useAuth";
+import { Profile } from "../Types/ServerTypes";
+import Urls from "../Utility/Urls";
+import { useApi } from "../Utility/useApi";
 import LazyImage from "./LazyImage";
 import ProfileModal from "./Modals/ProfileModal";
 
 function Navbar({ toggleDrawer, enableBurgerMenu = true }: { toggleDrawer: (open: boolean) => void; enableBurgerMenu?: boolean }) {
-  const { logout, user } = useAuth();
+  const { logout } = useAuth();
+  const { data: whoami } = useApi<Profile>("profile", Urls.Profile, {});
 
   const isMobile = useMediaQuery("(max-width:899px)");
   const [opened, setOpened] = useState<boolean>(false);
@@ -50,7 +54,7 @@ function Navbar({ toggleDrawer, enableBurgerMenu = true }: { toggleDrawer: (open
             color="inherit"
             ref={anchorRef}
           >
-            <Avatar src={user.profilePicture} title="Profile Picture" sx={{ bgcolor: "background.default", borderRadius: "50%", height: 32, width: 32 }} />
+            <Avatar src={whoami?.picture} title="Profile Picture" sx={{ bgcolor: "background.default", borderRadius: "50%", height: 32, width: 32 }} />
           </IconButton>
           <Menu
             id="menu-appbar"

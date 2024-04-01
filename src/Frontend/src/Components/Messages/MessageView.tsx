@@ -21,7 +21,7 @@ import {
 } from "@mui/material";
 import axios from "axios"; // Import axios for making HTTP requests
 import { enqueueSnackbar } from "notistack"; // Import enqueueSnackbar for showing snackbars (notifications)
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useMutation, useQueryClient } from "react-query"; // Import from react-query for server state management
 import { useNavigate, useParams } from "react-router-dom"; // Import useParams hook for getting URL parameters
 import { useAuth } from "../../Auth/useAuth"; // Custom hook for authentication
@@ -35,6 +35,24 @@ import Message from "./Message"; // Import the Message component for displaying 
 // Define the MessageView component
 function MessageView() {
   const { uuid } = useParams<{ uuid: string }>(); // Get the 'uuid' from the URL parameters
+
+  if (uuid === undefined) {
+    return (
+      <Stack
+        flexBasis={0}
+        justifyContent={"center"}
+        alignItems={"center"}
+        flexGrow={1}
+        p={1.5}
+        sx={{ m: { xs: 1, md: 2 } }}
+        borderRadius={1}
+        bgcolor="background.paper"
+      >
+        <Typography>Start by creating or opening a channel</Typography>
+      </Stack>
+    );
+  }
+
   const getMessageKey = ["getMessages", uuid]; // Define a key for caching messages
   // Fetch messages using a custom hook and refetch them every 5000ms
   const { data: messages } = useRefetchApi<PostMessageResponse[]>(getMessageKey, Urls.Messages + "?id=" + uuid, {
@@ -42,22 +60,17 @@ function MessageView() {
   });
 
   const queryClient = useQueryClient(); // Access the QueryClient to manage queries and cache
-  const { data: smartReplies } = useApi<string[]>(["getReplies", uuid], Urls.Replies, { refetchInterval: false });
+  const { data: smartReplies } = useApi<string[]>(["getReplies", uuid], Urls.Replies + "?id=" + uuid, { refetchInterval: false });
 
   useEffect(() => {
     const id = setTimeout(() => {
+      console.log("Getting replies");
+
       queryClient.invalidateQueries({ queryKey: ["getReplies", uuid] });
     }, 30_000);
 
     return () => clearTimeout(id);
   }, [messages]);
-
-  const replies = useMemo(() => {
-    if (smartReplies) {
-      return smartReplies;
-    }
-    return [];
-  }, [smartReplies]);
 
   const navigate = useNavigate();
 
@@ -205,23 +218,24 @@ function MessageView() {
       {/* Use MobileSwitch to choose between mobile and desktop layouts */}
       <Stack sx={{ flexDirection: { md: "row", xs: "column" }, justifyContent: "center" }}>
         {/* Container to control sizing */}
-        {replies.map((reply) => (
-          <Tooltip title={reply}>
-            <Chip
-              label={reply}
-              onClick={() => handleSmartReply(reply)}
-              variant="outlined"
-              sx={{
-                maxWidth: "100%",
-                mx: 2,
-                my: { xs: 1 },
-                overflow: "hidden",
-                whiteSpace: "nowrap",
-                textOverflow: "ellipsis",
-              }}
-            />
-          </Tooltip>
-        ))}
+        {smartReplies &&
+          smartReplies.map((reply) => (
+            <Tooltip title={reply}>
+              <Chip
+                label={reply}
+                onClick={() => handleSmartReply(reply)}
+                variant="outlined"
+                sx={{
+                  maxWidth: { md: "300px", xs: "80vw" },
+                  mx: 2,
+                  my: { xs: 1 },
+                  overflow: "hidden",
+                  whiteSpace: "nowrap",
+                  textOverflow: "ellipsis",
+                }}
+              />
+            </Tooltip>
+          ))}
       </Stack>
       {/* Message Input Section */}
       <Stack direction={"row"} display={"flex"} alignItems={"center"} justifyContent={"center"} gap={1}>

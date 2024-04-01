@@ -37,6 +37,11 @@ func getUser(c echo.Context) (user string) {
 	return jwt.Claims.(*AuthJwt).Subject
 }
 
+func getUsername(c echo.Context) (user string) {
+	jwt := c.Get("user").(*jwt.Token)
+	return jwt.Claims.(*AuthJwt).Username
+}
+
 func getBody[T any](c echo.Context) (*T, error) {
 	body := new(T)
 	if err := c.Bind(body); err != nil {

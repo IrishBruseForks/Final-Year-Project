@@ -1,6 +1,6 @@
 import { Avatar, Dialog, DialogContent, Divider, Grid, Stack, Typography } from "@mui/material";
 import { useEffect } from "react";
-import { useAuth } from "../../Auth/useAuth";
+import { useQueryClient } from "react-query";
 import { Profile } from "../../Types/ServerTypes";
 import Urls from "../../Utility/Urls";
 import { useApi } from "../../Utility/useApi";
@@ -11,21 +11,25 @@ interface ProfileModalProps {
 }
 
 function ProfileModal({ open, onClose }: ProfileModalProps) {
-  const { user } = useAuth();
+  const queryClient = useQueryClient();
 
-  const { data: whoami } = useApi<Profile>("profile", Urls.Profile, {
-    refetchOnMount: "always",
-  });
+  const { data: whoami } = useApi<Profile>("profile", Urls.Profile, {});
 
   useEffect(() => {
     document.title = import.meta.env.VITE_APP_TITLE + " - Profile";
   }, []);
 
+  useEffect(() => {
+    if (open) {
+      queryClient.invalidateQueries("profile");
+    }
+  }, [open]);
+
   return (
     <Dialog onClose={onClose} open={open} sx={{ overflowY: "visible" }}>
       <Stack direction={"column"} justifyContent={"center"} alignItems={"center"}>
         <Avatar
-          src={user.profilePicture}
+          src={whoami?.picture}
           sx={{
             position: "absolute",
             top: -50,

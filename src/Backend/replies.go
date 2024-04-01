@@ -16,18 +16,15 @@ import (
 
 const prompt = `You are an AI assistant that provides civil suggestions for replies to text messages between real humans.
 Do not reply with code, emojis, quotes, colons, or other special characters.
+Keep replies short and to the point.
 Below is the conversation with their names for reference.
 Reply as if you were %s.
 Do not reply with anything other than 3 choices prefixed with numbers.`
 
 func getReplies(c echo.Context) error {
-	messages := []string{
-		"Ryan: Hello",
-		"IrishBruse: Hi",
-		"Ryan: How are you?",
-		"IrishBruse: I'm doing well",
-		"Ryan: What are you doing today?",
-	}
+	username := getUsername(c)
+
+	messages := getRecentMessages(c)
 
 	seed := rand.Intn(512)
 
@@ -35,7 +32,7 @@ func getReplies(c echo.Context) error {
 		Messages: []Message{
 			{
 				Role:    "system",
-				Content: fmt.Sprintf(prompt, "IrishBruse"),
+				Content: fmt.Sprintf(prompt, username),
 			},
 			{
 				Role:    "user",
@@ -80,12 +77,11 @@ func getReplies(c echo.Context) error {
 		log.Error(string(body))
 		fmt.Println(resp.StatusCode)
 
-		return c.JSON(http.StatusOK, []string{"a", "Generate Lorem Ipsum placeholder text. Select the number of characters, words", "c"})
+		return c.NoContent(http.StatusForbidden)
 	}
 
 	var res OpenAI
 	err = json.NewDecoder(resp.Body).Decode(&res)
-
 	if err != nil {
 		log.Error(err)
 		return echo.ErrInternalServerError
@@ -93,12 +89,54 @@ func getReplies(c echo.Context) error {
 
 	message := res.Choices[0].Message.Content
 
+	results := make([]string, 0)
 	choices := strings.Split(message, "\n")
-	for i := 0; i < 3; i++ {
-		choices[i] = strings.TrimPrefix(choices[i], fmt.Sprintf("%d. ", i+1))
+	for i := 0; i < len(choices); i++ {
+		if strings.HasPrefix(choices[i], fmt.Sprintf("%d. ", i+1)) {
+			res := strings.TrimPrefix(choices[i], fmt.Sprintf("%d. ", i+1))
+			results = append(results, res)
+		}
 	}
 
-	return c.JSON(http.StatusOK, choices)
+	return c.JSON(http.StatusOK, results)
+}
+
+func getRecentMessages(c echo.Context) []string {
+	var channelId string
+	echo.QueryParamsBinder(c).MustString("id", &channelId)
+
+	query := `
+	SELECT
+		u.username,content
+	FROM
+		Messages m
+	JOIN
+		Users u ON u.id=m.sentBy
+	WHERE
+		channelId=?
+	ORDER BY sentOn DESC
+	LIMIT 10;
+	`
+
+	rows, err := db.Query(query, channelId)
+	if err != nil {
+		log.Error(err)
+		return []string{}
+	}
+
+	messages := make([]string, 0)
+
+	for rows.Next() {
+		var msg PostMessageResponse
+		err := rows.Scan(&msg.SentBy, &msg.Content)
+		if err != nil {
+			log.Error(err)
+			return []string{}
+		}
+		messages = append(messages, fmt.Sprintf("%s: %s", msg.SentBy, msg.Content))
+	}
+
+	return messages
 }
 
 type Reply struct {

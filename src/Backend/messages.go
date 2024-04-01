@@ -112,7 +112,7 @@ func postMessages(c echo.Context) error {
 }
 
 func UploadImage(img string) (string, error) {
-	resp, err := http.PostForm("https://api.imgbb.com/1/upload?expiration=1000000&key="+os.Getenv("IMGBB_SECRET"), map[string][]string{
+	resp, err := http.PostForm("https://api.imgbb.com/1/upload?expiration=15552000&key="+os.Getenv("IMGBB_SECRET"), map[string][]string{
 		"image": {img},
 	})
 
@@ -135,7 +135,7 @@ func UploadImage(img string) (string, error) {
 		return "", echo.ErrInternalServerError
 	}
 
-	return imgbb.Data.Image.URL, err
+	return imgbb.Data.URL, err
 }
 
 type ImgBB struct {

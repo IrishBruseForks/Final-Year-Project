@@ -7,7 +7,7 @@ import Urls from "./Urls";
 
 export function useApi<TQueryFnData = unknown, TError = AxiosError, TData = TQueryFnData, TQueryKey extends QueryKey = QueryKey>(
   queryKey: TQueryKey,
-  url: (typeof Urls)[keyof typeof Urls],
+  url: (typeof Urls)[keyof typeof Urls] | string,
   options?: Omit<UseQueryOptions<TQueryFnData, TError, TData, TQueryKey>, "queryKey" | "queryFn">
 ): UseQueryResult<TData, TError> {
   const { user, logout } = useAuth();
