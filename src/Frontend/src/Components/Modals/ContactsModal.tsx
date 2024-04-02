@@ -11,7 +11,7 @@ interface ContactsModalProps {
 }
 
 const ContactsModal: React.FC<ContactsModalProps> = ({ open, onClose }) => {
-  const { data: users, isLoading } = useApi<User[]>("getFriends", Urls.Friends);
+  const { data: users, isLoading } = useApi<User[]>(["getFriends"], Urls.Friends);
 
   return (
     <Dialog onClose={onClose} open={open} fullWidth maxWidth="sm">

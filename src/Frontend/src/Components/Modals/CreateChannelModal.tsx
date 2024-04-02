@@ -17,8 +17,8 @@ import {
   SelectChangeEvent,
   TextField,
 } from "@mui/material";
+import { useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
-import { useQueryClient } from "react-query";
 import { useAuth } from "../../Auth/useAuth";
 import { PostChannelBody, User } from "../../Types/ServerTypes";
 import Api from "../../Utility/Api";
@@ -109,7 +109,7 @@ export const CreateChannelModal: React.FC<CreateChannelModalProps> = ({ open, ha
       // Send a POST request to create the channel
       await Api.Post(Urls.Channels, channelData);
       // Invalidate the queries to refresh the channel list
-      queryClient.invalidateQueries("getChannels");
+      queryClient.invalidateQueries({ queryKey: ["getChannels"] });
       // Close the modal
       close();
     } catch (error) {

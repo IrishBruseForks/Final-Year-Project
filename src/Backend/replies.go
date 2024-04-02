@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io"
 	"math/rand"
 	"net/http"
 	"os"
@@ -25,6 +24,10 @@ func getReplies(c echo.Context) error {
 	username := getUsername(c)
 
 	messages := getRecentMessages(c)
+
+	if len(messages) < 5 {
+		return echo.ErrForbidden
+	}
 
 	seed := rand.Intn(512)
 
@@ -72,11 +75,6 @@ func getReplies(c echo.Context) error {
 	}
 
 	if resp.StatusCode != http.StatusOK {
-		// read all body
-		body, _ := io.ReadAll(resp.Body)
-		log.Error(string(body))
-		fmt.Println(resp.StatusCode)
-
 		return c.NoContent(http.StatusForbidden)
 	}
 

@@ -19,10 +19,10 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
+import { useMutation, useQueryClient } from "@tanstack/react-query"; // Import from react-query for server state management
 import axios from "axios"; // Import axios for making HTTP requests
 import { enqueueSnackbar } from "notistack"; // Import enqueueSnackbar for showing snackbars (notifications)
 import { useEffect, useRef, useState } from "react";
-import { useMutation, useQueryClient } from "react-query"; // Import from react-query for server state management
 import { useNavigate, useParams } from "react-router-dom"; // Import useParams hook for getting URL parameters
 import { useAuth } from "../../Auth/useAuth"; // Custom hook for authentication
 import { ChannelResponse, PostMessageBody, PostMessageResponse } from "../../Types/ServerTypes"; // Import type definitions
@@ -35,23 +35,6 @@ import Message from "./Message"; // Import the Message component for displaying 
 // Define the MessageView component
 function MessageView() {
   const { uuid } = useParams<{ uuid: string }>(); // Get the 'uuid' from the URL parameters
-
-  if (uuid === undefined) {
-    return (
-      <Stack
-        flexBasis={0}
-        justifyContent={"center"}
-        alignItems={"center"}
-        flexGrow={1}
-        p={1.5}
-        sx={{ m: { xs: 1, md: 2 } }}
-        borderRadius={1}
-        bgcolor="background.paper"
-      >
-        <Typography>Start by creating or opening a channel</Typography>
-      </Stack>
-    );
-  }
 
   const getMessageKey = ["getMessages", uuid]; // Define a key for caching messages
   // Fetch messages using a custom hook and refetch them every 5000ms
@@ -123,15 +106,14 @@ function MessageView() {
   const handleSmartReply = (reply: string) => {
     setMessageText(reply);
   };
+
   // Detele mutation using React Query
-  const deleteMessageMutation = useMutation(
-    (messageId: string) => axios.delete(`${import.meta.env.VITE_API_URL}/messages/${messageId}`, getApiAuthConfig(user!)),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(getMessageKey); // Refresh the messages after a successful delete
-      },
-    }
-  );
+  const deleteMessageMutation = useMutation({
+    mutationFn: async (messageId: string) => axios.delete(`${import.meta.env.VITE_API_URL}/messages/${messageId}`, getApiAuthConfig(user!)),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: getMessageKey }); // Refresh the messages after a successful delete
+    },
+  });
   // Render the component UI
   return (
     <Stack flexBasis={0} flexGrow={1} p={1.5} sx={{ m: { xs: 1, md: 2 } }} borderRadius={1} bgcolor="background.paper">
@@ -161,13 +143,13 @@ function MessageView() {
               setOpened(false);
             }}
           >
-            <ListItem>
+            <ListItem key={"Users"}>
               <Typography>Users</Typography>
             </ListItem>
             <Divider />
             {channel?.users?.map((user) => {
               return (
-                <ListItem>
+                <ListItem key={user.id}>
                   <ListItemAvatar>
                     <Avatar key={user.id} alt={user.username} src={user.picture} />
                   </ListItemAvatar>
@@ -219,8 +201,8 @@ function MessageView() {
       <Stack sx={{ flexDirection: { md: "row", xs: "column" }, justifyContent: "center" }}>
         {/* Container to control sizing */}
         {smartReplies &&
-          smartReplies.map((reply) => (
-            <Tooltip title={reply}>
+          smartReplies.map((reply, index) => (
+            <Tooltip key={index} title={reply}>
               <Chip
                 label={reply}
                 onClick={() => handleSmartReply(reply)}

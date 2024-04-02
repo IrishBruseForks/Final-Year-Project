@@ -3,7 +3,6 @@ import { Avatar, Box, IconButton, ListItemButton, Stack, Typography } from "@mui
 import { format } from "date-fns";
 import * as linkify from "linkifyjs";
 import { useMemo, useState } from "react";
-import * as sanitizeHtml from "sanitize-html";
 import { ChannelResponse, OAuthResponse, PostMessageResponse } from "../../Types/ServerTypes";
 import LazyImage from "../LazyImage";
 
@@ -46,9 +45,8 @@ function Message({ message, channel, onDelete }: MessageProps) {
         }
       }
     }
-    console.log(content);
 
-    return sanitizeHtml(content, { allowedTags: ["a"], allowedAttributes: { a: ["href"] } });
+    return content;
   }, [message.content]);
 
   return (

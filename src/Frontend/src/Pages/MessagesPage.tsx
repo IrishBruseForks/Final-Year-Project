@@ -1,11 +1,14 @@
-import { Stack, SwipeableDrawer } from "@mui/material";
+import { Stack, SwipeableDrawer, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import FriendsPanel from "../Components/FriendsPanel";
 import MessageView from "../Components/Messages/MessageView";
 import MobileSwitch from "../Components/MobileSwitch";
 import Navbar from "../Components/Navbar";
 
 function MessagesPage() {
+  const { uuid } = useParams<{ uuid: string }>(); // Get the 'uuid' from the URL parameters
+
   const [opened, setOpened] = useState(false);
   const toggleDrawer = (state: boolean) => {
     setOpened(state);
@@ -39,7 +42,23 @@ function MessagesPage() {
           }
           desktop={<FriendsPanel />}
         />
-        <MessageView />
+
+        {uuid == undefined ? (
+          <Stack
+            flexBasis={0}
+            justifyContent={"center"}
+            alignItems={"center"}
+            flexGrow={1}
+            p={1.5}
+            sx={{ m: { xs: 1, md: 2 } }}
+            borderRadius={1}
+            bgcolor="background.paper"
+          >
+            <Typography>Start by creating or opening a channel</Typography>
+          </Stack>
+        ) : (
+          <MessageView />
+        )}
       </Stack>
     </Stack>
   );

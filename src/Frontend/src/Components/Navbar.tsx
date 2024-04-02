@@ -10,7 +10,7 @@ import ProfileModal from "./Modals/ProfileModal";
 
 function Navbar({ toggleDrawer, enableBurgerMenu = true }: { toggleDrawer: (open: boolean) => void; enableBurgerMenu?: boolean }) {
   const { logout } = useAuth();
-  const { data: whoami } = useApi<Profile>("profile", Urls.Profile, {});
+  const { data: whoami } = useApi<Profile>(["profile"], Urls.Profile, {});
 
   const isMobile = useMediaQuery("(max-width:899px)");
   const [opened, setOpened] = useState<boolean>(false);

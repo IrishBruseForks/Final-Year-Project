@@ -1,9 +1,10 @@
 import CloseIcon from "@mui/icons-material/Close";
 import { CssBaseline, IconButton, ThemeProvider, createTheme } from "@mui/material";
-import {} from "@mui/material/colors";
+import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { persistQueryClient } from "@tanstack/react-query-persist-client";
 import { SnackbarKey, SnackbarProvider, useSnackbar } from "notistack";
 import React, { createContext } from "react";
-import { QueryClient, QueryClientProvider } from "react-query";
 import { RouterProvider } from "react-router-dom";
 import { AuthProvider } from "./Auth/AuthProvider";
 import { router } from "./router";
@@ -138,11 +139,22 @@ function App() {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
+        gcTime: 1000 * 60 * 60 * 24, // 24 hours
         retry: 3,
         refetchOnWindowFocus: false,
         retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
       },
     },
+  });
+
+  const localStoragePersister = createSyncStoragePersister({
+    storage: window.localStorage,
+  });
+  // const sessionStoragePersister = createSyncStoragePersister({ storage: window.sessionStorage })
+
+  persistQueryClient({
+    queryClient,
+    persister: localStoragePersister,
   });
 
   function SnackbarCloseButton({ snackbarKey }: { snackbarKey: SnackbarKey }) {

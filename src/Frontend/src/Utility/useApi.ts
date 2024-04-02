@@ -1,5 +1,5 @@
+import { QueryKey, UseQueryOptions, UseQueryResult, useQuery } from "@tanstack/react-query";
 import axios, { AxiosError, AxiosRequestConfig } from "axios";
-import { QueryKey, UseQueryOptions, UseQueryResult, useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../Auth/useAuth";
 import { OAuthResponse } from "../Types/ServerTypes";
@@ -13,9 +13,10 @@ export function useApi<TQueryFnData = unknown, TError = AxiosError, TData = TQue
   const { user, logout } = useAuth();
   let navigate = useNavigate();
 
-  return useQuery<TQueryFnData, TError, TData, TQueryKey>(
-    queryKey,
-    async (): Promise<TQueryFnData> => {
+  return useQuery<TQueryFnData, TError, TData, TQueryKey>({
+    ...options,
+    queryKey: queryKey,
+    queryFn: async (): Promise<TQueryFnData> => {
       if (!user) {
         navigate("/login");
         return Promise.reject("Unauthorized");
@@ -32,32 +33,23 @@ export function useApi<TQueryFnData = unknown, TError = AxiosError, TData = TQue
           }
         }
 
-        console.log(error);
-
         throw error;
       }
     },
-    options
-  );
+  });
 }
 
 export function useRefetchApi<TQueryFnData = unknown, TError = AxiosError, TData = TQueryFnData, TQueryKey extends QueryKey = QueryKey>(
   queryKey: TQueryKey,
   url: string,
-  options?: Omit<UseQueryOptions<TQueryFnData, TError, TData, TQueryKey>, "queryKey" | "queryFn">
+  options?: Omit<UseQueryOptions<TQueryFnData, TError, TData, TQueryKey>, "queryKey" | "queryFn" | "initialData">
 ): UseQueryResult<TData, TError> {
-  return useApi(queryKey, url as any, {
+  const ret = useApi<TQueryFnData, TError, TData, TQueryKey>(queryKey, url as any, {
     ...options,
-    refetchInterval(data, query) {
-      if (typeof options?.refetchInterval !== "number") return false;
-      if (data) return options?.refetchInterval;
-
-      // Exponential backoff on error
-      const time = options?.refetchInterval * 2 ** (query.state.errorUpdateCount + 1);
-
-      return Math.min(time, 60000);
-    },
+    refetchInterval: 5000,
   });
+
+  return ret;
 }
 
 export function getApiAuthConfig(user: OAuthResponse): AxiosRequestConfig {

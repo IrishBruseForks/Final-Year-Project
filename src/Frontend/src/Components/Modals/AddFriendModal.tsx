@@ -1,9 +1,9 @@
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle, InputAdornment, TextField } from "@mui/material";
+import { useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import React, { useMemo, useState } from "react";
-import { useQueryClient } from "react-query";
 import { UsernameBody } from "../../Types/ServerTypes";
 import Api from "../../Utility/Api";
 import Urls from "../../Utility/Urls";
@@ -33,7 +33,7 @@ export const AddFriendModal: React.FC<AddFriendModalProps> = ({ open, handleClos
       await Api.Post<UsernameBody>(Urls.Friends, { username: username });
       handleClose();
       setUsername(null);
-      queryClient.invalidateQueries("getFriends");
+      queryClient.invalidateQueries({ queryKey: ["getFriends"] });
     } catch (error) {
       if (error instanceof AxiosError) {
         let networkError = error.response?.data.message;

@@ -1,6 +1,6 @@
 import { Avatar, Dialog, DialogContent, Divider, Grid, Stack, Typography } from "@mui/material";
+import { useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
-import { useQueryClient } from "react-query";
 import { Profile } from "../../Types/ServerTypes";
 import Urls from "../../Utility/Urls";
 import { useApi } from "../../Utility/useApi";
@@ -13,7 +13,7 @@ interface ProfileModalProps {
 function ProfileModal({ open, onClose }: ProfileModalProps) {
   const queryClient = useQueryClient();
 
-  const { data: whoami } = useApi<Profile>("profile", Urls.Profile, {});
+  const { data: whoami } = useApi<Profile>(["profile"], Urls.Profile, {});
 
   useEffect(() => {
     document.title = import.meta.env.VITE_APP_TITLE + " - Profile";
@@ -21,7 +21,7 @@ function ProfileModal({ open, onClose }: ProfileModalProps) {
 
   useEffect(() => {
     if (open) {
-      queryClient.invalidateQueries("profile");
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
     }
   }, [open]);
 

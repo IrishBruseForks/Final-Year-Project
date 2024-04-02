@@ -21,13 +21,14 @@ function ChannelItem({ id, username, lastMessage, profilePic }: Props) {
     mouseY: number;
   } | null>(null);
 
-  const handleContextMenu = (event: React.MouseEvent) => {
-    event.preventDefault();
+  const handleContextMenu = (e: React.MouseEvent) => {
+    e.preventDefault();
+
     setContextMenu(
       contextMenu === null
         ? {
-            mouseX: event.clientX + 2,
-            mouseY: event.clientY - 6,
+            mouseX: e.clientX + 2,
+            mouseY: e.clientY - 6,
           }
         : null
     );
@@ -83,8 +84,7 @@ function ChannelItem({ id, username, lastMessage, profilePic }: Props) {
               }, 200);
             }}
           >
-            Leave Channel&nbsp;
-            <ExitToAppIcon />
+            Leave Channel&nbsp; <ExitToAppIcon />
           </MenuItem>
         </Menu>
       </ListItemButton>

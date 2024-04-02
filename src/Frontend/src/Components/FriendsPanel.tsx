@@ -19,9 +19,9 @@ const FriendsPanel = ({ close }: { close?: () => void }) => {
   const navigate = useNavigate();
 
   // Fetch all channels
-  const { data, isLoading, isError } = useRefetchApi<ChannelsResponse[]>("getChannels", Urls.Channels, { refetchInterval: 2000 });
+  const { data, isLoading, isError } = useRefetchApi<ChannelsResponse[]>(["getChannels"], Urls.Channels, { refetchInterval: 2000 });
 
-  const { data: users } = useApi<User[]>("getFriends", Urls.Friends);
+  const { data: users } = useApi<User[]>(["getFriends"], Urls.Friends);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const searchData = useMemo<ChannelsResponse[] | undefined>(() => data && filterChannels(data), [searchTerm, data]);
@@ -71,7 +71,6 @@ const FriendsPanel = ({ close }: { close?: () => void }) => {
         <Stack direction={"row"}>
           <TextField
             size="small"
-            autoFocus
             margin="dense"
             label="Find a Channel"
             fullWidth
