@@ -47,8 +47,6 @@ function MessageView() {
 
   useEffect(() => {
     const id = setTimeout(() => {
-      console.log("Getting replies");
-
       queryClient.invalidateQueries({ queryKey: ["getReplies", uuid] });
     }, 30_000);
 

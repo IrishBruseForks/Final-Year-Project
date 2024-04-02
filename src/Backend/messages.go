@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"net/http"
 	"os"
@@ -70,8 +69,6 @@ func postMessages(c echo.Context) error {
 	user := getUser(c)
 
 	body.Content = strings.TrimSpace(htmlSanitizer.Sanitize(body.Content))
-
-	fmt.Println(body.Content)
 
 	if len(body.Content) == 0 {
 		return echo.ErrBadRequest

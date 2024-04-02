@@ -39,6 +39,7 @@ function ChannelItem({ id, username, lastMessage, profilePic }: Props) {
       return "No message";
     }
 
+    // Message is sanitized on the server size so its save to set inner html
     return lastMessage;
   };
 
@@ -66,9 +67,7 @@ function ChannelItem({ id, username, lastMessage, profilePic }: Props) {
           <Typography noWrap variant="h6">
             {username}
           </Typography>
-          <Typography noWrap color={"text.secondary"} sx={{ maxWidth: "200px" }}>
-            {lastMessagePreview()}
-          </Typography>
+          <Typography noWrap color={"text.secondary"} sx={{ maxWidth: "200px" }} dangerouslySetInnerHTML={{ __html: lastMessagePreview() }} />
         </Box>
 
         <Menu
