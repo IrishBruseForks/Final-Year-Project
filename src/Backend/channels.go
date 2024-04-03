@@ -42,6 +42,12 @@ func getChannel(c echo.Context) error {
 		return echo.ErrForbidden
 	}
 
+	users = append(users, User{
+		Id:       "0",
+		Username: "Chatalyst",
+		Picture:  "https://chatalyst.ethanconneely.com/Logo.png",
+	})
+
 	channel.Users = users
 
 	rows, err = db.Query(`

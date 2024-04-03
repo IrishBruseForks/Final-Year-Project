@@ -54,7 +54,15 @@ function App() {
       MuiPaper: {
         styleOverrides: {
           root: {
-            backgroundColor: "#464e5a",
+            backgroundColor: "#31373f",
+            backgroundImage: "none",
+          },
+        },
+      },
+      MuiMenu: {
+        styleOverrides: {
+          paper: {
+            backgroundColor: "#454e58",
             backgroundImage: "none",
           },
         },
@@ -69,7 +77,22 @@ function App() {
       MuiDialog: {
         styleOverrides: {
           paper: {
+            backgroundColor: "#454e58",
             overflowY: "visible",
+          },
+        },
+      },
+      MuiModal: {
+        styleOverrides: {
+          root: {
+            backgroundColor: "background.paper",
+          },
+        },
+      },
+      MuiAvatar: {
+        styleOverrides: {
+          root: {
+            backgroundColor: "background.paper",
           },
         },
       },

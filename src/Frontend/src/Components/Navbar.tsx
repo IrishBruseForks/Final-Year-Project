@@ -54,7 +54,11 @@ function Navbar({ toggleDrawer, enableBurgerMenu = true }: { toggleDrawer: (open
             color="inherit"
             ref={anchorRef}
           >
-            <Avatar src={whoami?.picture} title="Profile Picture" sx={{ bgcolor: "background.default", borderRadius: "50%", height: 32, width: 32 }} />
+            <Avatar
+              src={whoami?.picture}
+              title="Profile Picture"
+              sx={{ bgcolor: "background.default", borderRadius: "50%", border: "4px solid #242b33", height: 36, width: 36 }}
+            />
           </IconButton>
           <Menu
             id="menu-appbar"

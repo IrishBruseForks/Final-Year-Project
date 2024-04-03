@@ -25,7 +25,7 @@ import {
 import { useMutation, useQueryClient } from "@tanstack/react-query"; // Import from react-query for server state management
 import axios from "axios"; // Import axios for making HTTP requests
 import { enqueueSnackbar } from "notistack"; // Import enqueueSnackbar for showing snackbars (notifications)
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom"; // Import useParams hook for getting URL parameters
 import { useAuth } from "../../Auth/useAuth"; // Custom hook for authentication
 import { ChannelResponse, PostMessageBody, PostMessageResponse } from "../../Types/ServerTypes"; // Import type definitions
@@ -83,6 +83,11 @@ function MessageView() {
       enqueueSnackbar("Failed to send Message", { variant: "error" });
     },
   });
+
+  // Get all users except the current user and system user for display
+  const otherUsers = useMemo(() => {
+    return channel?.users?.filter((u) => !(u.id == "0" || (channel.users.length > 2 && u.id == user?.id)));
+  }, [channel?.users]);
 
   const anchorRef = useRef<HTMLButtonElement>(null);
   const [opened, setOpened] = useState<boolean>(false);
@@ -144,14 +149,11 @@ function MessageView() {
     <Stack flexBasis={0} flexGrow={1} p={1.5} sx={{ m: { xs: 1, md: 2 } }} borderRadius={1} bgcolor="background.paper">
       <Box sx={{ display: "flex", alignItems: "center", height: 50, mb: 1 }}>
         <Typography sx={{ textAlign: "justify" }} variant="h5">
-          {channel?.users && (
+          {otherUsers && (
             <Button ref={anchorRef} onClick={() => setOpened(!opened)} sx={{ mr: 1 }}>
               {/* Lazy load the channel picture */}
               <AvatarGroup contextMenu="" max={3}>
-                {channel?.users?.map((u) => {
-                  if (u.id === user.id) {
-                    return undefined;
-                  }
+                {otherUsers.map((u) => {
                   return <Avatar key={u.id} alt={u.username} src={u.picture} sx={{ bgcolor: "background.paper" }} />;
                 })}
               </AvatarGroup>
@@ -175,13 +177,13 @@ function MessageView() {
               <Typography>Users</Typography>
             </ListItem>
             <Divider />
-            {channel?.users?.map((user) => {
+            {otherUsers?.map((u) => {
               return (
-                <ListItem key={user.id}>
+                <ListItem key={u.id}>
                   <ListItemAvatar>
-                    <Avatar key={user.id} alt={user.username} src={user.picture} />
+                    <Avatar key={u.id} alt={u.username} src={u.picture} />
                   </ListItemAvatar>
-                  <Typography>{user.username}</Typography>
+                  <Typography>{u.username}</Typography>
                 </ListItem>
               );
             })}

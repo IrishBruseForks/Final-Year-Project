@@ -3,7 +3,8 @@ import { Avatar, Box, IconButton, ListItemButton, Stack, Typography } from "@mui
 import { format } from "date-fns";
 import * as linkify from "linkifyjs";
 import { useMemo, useState } from "react";
-import { ChannelResponse, OAuthResponse, PostMessageResponse } from "../../Types/ServerTypes";
+import { useAuth } from "../../Auth/useAuth";
+import { ChannelResponse, PostMessageResponse } from "../../Types/ServerTypes";
 import LazyImage from "../LazyImage";
 
 interface MessageProps {
@@ -21,11 +22,10 @@ function Message({ message, channel, onDelete }: MessageProps) {
   }
 
   // Retrieve current user from localStorage
-  const currentUserJson = localStorage.getItem("user");
-  const currentUser = currentUserJson ? (JSON.parse(currentUserJson) as OAuthResponse) : null;
+  const { user } = useAuth();
 
   // Determine if the current user is the sender of the message
-  const userCanDeleteMessage = currentUser?.id === message.sentBy;
+  const userCanDeleteMessage = user?.id === message.sentBy;
   const [videos, setVideos] = useState<string[]>([]);
 
   const content = useMemo(() => {

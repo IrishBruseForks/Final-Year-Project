@@ -28,9 +28,9 @@ const AvatarStyles: SxProps<Theme> = {
   width: 110,
   height: 110,
   borderWidth: "10px",
-  borderColor: "background.default",
+  borderColor: "#454e58",
   borderStyle: "solid",
-  bgcolor: "background.default",
+  bgcolor: "#3b434d",
   transition: "filter .2s",
 };
 
