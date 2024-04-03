@@ -64,3 +64,7 @@ type PostMessageResponse struct {
 	Content string  `json:"content"`
 	Image   *string `json:"image"`
 }
+
+type PutProfileBody struct {
+	Picture *string `json:"picture"`
+}

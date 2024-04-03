@@ -6,6 +6,9 @@ type URL = string;
 async function Post<D = any, T = unknown>(url: URL, data: D): Promise<T> {
   return (await axios.post<T>(import.meta.env.VITE_API_URL + url, data, config())).data;
 }
+async function Put<D = any, T = unknown>(url: URL, data: D): Promise<T> {
+  return (await axios.put<T>(import.meta.env.VITE_API_URL + url, data, config())).data;
+}
 
 async function Delete<T = unknown>(url: URL): Promise<T> {
   return (await axios.delete<T>(import.meta.env.VITE_API_URL + url, config())).data;
@@ -30,4 +33,4 @@ function config() {
   };
 }
 
-export default { Post, Delete, Get };
+export default { Post, Delete, Get, Put };

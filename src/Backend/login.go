@@ -53,15 +53,13 @@ func postLogin(c echo.Context) error {
 	if err != nil || username == nil {
 
 		if profilePicture == nil {
-
-			query := `INSERT INTO Users (id,picture) VALUES (?,?)`
-
 			url, err := uploadImage(googleJwt.Picture)
 			if err != nil {
 				log.Error(err)
 				return echo.ErrInternalServerError
 			}
 
+			query := `INSERT INTO Users (id,picture) VALUES (?,?)`
 			_, err = db.Exec(query, googleJwt.Subject, url)
 			if err != nil {
 				log.Error(err)
@@ -126,45 +124,6 @@ func postSignup(c echo.Context) error {
 		Id:     jwt.Subject,
 		Signup: false,
 		Token:  tokenString,
-	})
-}
-
-func getProfile(c echo.Context) error {
-	user := c.Get("user").(*jwt.Token)
-	jwt := user.Claims.(*AuthJwt)
-
-	var id *string = nil
-	var username *string = nil
-	var profilePicture *string = nil
-
-	err := db.QueryRow("SELECT id,username,picture FROM Users WHERE id = ?", jwt.Subject).Scan(&id, &username, &profilePicture)
-	if err != nil {
-		log.Error(err)
-		return echo.ErrInternalServerError
-	}
-
-	var friends int
-	err = db.QueryRow("SELECT COUNT(*) FROM Friends f WHERE f.user = ?", jwt.Subject).Scan(&friends)
-	if err != nil {
-		log.Error(err)
-		return echo.ErrInternalServerError
-	}
-
-	var channels int
-	err = db.QueryRow("SELECT COUNT(*) FROM Users_Channels u WHERE u.Users_id = ?", jwt.Subject).Scan(&channels)
-	if err != nil {
-		log.Error(err)
-		return echo.ErrInternalServerError
-	}
-
-	return c.JSON(http.StatusOK, &Profile{
-		User: User{
-			Id:       *id,
-			Username: *username,
-			Picture:  *profilePicture,
-		},
-		Friends:  friends,
-		Channels: channels,
 	})
 }
 

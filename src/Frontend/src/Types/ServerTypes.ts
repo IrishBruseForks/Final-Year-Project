@@ -56,3 +56,6 @@ export interface PostMessageResponse {
   content: string;
   image?: string;
 }
+export interface PutProfileBody {
+  picture?: string;
+}

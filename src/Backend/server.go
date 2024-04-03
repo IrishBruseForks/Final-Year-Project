@@ -69,6 +69,7 @@ func addRoutes(e *echo.Echo) {
 
 	e.POST("/signup", postSignup)
 	e.GET("/profile", getProfile)
+	e.PUT("/profile", putProfile)
 
 	// Channel Endpoints
 	e.GET("/channels", getChannels)
