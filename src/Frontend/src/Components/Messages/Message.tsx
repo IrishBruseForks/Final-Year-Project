@@ -81,7 +81,10 @@ function Message({ message, channel, onDelete }: MessageProps) {
         {videos.length > 0 &&
           videos.map((video) => (
             <iframe
-              frameBorder={0}
+              style={{
+                border: "none",
+                aspectRatio: "16 / 9",
+              }}
               src={"https://www.youtube.com/embed/" + video}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowFullScreen

@@ -1,8 +1,7 @@
 import axios from "axios";
 import { OAuthResponse } from "../Types/ServerTypes";
-import Urls from "./Urls";
 
-type URL = (typeof Urls)[keyof typeof Urls];
+type URL = string;
 
 async function Post<D = any, T = unknown>(url: URL, data: D): Promise<T> {
   return (await axios.post<T>(import.meta.env.VITE_API_URL + url, data, config())).data;

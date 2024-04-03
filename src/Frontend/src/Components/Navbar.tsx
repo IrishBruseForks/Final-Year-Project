@@ -74,6 +74,13 @@ function Navbar({ toggleDrawer, enableBurgerMenu = true }: { toggleDrawer: (open
             }}
           >
             <MenuItem onClick={profile}>Profile</MenuItem>
+            <MenuItem
+              onClick={() => {
+                window.open("/privacypolicy.html", "_blank");
+              }}
+            >
+              Privacy
+            </MenuItem>
             <MenuItem onClick={logout}>Logout</MenuItem>
           </Menu>
         </Toolbar>

@@ -2,10 +2,28 @@ import AddIcon from "@mui/icons-material/Add";
 import ContactsIcon from "@mui/icons-material/Contacts";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import SearchIcon from "@mui/icons-material/Search";
-import { Box, Divider, IconButton, InputAdornment, LinearProgress, List, Stack, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Divider,
+  IconButton,
+  InputAdornment,
+  LinearProgress,
+  List,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
+import { enqueueSnackbar } from "notistack";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ChannelsResponse, User } from "../Types/ServerTypes";
+import Api from "../Utility/Api";
 import Urls from "../Utility/Urls";
 import { useApi, useRefetchApi } from "../Utility/useApi";
 import ChannelItem from "./ChannelItem";
@@ -19,16 +37,18 @@ const FriendsPanel = ({ close }: { close?: () => void }) => {
   const navigate = useNavigate();
 
   // Fetch all channels
-  const { data, isLoading, isError } = useRefetchApi<ChannelsResponse[]>(["getChannels"], Urls.Channels, { refetchInterval: 2000 });
+  const { data: channels, isLoading, isError } = useRefetchApi<ChannelsResponse[]>(["getChannels"], Urls.Channels, { refetchInterval: 2000 });
 
   const { data: users } = useApi<User[]>(["getFriends"], Urls.Friends);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const searchData = useMemo<ChannelsResponse[] | undefined>(() => data && filterChannels(data), [searchTerm, data]);
+  const searchData = useMemo<ChannelsResponse[] | undefined>(() => channels && filterChannels(channels), [searchTerm, channels]);
 
   const [isChannelModalOpen, setIsChannelModalOpen] = useState<boolean>(false);
   const [isAddFriendModalOpen, setIsAddFriendModalOpen] = useState<boolean>(false);
   const [isContactsModalOpen, setIsContactsModalOpen] = useState<boolean>(false);
+  const [isLeaveModalOpen, setLeaveModalOpen] = useState(false);
+  const [leaveChannelId, setLeaveChannelId] = useState("");
 
   function filterChannels(value: ChannelsResponse[]): ChannelsResponse[] {
     return value?.filter((channel) => channel.name.toLowerCase().includes(searchTerm.toLowerCase()));
@@ -37,11 +57,16 @@ const FriendsPanel = ({ close }: { close?: () => void }) => {
   const { uuid } = useParams<{ uuid: string }>();
 
   useEffect(() => {
-    if (!uuid && data && data[0]) {
-      navigate(data[0].id);
+    if (!uuid && channels && channels[0]) {
+      navigate(channels[0].id);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data]);
+  }, [channels]);
+
+  const leaveChannel = (id: string) => {
+    setLeaveModalOpen(true);
+    setLeaveChannelId(id);
+  };
 
   return (
     <Stack
@@ -123,7 +148,14 @@ const FriendsPanel = ({ close }: { close?: () => void }) => {
 
         {!isLoading && searchData && searchData.length > 0 ? (
           searchData.map((channel: ChannelsResponse) => (
-            <ChannelItem id={channel.id} username={channel.name} lastMessage={channel.lastMessage} profilePic={channel.picture} key={channel.id} />
+            <ChannelItem
+              id={channel.id}
+              username={channel.name}
+              lastMessage={channel.lastMessage}
+              profilePic={channel.picture}
+              key={channel.id}
+              leaveChannel={leaveChannel}
+            />
           ))
         ) : (
           <Typography textAlign={"center"} py={4}>
@@ -134,6 +166,32 @@ const FriendsPanel = ({ close }: { close?: () => void }) => {
       <CreateChannelModal users={users ?? []} open={isChannelModalOpen} handleClose={() => setIsChannelModalOpen(false)} />
       <AddFriendModal open={isAddFriendModalOpen} handleClose={() => setIsAddFriendModalOpen(false)} />
       <ContactsModal users={users ?? []} open={isContactsModalOpen} onClose={() => setIsContactsModalOpen(false)} />
+      <Dialog fullScreen={false} open={isLeaveModalOpen} onClose={() => setLeaveModalOpen(false)}>
+        <DialogTitle>Leave Channel {channels?.find((v) => v.id == leaveChannelId)?.name}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>Are you sure you want to leave this channel?</DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button color="inherit" autoFocus onClick={() => setLeaveModalOpen(false)}>
+            Cancel
+          </Button>
+          <Button
+            color="error"
+            onClick={async () => {
+              setLeaveModalOpen(false);
+
+              try {
+                await Api.Delete(Urls.Channels + "?id=" + leaveChannelId);
+                navigate("/");
+              } catch (e) {
+                enqueueSnackbar("Error leaving the channel", { variant: "error" });
+              }
+            }}
+          >
+            <b>Leave</b>
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Stack>
   );
 };

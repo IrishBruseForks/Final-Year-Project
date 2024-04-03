@@ -1,4 +1,3 @@
-import DeleteIcon from "@mui/icons-material/Delete";
 import SendIcon from "@mui/icons-material/Send";
 import UploadIcon from "@mui/icons-material/Upload";
 import {
@@ -7,8 +6,12 @@ import {
   Box,
   Button,
   Chip,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   Divider,
-  IconButton,
   InputAdornment,
   List,
   ListItem,
@@ -26,6 +29,7 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom"; // Import useParams hook for getting URL parameters
 import { useAuth } from "../../Auth/useAuth"; // Custom hook for authentication
 import { ChannelResponse, PostMessageBody, PostMessageResponse } from "../../Types/ServerTypes"; // Import type definitions
+import Api from "../../Utility/Api";
 import Urls from "../../Utility/Urls"; // Utility for managing URLs
 import { getApiAuthConfig, useApi, useRefetchApi } from "../../Utility/useApi"; // API config and custom hook for API calls
 import ImageUpload from "../ImageUpload";
@@ -37,9 +41,11 @@ function MessageView() {
   const { uuid } = useParams<{ uuid: string }>(); // Get the 'uuid' from the URL parameters
 
   const getMessageKey = ["getMessages", uuid]; // Define a key for caching messages
+
   // Fetch messages using a custom hook and refetch them every 5000ms
   const { data: messages } = useRefetchApi<PostMessageResponse[]>(getMessageKey, Urls.Messages + "?id=" + uuid, {
     refetchInterval: 2_000,
+    retry: false,
   });
 
   const queryClient = useQueryClient(); // Access the QueryClient to manage queries and cache
@@ -58,7 +64,7 @@ function MessageView() {
   const { user } = useAuth(); // Use the custom useAuth hook to access the user's authentication status
 
   // Fetch channel data using a custom hook
-  const { data: channel, error } = useRefetchApi<ChannelResponse>(["getChannel", uuid], Urls.Channel + "?id=" + uuid, { retry: false });
+  const { data: channel, error } = useApi<ChannelResponse>(["getChannel", uuid], Urls.Channel + "?id=" + uuid, { retry: false, refetchOnMount: true });
 
   const { mutate } = useMutation({
     mutationFn: async (newMessage: PostMessageBody) => {
@@ -66,10 +72,15 @@ function MessageView() {
       await axios.post(import.meta.env.VITE_API_URL + Urls.Messages, newMessage, getApiAuthConfig(user!));
     },
     // Callback function after mutation is settled to refresh messages
-    onSettled: async () => {
+    onSuccess: async () => {
       setMessageText("");
       setImage(undefined);
+      console.log("test");
+
       return await queryClient.invalidateQueries({ queryKey: getMessageKey });
+    },
+    onError: async () => {
+      enqueueSnackbar("Failed to send Message", { variant: "error" });
     },
   });
 
@@ -105,13 +116,29 @@ function MessageView() {
     setMessageText(reply);
   };
 
+  const [deleteDialog, setDeleteDialog] = useState<string | null>(null);
+
+  const handleDeleteConfirm = () => {
+    setDeleteDialog(null);
+    if (deleteDialog) {
+      deleteMessageMutation.mutate(deleteDialog);
+    } else {
+      enqueueSnackbar("Failed to delete Message", { variant: "error" });
+    }
+  };
+
+  const handleDeleteCancel = () => {
+    setDeleteDialog(null);
+  };
+
   // Detele mutation using React Query
   const deleteMessageMutation = useMutation({
-    mutationFn: async (messageId: string) => axios.delete(`${import.meta.env.VITE_API_URL}/messages/${messageId}`, getApiAuthConfig(user!)),
+    mutationFn: async (messageId: string) => Api.Delete("messages?id=" + messageId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: getMessageKey }); // Refresh the messages after a successful delete
     },
   });
+
   // Render the component UI
   return (
     <Stack flexBasis={0} flexGrow={1} p={1.5} sx={{ m: { xs: 1, md: 2 } }} borderRadius={1} bgcolor="background.paper">
@@ -121,8 +148,11 @@ function MessageView() {
             <Button ref={anchorRef} onClick={() => setOpened(!opened)} sx={{ mr: 1 }}>
               {/* Lazy load the channel picture */}
               <AvatarGroup contextMenu="" max={3}>
-                {channel?.users?.map((user) => {
-                  return <Avatar key={user.id} alt={user.username} src={user.picture} sx={{ bgcolor: "background.paper" }} />;
+                {channel?.users?.map((u) => {
+                  if (u.id === user.id) {
+                    return undefined;
+                  }
+                  return <Avatar key={u.id} alt={u.username} src={u.picture} sx={{ bgcolor: "background.paper" }} />;
                 })}
               </AvatarGroup>
             </Button>
@@ -173,7 +203,7 @@ function MessageView() {
       >
         {/* Map over the fetched messages and display them */}
         {messages?.map((message) => (
-          <Message key={message.id} message={message} channel={channel} onDelete={(messageId) => deleteMessageMutation.mutate(messageId)} />
+          <Message key={message.id} message={message} channel={channel} onDelete={(messageId) => setDeleteDialog(messageId)} />
         ))}
       </List>
       {image && (
@@ -189,9 +219,6 @@ function MessageView() {
               overflow: "hidden",
             }}
           />
-          <IconButton color="error" onClick={() => setImage(undefined)} sx={{ backgroundColor: "#00000022", position: "absolute", top: -15, right: -15 }}>
-            <DeleteIcon />
-          </IconButton>
         </Box>
       )}
       {/* Smart Replies Section */}
@@ -260,6 +287,20 @@ function MessageView() {
           }}
         />
       </Stack>
+      <Dialog fullScreen={false} open={deleteDialog !== null} onClose={handleDeleteCancel}>
+        <DialogTitle>Delete Message</DialogTitle>
+        <DialogContent>
+          <DialogContentText>Are you sure?</DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button color="primary" autoFocus onClick={handleDeleteCancel}>
+            Cancel
+          </Button>
+          <Button color="error" autoFocus onClick={handleDeleteConfirm}>
+            DELETE
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Stack>
   );
 }

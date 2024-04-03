@@ -16,8 +16,9 @@ function MessagesPage() {
 
   // Effect for setting the document title and disabling body scroll
   useEffect(() => {
-    document.title = import.meta.env.VITE_APP_TITLE + " - Home";
+    document.title = import.meta.env.VITE_APP_TITLE;
   }, []);
+
   return (
     <Stack sx={{ minHeight: "100vh", maxHeight: "100vh", color: "inherit" }}>
       <Navbar toggleDrawer={toggleDrawer} />

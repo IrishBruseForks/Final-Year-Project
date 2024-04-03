@@ -17,7 +17,7 @@ import (
 var htmlSanitizer = bluemonday.StripTagsPolicy()
 
 func getMessages(c echo.Context) error {
-	user := getUser(c)
+	user := getUserId(c)
 
 	var channelId string
 	echo.QueryParamsBinder(c).MustString("id", &channelId)
@@ -66,11 +66,12 @@ func postMessages(c echo.Context) error {
 		log.Error(err)
 		return err
 	}
-	user := getUser(c)
+	user := getUserId(c)
 
+	// Sanitize the content stopping xss attacks
 	body.Content = strings.TrimSpace(htmlSanitizer.Sanitize(body.Content))
 
-	if len(body.Content) == 0 {
+	if len(body.Content) == 0 && body.Image == nil {
 		return echo.ErrBadRequest
 	}
 
@@ -84,7 +85,7 @@ func postMessages(c echo.Context) error {
 
 	if body.Image != nil {
 		// lets assume its this file
-		url, err := UploadImage(*body.Image)
+		url, err := uploadImage(*body.Image)
 		if err != nil {
 			log.Error(err)
 			return echo.ErrInternalServerError
@@ -108,7 +109,7 @@ func postMessages(c echo.Context) error {
 	return c.String(http.StatusOK, uuid.String())
 }
 
-func UploadImage(img string) (string, error) {
+func uploadImage(img string) (string, error) {
 	resp, err := http.PostForm("https://api.imgbb.com/1/upload?expiration=15552000&key="+os.Getenv("IMGBB_SECRET"), map[string][]string{
 		"image": {img},
 	})
@@ -133,6 +134,27 @@ func UploadImage(img string) (string, error) {
 	}
 
 	return imgbb.Data.URL, err
+}
+
+func deleteMessage(c echo.Context) error {
+	userId := getUserId(c)
+
+	var messageId string
+	echo.QueryParamsBinder(c).MustString("id", &messageId)
+
+	query := `
+	DELETE FROM Messages
+	WHERE id=? AND sentBy=?
+	LIMIT 1;
+	`
+
+	_, err := db.Exec(query, messageId, userId)
+	if err != nil {
+		log.Error(err)
+		return echo.ErrInternalServerError
+	}
+
+	return c.NoContent(http.StatusOK)
 }
 
 type ImgBB struct {

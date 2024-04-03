@@ -32,7 +32,7 @@ func getJwtSecretBytes() []byte {
 	return secretBytes
 }
 
-func getUser(c echo.Context) (user string) {
+func getUserId(c echo.Context) (user string) {
 	jwt := c.Get("user").(*jwt.Token)
 	return jwt.Claims.(*AuthJwt).Subject
 }

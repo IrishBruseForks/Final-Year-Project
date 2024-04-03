@@ -72,7 +72,7 @@ func getChannel(c echo.Context) error {
 }
 
 func getChannels(c echo.Context) error {
-	user := getUser(c)
+	userId := getUserId(c)
 
 	// TODO return only chats the user is in
 	rows, err := db.Query(`
@@ -85,7 +85,7 @@ func getChannels(c echo.Context) error {
 		DESC LIMIT 1
 	)
 	WHERE uc.Users_id = ?
-	`, user)
+	`, userId)
 
 	if err != nil {
 		log.Error(err)
@@ -120,10 +120,10 @@ func postChannels(c echo.Context) error {
 		log.Error(err)
 		return err
 	}
-	user := getUser(c)
+	userId := getUserId(c)
 
 	// Add the user who created the group to the group
-	body.Users = append(body.Users, user)
+	body.Users = append(body.Users, userId)
 
 	id, err := uuid.NewRandom()
 	if err != nil {
@@ -134,7 +134,7 @@ func postChannels(c echo.Context) error {
 	var img string = ""
 
 	if body.Picture != nil {
-		uploadedImage, err := UploadImage(*body.Picture)
+		uploadedImage, err := uploadImage(*body.Picture)
 
 		if err != nil {
 			log.Error(err)
@@ -168,22 +168,41 @@ func putChannels(c echo.Context) error {
 	return c.String(http.StatusOK, "putChannels")
 }
 
+// Leave Channel
 func deleteChannels(c echo.Context) error {
-	body, err := getBody[DeleteChannelBody](c)
-	if err != nil {
-		log.Error(err)
-		return err
-	}
-	user := getUser(c)
+	var channelId string
+	echo.QueryParamsBinder(c).MustString("id", &channelId)
+	userId := getUserId(c)
+	username := getUsername(c)
 
 	query := `DELETE FROM Users_Channels WHERE Users_id=? AND Channels_id=?;`
 
-	_, err = db.Exec(query, user, body.ChannelId)
+	_, err := db.Exec(query, userId, channelId)
 
 	if err != nil {
 		log.Error(err)
 		return echo.ErrInternalServerError
 	}
 
+	sendSystemMessage(channelId, username+" left the channel.")
+
 	return c.NoContent(http.StatusOK)
+}
+
+func sendSystemMessage(channelId string, message string) error {
+	query := `
+	INSERT INTO
+		Messages (id,channelId,sentBy,sentOn,content)
+	VALUES
+		(?,?,?,NOW(),?);
+	`
+
+	uuid := uuid.New()
+	_, err := db.Exec(query, uuid, channelId, "0", message)
+	if err != nil {
+		log.Error(err)
+		return echo.ErrInternalServerError
+	}
+
+	return nil
 }

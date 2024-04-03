@@ -9,9 +9,9 @@ import (
 )
 
 func getFriends(c echo.Context) error {
-	user := getUser(c)
+	userId := getUserId(c)
 
-	rows, err := db.Query("SELECT id,username,picture FROM Users JOIN Friends ON Friends.friend=id WHERE Friends.user=?", user)
+	rows, err := db.Query("SELECT id,username,picture FROM Users JOIN Friends ON Friends.friend=id WHERE Friends.user=?", userId)
 
 	if err != nil {
 		log.Error(err)
@@ -29,7 +29,7 @@ func getFriends(c echo.Context) error {
 			return echo.ErrInternalServerError
 		}
 
-		if channel.Id != user {
+		if channel.Id != userId {
 			Friends = append(Friends, channel)
 		}
 	}
@@ -48,7 +48,7 @@ func postFriends(c echo.Context) error {
 		log.Error(err)
 		return err
 	}
-	user := getUser(c)
+	userId := getUserId(c)
 
 	// get the id of the user
 	id, err := getFriendsId(body)
@@ -56,12 +56,12 @@ func postFriends(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, "User Not Found")
 	}
 
-	if *id == user {
+	if *id == userId {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Cannot add yourself as a friend")
 	}
 
 	// add the user to the friend list
-	_, err = db.Exec("INSERT INTO Friends (user,friend) VALUES (?,?);", user, *id)
+	_, err = db.Exec("INSERT INTO Friends (user,friend) VALUES (?,?);", userId, *id)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Friend Already Added")
 	}

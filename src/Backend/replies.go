@@ -22,11 +22,10 @@ Do not reply with anything other than 3 choices prefixed with numbers.`
 
 func getReplies(c echo.Context) error {
 	username := getUsername(c)
-
 	messages := getRecentMessages(c)
 
 	if len(messages) < 5 {
-		return echo.ErrForbidden
+		return c.JSON(http.StatusOK, []string{})
 	}
 
 	seed := rand.Intn(512)

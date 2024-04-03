@@ -82,6 +82,7 @@ func addRoutes(e *echo.Echo) {
 	// Messages Endpoints
 	e.GET("/messages", getMessages)
 	e.POST("/messages", postMessages)
+	e.DELETE("/messages", deleteMessage)
 
 	// Friends Endpoints
 	e.GET("/friend", getFriend)
@@ -91,8 +92,10 @@ func addRoutes(e *echo.Echo) {
 
 func addMiddleware(e *echo.Echo) {
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
-		Format:  "${remote_ip} ${method} ${status} ${error} ${uri}\n",
-		Skipper: Skipper,
+		Format: "${remote_ip} ${method} ${status} ${error} ${uri}\n",
+		Skipper: func(c echo.Context) bool {
+			return c.Request().Method == "OPTIONS" || c.Path() == "/channels" || strings.HasPrefix(c.Path(), "/messages")
+		},
 	}))
 
 	e.Use(middleware.Recover())
@@ -159,8 +162,4 @@ func initDatabase() {
 	}
 
 	db.Exec("SET NAMES 'utf8mb4' COLLATE 'utf8mb4_0900_ai_ci';")
-}
-
-func Skipper(c echo.Context) bool {
-	return c.Request().Method == "OPTIONS" || c.Path() == "/channels" || strings.Contains(c.Path(), "/messages")
 }

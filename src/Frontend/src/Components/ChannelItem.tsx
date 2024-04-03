@@ -10,9 +10,10 @@ type Props = {
   username: string;
   lastMessage?: string;
   profilePic: string;
+  leaveChannel: (id: string) => void;
 };
 
-function ChannelItem({ id, username, lastMessage, profilePic }: Props) {
+function ChannelItem({ id, username, lastMessage, profilePic, leaveChannel }: Props) {
   const navigate = useNavigate();
   var { uuid } = useParams<{ uuid: string }>();
 
@@ -48,6 +49,7 @@ function ChannelItem({ id, username, lastMessage, profilePic }: Props) {
       <ListItemButton
         sx={{ width: "100%", cursor: "pointer" }}
         selected={id === uuid}
+        disableRipple={contextMenu !== null}
         onClick={() => {
           navigate("/" + id);
         }}
@@ -78,12 +80,14 @@ function ChannelItem({ id, username, lastMessage, profilePic }: Props) {
         >
           <MenuItem
             onClick={() => {
+              leaveChannel(id);
               setTimeout(() => {
                 setContextMenu(null);
               }, 200);
             }}
           >
-            Leave Channel&nbsp; <ExitToAppIcon />
+            Leave Channel&nbsp;
+            <ExitToAppIcon />
           </MenuItem>
         </Menu>
       </ListItemButton>

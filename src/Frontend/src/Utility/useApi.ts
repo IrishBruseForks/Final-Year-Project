@@ -46,7 +46,7 @@ export function useRefetchApi<TQueryFnData = unknown, TError = AxiosError, TData
 ): UseQueryResult<TData, TError> {
   const ret = useApi<TQueryFnData, TError, TData, TQueryKey>(queryKey, url as any, {
     ...options,
-    refetchInterval: 5000,
+    refetchInterval: options?.refetchInterval ?? 5000,
   });
 
   return ret;

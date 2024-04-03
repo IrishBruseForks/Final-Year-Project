@@ -56,7 +56,7 @@ func postLogin(c echo.Context) error {
 
 			query := `INSERT INTO Users (id,picture) VALUES (?,?)`
 
-			url, err := UploadImage(googleJwt.Picture)
+			url, err := uploadImage(googleJwt.Picture)
 			if err != nil {
 				log.Error(err)
 				return echo.ErrInternalServerError

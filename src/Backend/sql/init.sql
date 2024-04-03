@@ -15,4 +15,8 @@ INSERT INTO Users(id, username, picture) VALUES (
     '101460519336812133746',
     'Nocnava',
     'https://cdn.discordapp.com/avatars/554359372315099147/a_4e859c49e8c29039eb233b5c678349f3.gif'
+),(
+    '0',
+    'Chatalyst',
+    'https://chatalyst.ethanconneely.com/Icon_Big.png'
 );
