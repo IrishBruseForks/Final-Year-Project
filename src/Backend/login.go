@@ -123,7 +123,7 @@ func postSignup(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, OAuthResponse{
-		Id:     jwt.ID,
+		Id:     jwt.Subject,
 		Signup: false,
 		Token:  tokenString,
 	})
