@@ -38,17 +38,15 @@ import Message from "./Message"; // Import the Message component for displaying 
 
 // Define the MessageView component
 function MessageView() {
+  const queryClient = useQueryClient(); // Access the QueryClient to manage queries and cache
+  const navigate = useNavigate();
+  const { user } = useAuth(); // Use the custom useAuth hook to access the user's authentication status
   const { uuid } = useParams<{ uuid: string }>(); // Get the 'uuid' from the URL parameters
 
   const getMessageKey = ["getMessages", uuid]; // Define a key for caching messages
 
   // Fetch messages using a custom hook and refetch them every 5000ms
-  const { data: messages } = useRefetchApi<PostMessageResponse[]>(getMessageKey, Urls.Messages + "?id=" + uuid, {
-    refetchInterval: 2_000,
-    retry: false,
-  });
-
-  const queryClient = useQueryClient(); // Access the QueryClient to manage queries and cache
+  const { data: messages } = useRefetchApi<PostMessageResponse[]>(getMessageKey, Urls.Messages + "?id=" + uuid, { retry: false, refetchInterval: 2_000 });
   const { data: smartReplies } = useApi<string[]>(["getReplies", uuid], Urls.Replies + "?id=" + uuid, { refetchInterval: false });
 
   useEffect(() => {
@@ -59,12 +57,8 @@ function MessageView() {
     return () => clearTimeout(id);
   }, [messages]);
 
-  const navigate = useNavigate();
-
-  const { user } = useAuth(); // Use the custom useAuth hook to access the user's authentication status
-
   // Fetch channel data using a custom hook
-  const { data: channel, error } = useApi<ChannelResponse>(["getChannel", uuid], Urls.Channel + "?id=" + uuid, { retry: false, refetchOnMount: true });
+  const { data: channel, error } = useRefetchApi<ChannelResponse>(["getChannel", uuid], Urls.Channel + "?id=" + uuid, { retry: false, refetchInterval: 5_000 });
 
   const { mutate } = useMutation({
     mutationFn: async (newMessage: PostMessageBody) => {
@@ -75,8 +69,6 @@ function MessageView() {
     onSuccess: async () => {
       setMessageText("");
       setImage(undefined);
-      console.log("test");
-
       return await queryClient.invalidateQueries({ queryKey: getMessageKey });
     },
     onError: async () => {
@@ -84,22 +76,31 @@ function MessageView() {
     },
   });
 
-  // Get all users except the current user and system user for display
-  const otherUsers = useMemo(() => {
-    return channel?.users?.filter((u) => !(u.id == "0" || (channel.users.length > 2 && u.id == user?.id)));
-  }, [channel?.users]);
-
   const anchorRef = useRef<HTMLButtonElement>(null);
   const [opened, setOpened] = useState<boolean>(false);
   const [image, setImage] = useState<string | undefined>(); // State for the file upload
-
-  const [messageText, setMessageText] = useState(""); // State for the message input text for smart replies
+  const [messageText, setMessageText] = useState(""); // State for the message input text
 
   useEffect(() => {
     if (error?.response?.status == 403) {
       navigate("/");
     }
   }, [error]);
+
+  const users = useMemo(() => {
+    if (!channel) return [];
+
+    for (const user of channel.users) {
+      queryClient.setQueryData(["user", user.id], user);
+    }
+
+    return channel.users;
+  }, [channel]);
+
+  // Get all users except the current user and system user for display
+  const filteredUsers = useMemo(() => {
+    return channel?.users?.filter((u) => !(u.id == "0" || (channel.users.length > 2 && u.id == user?.id)));
+  }, [channel?.users]);
 
   // Function to handle sending a message
   const sendMessage = async () => {
@@ -149,11 +150,11 @@ function MessageView() {
     <Stack flexBasis={0} flexGrow={1} p={1.5} sx={{ m: { xs: 1, md: 2 } }} borderRadius={1} bgcolor="background.paper">
       <Box sx={{ display: "flex", alignItems: "center", height: 50, mb: 1 }}>
         <Typography sx={{ textAlign: "justify" }} variant="h5">
-          {otherUsers && (
+          {filteredUsers && (
             <Button ref={anchorRef} onClick={() => setOpened(!opened)} sx={{ mr: 1 }}>
               {/* Lazy load the channel picture */}
-              <AvatarGroup contextMenu="" max={3}>
-                {otherUsers.map((u) => {
+              <AvatarGroup max={3}>
+                {filteredUsers.map((u) => {
                   return <Avatar key={u.id} alt={u.username} src={u.picture} sx={{ bgcolor: "background.paper" }} />;
                 })}
               </AvatarGroup>
@@ -173,11 +174,11 @@ function MessageView() {
               setOpened(false);
             }}
           >
-            <ListItem key={"Users"}>
+            <ListItem>
               <Typography>Users</Typography>
             </ListItem>
             <Divider />
-            {otherUsers?.map((u) => {
+            {filteredUsers?.map((u) => {
               return (
                 <ListItem key={u.id}>
                   <ListItemAvatar>
@@ -205,7 +206,7 @@ function MessageView() {
       >
         {/* Map over the fetched messages and display them */}
         {messages?.map((message) => (
-          <Message key={message.id} message={message} channel={channel} onDelete={(messageId) => setDeleteDialog(messageId)} />
+          <Message key={message.id} message={message} id={message.sentBy} onDelete={(messageId) => setDeleteDialog(messageId)} />
         ))}
       </List>
       {image && (

@@ -4,9 +4,9 @@ export default {
   Channel: "channel",
   Messages: "messages",
   Friends: "friends",
-  Users: "users",
   Login: "auth/google",
   Signup: "signup",
   Profile: "profile",
   Replies: "replies",
+  User: "user",
 } as const;

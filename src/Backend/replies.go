@@ -13,12 +13,14 @@ import (
 	"github.com/labstack/gommon/log"
 )
 
-const prompt = `You are an AI assistant that provides civil suggestions for replies to text messages between real humans.
+const prompt = `You are a smart reply bot that give responses to messages as if you were them.
 Do not reply with code, emojis, quotes, colons, or other special characters.
-Keep replies short and to the point.
-Below is the conversation with their names for reference.
+Keep replies respectful and kind, short and to the point.
 Reply as if you were %s.
-Do not reply with anything other than 3 choices prefixed with numbers.`
+Do not reply with anything other than 3 choices prefixed with numbers.
+Below is the conversation with their names for reference.
+
+%s`
 
 func getReplies(c echo.Context) error {
 	username := getUsername(c)
@@ -34,11 +36,7 @@ func getReplies(c echo.Context) error {
 		Messages: []Message{
 			{
 				Role:    "system",
-				Content: fmt.Sprintf(prompt, username),
-			},
-			{
-				Role:    "user",
-				Content: strings.Join(messages, "\n"),
+				Content: fmt.Sprintf(prompt, username, strings.Join(messages, "\n")),
 			},
 		},
 		Model:       "gpt-3.5-turbo",

@@ -4,25 +4,26 @@ import { format } from "date-fns";
 import * as linkify from "linkifyjs";
 import { useMemo, useState } from "react";
 import { useAuth } from "../../Auth/useAuth";
-import { ChannelResponse, PostMessageResponse } from "../../Types/ServerTypes";
+import { PostMessageResponse, User } from "../../Types/ServerTypes";
+import Urls from "../../Utility/Urls";
+import { useApi } from "../../Utility/useApi";
 import LazyImage from "../LazyImage";
 
 interface MessageProps {
   message: PostMessageResponse;
-  channel?: ChannelResponse;
+  id?: string;
   onDelete?: (messageId: string) => void;
 }
 
 const contentStyle = { a: { color: "primary.main" }, "a:visited": { color: "primary.dark" } };
 
 // Assuming onReply is passed as a prop for initiating a reply
-function Message({ message, channel, onDelete }: MessageProps) {
-  function getProfilePictureUrl(message: PostMessageResponse) {
-    return channel?.users?.find((c) => c.id === message.sentBy)?.picture || "";
-  }
-
+function Message({ message, id, onDelete }: MessageProps) {
   // Retrieve current user from localStorage
   const { user } = useAuth();
+  const { data: senderCache } = useApi<User>(["user", id], Urls.User + "?id=" + id);
+
+  const sender = senderCache ?? { username: "Unknown User", picture: "", id: id };
 
   // Determine if the current user is the sender of the message
   const userCanDeleteMessage = user?.id === message.sentBy;
@@ -63,9 +64,9 @@ function Message({ message, channel, onDelete }: MessageProps) {
       }}
     >
       <Box sx={{ display: "flex", alignItems: "center", width: "100%" }}>
-        <Avatar src={getProfilePictureUrl(message)} sx={{ mr: 1 }} />
+        <Avatar src={sender?.picture} sx={{ mr: 1 }} />
         <Box flexGrow={1}>
-          <Typography variant="body2">{channel?.users?.find((c) => c.id === message.sentBy)?.username}</Typography>
+          <Typography variant="body2">{sender?.username}</Typography>
           <Typography variant="body1" sx={contentStyle} dangerouslySetInnerHTML={{ __html: content }}></Typography>
         </Box>
       </Box>

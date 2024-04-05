@@ -92,3 +92,23 @@ func getFriend(c echo.Context) error {
 
 	return c.NoContent(http.StatusOK)
 }
+
+func getUser(c echo.Context) error {
+	var userId string
+	echo.QueryParamsBinder(c).MustString("id", &userId)
+
+	var id *string = nil
+	var username *string = nil
+	var profilePicture *string = nil
+	err := db.QueryRow("SELECT id,username,picture FROM Users WHERE id=?;", userId).Scan(&id, &username, &profilePicture)
+	if err != nil {
+		log.Error(err)
+		return echo.ErrInternalServerError
+	}
+
+	return c.JSON(http.StatusOK, User{
+		Id:       *id,
+		Username: *username,
+		Picture:  *profilePicture,
+	})
+}

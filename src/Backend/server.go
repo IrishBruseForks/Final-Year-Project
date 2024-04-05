@@ -71,6 +71,9 @@ func addRoutes(e *echo.Echo) {
 	e.GET("/profile", getProfile)
 	e.PUT("/profile", putProfile)
 
+	// User
+	e.GET("/user", getUser)
+
 	// Channel Endpoints
 	e.GET("/channels", getChannels)
 	e.POST("/channels", postChannels)
